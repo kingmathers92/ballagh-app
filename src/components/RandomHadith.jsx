@@ -12,13 +12,16 @@ function RandomHadith() {
   const fetchArabicEditions = async () => {
     try {
       const response = await axios.get(
-        `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@${apiVersion}/editions.min.json`
+        `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@${apiVersion}/editions.json`
       );
       const arabicEditions = [];
       Object.values(response.data).forEach((book) => {
         book.collection.forEach((edition) => {
           if (edition.language === "Arabic") {
-            arabicEditions.push(edition);
+            arabicEditions.push({
+              ...edition,
+              link: edition.link.replace(".min.json", ".json"),
+            });
           }
         });
       });
@@ -52,10 +55,10 @@ function RandomHadith() {
       });
     } catch (error) {
       console.error("Error fetching hadith:", error);
-      // Fallback to non-minified version if minified version fails
+      // Fallback to minified version if non-minified version fails
       try {
         const fallbackResponse = await axios.get(
-          randomEdition.link.replace(".min.json", ".json")
+          randomEdition.link.replace(".json", ".min.json")
         );
         const hadiths = fallbackResponse.data.hadiths;
         const randomHadithNumber =

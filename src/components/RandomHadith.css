@@ -1,0 +1,56 @@
+@font-face {
+  font-family: "Uthmani";
+  src: url("/fonts/UthmanicHafs1Ver09.otf") format("opentype");
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.hadith-container {
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.hadith-text {
+  font-family: "Uthmani", Arial, sans-serif;
+  font-size: 24px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.rtl {
+  direction: rtl;
+  text-align: right;
+}
+
+.hadith-source {
+  font-style: italic;
+  text-align: right;
+}
+
+.button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}

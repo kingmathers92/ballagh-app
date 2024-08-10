@@ -27,7 +27,7 @@ function RandomHadith() {
       });
       setArabicEditions(arabicEditions);
     } catch (error) {
-      console.error("Error fetching Arabic editions:", error);
+      console.error("Error fetching Data:", error);
     }
   };
 
@@ -54,7 +54,7 @@ function RandomHadith() {
         edition: randomEdition.name,
       });
     } catch (error) {
-      console.error("Error fetching hadith:", error);
+      console.error("Error fetching data:", error);
       // Fallback to minified version if non-minified version fails
       try {
         const fallbackResponse = await axios.get(
@@ -74,7 +74,7 @@ function RandomHadith() {
           edition: randomEdition.name,
         });
       } catch (fallbackError) {
-        console.error("Error fetching hadith (fallback):", fallbackError);
+        console.error("Error fetching data (fallback):", fallbackError);
       }
     } finally {
       setIsLoading(false);

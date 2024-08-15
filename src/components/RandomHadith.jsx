@@ -23,7 +23,11 @@ function RandomHadith() {
         onClick={fetchRandomHadith}
         disabled={isLoading}
       >
-        {isLoading ? "Loading..." : "Get Another Random Hadith"}
+        {isLoading ? (
+          <div className="spinner"></div>
+        ) : (
+          "Get Another Random Hadith"
+        )}
       </button>
     </div>
   );

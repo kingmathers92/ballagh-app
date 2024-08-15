@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import Spinner from "../components/Spinner";
 
 function Search() {
   const [query, setQuery] = useState("");
@@ -45,9 +46,8 @@ function Search() {
         placeholder="Enter search term"
       />
       <button className="button" onClick={searchVerses}>
-        Search
+        {loading ? <Spinner /> : "Search"}
       </button>
-      {loading && <p>Loading...</p>}
       {error && <p className="error">{error}</p>}
       {results.map((result, index) => (
         <div key={index} className="hadith-container">

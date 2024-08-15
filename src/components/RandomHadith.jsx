@@ -1,5 +1,6 @@
 import useRandomHadith from "../hooks/useRandomHadith";
 import "./RandomHadith.css";
+import Spinner from "../components/Spinner";
 
 function RandomHadith() {
   const { hadith, isLoading, fetchRandomHadith } = useRandomHadith();
@@ -23,11 +24,7 @@ function RandomHadith() {
         onClick={fetchRandomHadith}
         disabled={isLoading}
       >
-        {isLoading ? (
-          <div className="spinner"></div>
-        ) : (
-          "Get Another Random Hadith"
-        )}
+        {isLoading ? <Spinner /> : "Get Another Random Hadith"}
       </button>
     </div>
   );

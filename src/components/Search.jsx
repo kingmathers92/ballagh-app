@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import Spinner from "../components/Spinner";
 
@@ -7,34 +7,80 @@ function Search() {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [collection, setCollection] = useState("");
-  //const [edition, setEdition] = useState("");
-  const [language, setLanguage] = useState("en.asad"); // Default language
+  const [editions, setEditions] = useState([]);
+  const [selectedEdition, setSelectedEdition] = useState("all");
 
-  const searchVerses = async () => {
+  useEffect(() => {
+    const fetchEditions = async () => {
+      try {
+        const response = await axios.get(
+          `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions.json`
+        );
+        const editionList = [];
+        Object.values(response.data).forEach((book) => {
+          book.collection.forEach((edition) => {
+            editionList.push({
+              ...edition,
+              link: edition.link.replace(".min.json", ".json"),
+            });
+          });
+        });
+        setEditions(editionList);
+      } catch (error) {
+        console.error("Error fetching editions:", error);
+      }
+    };
+
+    fetchEditions();
+  }, []);
+
+  const searchHadith = async () => {
     setLoading(true);
     setError(null);
+    setResults([]);
     try {
-      const response = await axios.get(
-        `https://api.alquran.cloud/v1/quran/${language}`
-      );
-      const verses = response.data.data.surahs.flatMap((surah) =>
-        surah.ayahs.map((ayah) => ({
-          text: ayah.text,
-          surah: surah.englishName,
-          numberInSurah: ayah.numberInSurah,
-        }))
-      );
-      const filteredVerses = verses.filter(
-        (verse) =>
-          verse.text.toLowerCase().includes(query.toLowerCase()) &&
-          (!collection || verse.surah === collection)
-      );
-      setResults(filteredVerses);
+      let allResults = [];
+      if (selectedEdition === "all") {
+        const editionRequests = editions.map((edition) =>
+          axios.get(edition.link)
+        );
+        const responses = await Promise.all(editionRequests);
+
+        responses.forEach((response, index) => {
+          const hadiths = response.data.hadiths;
+          const filteredHadiths = Object.values(hadiths).filter((hadith) =>
+            hadith.text.toLowerCase().includes(query.toLowerCase())
+          );
+          const formattedResults = filteredHadiths.map((hadith) => ({
+            text: hadith.text,
+            collection: editions[index].book,
+            edition: editions[index].name,
+          }));
+          allResults = [...allResults, ...formattedResults];
+        });
+      } else {
+        const edition = editions.find(
+          (edition) => edition.name === selectedEdition
+        );
+        if (edition) {
+          const response = await axios.get(edition.link);
+          const hadiths = response.data.hadiths;
+          allResults = Object.values(hadiths)
+            .filter((hadith) =>
+              hadith.text.toLowerCase().includes(query.toLowerCase())
+            )
+            .map((hadith) => ({
+              text: hadith.text,
+              collection: edition.book,
+              edition: edition.name,
+            }));
+        }
+      }
+      setResults(allResults);
     } catch (error) {
-      console.error("Error fetching Quran:", error);
+      console.error("Error fetching Hadiths:", error);
       setError(
-        "An error occurred while fetching the Quran. Please try again later."
+        "An error occurred while fetching Hadiths. Please try again later."
       );
     }
     setLoading(false);
@@ -42,35 +88,36 @@ function Search() {
 
   return (
     <div className="container">
-      <h2 className="title">Search Verses</h2>
+      <h2 className="title">Search Hadith</h2>
+
+      <div className="filters">
+        <select
+          className="input"
+          value={selectedEdition}
+          onChange={(e) => setSelectedEdition(e.target.value)}
+        >
+          <option value="all">All Editions</option>
+          {editions.map((edition, index) => (
+            <option key={index} value={edition.name}>
+              {edition.name} ({edition.book})
+            </option>
+          ))}
+        </select>
+      </div>
+
       <input
         className="input"
         type="text"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Enter search term"
+        disabled={!selectedEdition}
       />
-      <div className="filters">
-        <select
-          className="input"
-          value={collection}
-          onChange={(e) => setCollection(e.target.value)}
-        >
-          <option value="">All Collections</option>
-          <option value="Al-Fatiha">Al-Fatiha</option>
-          <option value="Al-Baqarah">Al-Baqarah</option>
-        </select>
-        <select
-          className="input"
-          value={language}
-          onChange={(e) => setLanguage(e.target.value)}
-        >
-          <option value="en.asad">English (Asad)</option>
-          <option value="en.pickthall">English (Pickthall)</option>
-          <option value="ar.alafasy">Arabic (Alafasy)</option>
-        </select>
-      </div>
-      <button className="button" onClick={searchVerses}>
+      <button
+        className="button"
+        onClick={searchHadith}
+        disabled={!selectedEdition}
+      >
         {loading ? <Spinner /> : "Search"}
       </button>
       {error && <p className="error">{error}</p>}
@@ -78,7 +125,8 @@ function Search() {
         <div key={index} className="hadith-container">
           <p className="hadith-text">{result.text}</p>
           <p className="hadith-source">
-            Surah: {result.surah}, Verse: {result.numberInSurah}
+            Collection: {result.collection}, Edition: {result.edition}, Hadith
+            Number: {result.number}
           </p>
         </div>
       ))}

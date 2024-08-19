@@ -12,6 +12,15 @@ function Search() {
 
   useEffect(() => {
     const fetchEditions = async () => {
+      if (!query.trim()) {
+        setError("Please enter a search term.");
+        return;
+      }
+
+      setLoading(true);
+      setError(null);
+      setResults([]);
+
       try {
         const response = await axios.get(
           `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions.json`
@@ -59,6 +68,7 @@ function Search() {
             collection: editions[index].book,
             edition: editions[index].name,
             grades: hadith.grades || [], // Default to an empty array if undefined
+            number: hadith.number || "Unknown", // Default to "Unknown" if number is not defined
           }));
           allResults = [...allResults, ...formattedResults];
         });
@@ -77,6 +87,7 @@ function Search() {
             collection: edition.book,
             edition: edition.name,
             grades: hadith.grades || [], // Default to an empty array if undefined
+            number: hadith.number || "Unknown", // Default to "Unknown" if number is not defined
           }));
           allResults = [...allResults, ...formattedResults];
         }
@@ -131,7 +142,7 @@ function Search() {
           <p className="hadith-text">{result.text}</p>
           <p className="hadith-source">
             Collection: {result.collection}, Edition: {result.edition}, Hadith
-            Number: {result.number}
+            Number: {result.number || "Unknown"}
           </p>
           <p className="hadith-grades">
             Grades:{" "}

@@ -52,7 +52,7 @@ const useRandomHadith = (apiVersion = "1") => {
       });
     } catch (error) {
       console.error("Error fetching data:", error);
-      // Fallback to minified version if non-minified version fails
+      // Fallback to minified version if non minified version fails
       try {
         const fallbackResponse = await axios.get(
           randomEdition.link.replace(".json", ".min.json")

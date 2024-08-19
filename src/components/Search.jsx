@@ -16,6 +16,7 @@ function Search() {
         const response = await axios.get(
           `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions.json`
         );
+        console.log("Editions API response:", response.data);
         const editionList = [];
         Object.values(response.data).forEach((book) => {
           book.collection.forEach((edition) => {
@@ -25,6 +26,7 @@ function Search() {
             });
           });
         });
+        console.log("Processed edition list:", editionList);
         setEditions(editionList);
       } catch (error) {
         console.error("Error fetching editions:", error);
@@ -45,6 +47,7 @@ function Search() {
           axios.get(edition.link)
         );
         const responses = await Promise.all(editionRequests);
+        console.log("Hadith API responses for all editions:", responses);
 
         responses.forEach((response, index) => {
           const hadiths = response.data.hadiths;
@@ -55,6 +58,7 @@ function Search() {
             text: hadith.text,
             collection: editions[index].book,
             edition: editions[index].name,
+            grades: hadith.grades || [], // Default to an empty array if undefined
           }));
           allResults = [...allResults, ...formattedResults];
         });
@@ -65,18 +69,20 @@ function Search() {
         if (edition) {
           const response = await axios.get(edition.link);
           const hadiths = response.data.hadiths;
-          allResults = Object.values(hadiths)
-            .filter((hadith) =>
-              hadith.text.toLowerCase().includes(query.toLowerCase())
-            )
-            .map((hadith) => ({
-              text: hadith.text,
-              collection: edition.book,
-              edition: edition.name,
-            }));
+          const filteredHadiths = Object.values(hadiths).filter((hadith) =>
+            hadith.text.toLowerCase().includes(query.toLowerCase())
+          );
+          const formattedResults = filteredHadiths.map((hadith) => ({
+            text: hadith.text,
+            collection: edition.book,
+            edition: edition.name,
+            grades: hadith.grades || [], // Default to an empty array if undefined
+          }));
+          allResults = [...allResults, ...formattedResults];
         }
       }
       setResults(allResults);
+      console.log("Search results after searching Hadith:", allResults);
     } catch (error) {
       console.error("Error fetching Hadiths:", error);
       setError(
@@ -89,7 +95,6 @@ function Search() {
   return (
     <div className="container">
       <h2 className="title">Search Hadith</h2>
-
       <div className="filters">
         <select
           className="input"
@@ -104,7 +109,6 @@ function Search() {
           ))}
         </select>
       </div>
-
       <input
         className="input"
         type="text"
@@ -121,12 +125,24 @@ function Search() {
         {loading ? <Spinner /> : "Search"}
       </button>
       {error && <p className="error">{error}</p>}
+
       {results.map((result, index) => (
         <div key={index} className="hadith-container">
           <p className="hadith-text">{result.text}</p>
           <p className="hadith-source">
             Collection: {result.collection}, Edition: {result.edition}, Hadith
             Number: {result.number}
+          </p>
+          <p className="hadith-grades">
+            Grades:{" "}
+            {result.grades && result.grades.length > 0
+              ? result.grades.map((grade, i) => (
+                  <span key={i}>
+                    {grade.name} ({grade.grade})
+                    {i < result.grades.length - 1 ? ", " : ""}
+                  </span>
+                ))
+              : "Unknown"}
           </p>
         </div>
       ))}

@@ -197,6 +197,13 @@ main {
   font-style: italic;
 }
 
+.hadith-grades {
+  font-size: 0.9em;
+  color: var(--accent-color);
+  font-style: italic;
+  margin-top: 5px;
+}
+
 .error {
   color: #721c24;
   background-color: #f8d7da;

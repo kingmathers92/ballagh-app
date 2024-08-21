@@ -245,29 +245,3 @@ main {
     text-align: left;
   }
 }
-
-.quran-container {
-  padding: 20px;
-  background-color: var(--background-color);
-  font-family: "Amiri", serif;
-  color: var(--text-color);
-}
-
-.chapter {
-  margin-bottom: 30px;
-  border-bottom: 2px solid var(--accent-color);
-  padding-bottom: 10px;
-}
-
-.ayah {
-  margin: 10px 0;
-  font-size: 1.1em;
-  line-height: 1.7;
-}
-
-.chapter h3 {
-  color: var(--primary-color);
-  font-size: 1.8em;
-  margin-bottom: 10px;
-  text-align: center;
-}

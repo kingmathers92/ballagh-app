@@ -1,41 +1,87 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import { quran } from "@quranjs/api";
+import { useSwipeable } from "react-swipeable";
 
-function Quran() {
+function QuranDisplay() {
   const [chapters, setChapters] = useState([]);
+  const [currentChapterIndex, setCurrentChapterIndex] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchQuran = async () => {
+    const fetchQuranData = async () => {
       try {
-        const response = await axios.get(
-          "https://api.alquran.cloud/v1/quran/en.asad"
-        );
-        setChapters(response.data.data.surahs);
+        const response = await quran.v4.chapters.findAll();
+        if (response && response.chapters) {
+          setChapters(response.chapters);
+        } else {
+          setError("No chapters found in the response.");
+        }
+      } catch (error) {
+        setError("Error fetching Quran data");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchQuran();
+    fetchQuranData();
   }, []);
 
+  const handleNextChapter = () => {
+    setCurrentChapterIndex((prevIndex) =>
+      prevIndex < chapters.length - 1 ? prevIndex + 1 : prevIndex
+    );
+  };
+
+  const handlePrevChapter = () => {
+    setCurrentChapterIndex((prevIndex) =>
+      prevIndex > 0 ? prevIndex - 1 : prevIndex
+    );
+  };
+
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: handleNextChapter,
+    onSwipedRight: handlePrevChapter,
+  });
+
   if (loading) return <p>Loading...</p>;
+  if (error) return <p>{error}</p>;
+
+  // Ensure `chapters` has been loaded and is not empty before accessing it
+  if (chapters.length === 0) return <p>No chapters available.</p>;
+
+  const currentChapter = chapters[currentChapterIndex];
 
   return (
-    <div className="quran-container">
-      {chapters.map((chapter) => (
-        <div key={chapter.number} className="chapter">
-          <h3>{chapter.englishName}</h3>
-          {chapter.ayahs.map((ayah) => (
-            <p key={ayah.number} className="ayah">
+    <div {...swipeHandlers} className="quran-container">
+      {currentChapter ? (
+        <>
+          <h3>{currentChapter.nameSimple}</h3>
+          {currentChapter.ayahs?.map((ayah) => (
+            <p key={ayah.id} className="ayah">
               {ayah.text}
             </p>
           ))}
-        </div>
-      ))}
+          <div className="navigation-buttons">
+            <button
+              onClick={handlePrevChapter}
+              disabled={currentChapterIndex === 0}
+            >
+              Previous
+            </button>
+            <button
+              onClick={handleNextChapter}
+              disabled={currentChapterIndex === chapters.length - 1}
+            >
+              Next
+            </button>
+          </div>
+        </>
+      ) : (
+        <p>No chapter data available.</p>
+      )}
     </div>
   );
 }
 
-export default Quran;
+export default QuranDisplay;

@@ -1,0 +1,72 @@
+.quran-container {
+  padding: 20px;
+  background-color: #f7f3e8;
+  color: #333;
+  font-family: "Amiri", serif;
+}
+
+.chapter-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.chapter-title {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #1f4e5f;
+}
+
+.ayah-list {
+  max-width: 90%;
+  margin: 0 auto;
+  line-height: 1.8;
+}
+
+.ayah-text {
+  margin-bottom: 10px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.ayah-text:hover {
+  color: #8c5e58;
+}
+
+.play-chapter {
+  background-color: #1f4e5f;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  margin-top: 20px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.play-chapter:hover {
+  background-color: #8c5e58;
+}
+
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pagination-btn {
+  background-color: #1f4e5f;
+  color: white;
+  border: none;
+  padding: 10px;
+  margin: 0 5px;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background-color 0.3s;
+}
+
+.pagination-btn:hover,
+.pagination-btn.active {
+  background-color: #8c5e58;
+}

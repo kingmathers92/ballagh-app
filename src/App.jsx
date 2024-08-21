@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import Home from "./components/Home";
 import Search from "./components/Search";
 import RandomHadith from "./components/RandomHadith";
+import Quran from "./components/Quran";
 import "./index.css";
 
 function App() {
@@ -38,6 +39,11 @@ function App() {
                 Random Verse
               </Link>
             </li>
+            <li>
+              <Link to="/quran" onClick={toggleMenu}>
+                Quran
+              </Link>
+            </li>
           </ul>
         </nav>
         <main>
@@ -45,6 +51,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/search" element={<Search />} />
             <Route path="/random" element={<RandomHadith />} />
+            <Route path="/quran" element={<Quran />} />
           </Routes>
         </main>
       </div>

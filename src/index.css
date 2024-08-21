@@ -158,6 +158,11 @@ main {
   box-sizing: border-box;
 }
 
+.input:focus {
+  border-color: var(--primary-color);
+  outline: none;
+}
+
 .button {
   background-color: var(--primary-color);
   border: none;

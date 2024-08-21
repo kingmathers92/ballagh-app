@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { quran } from "@quranjs/api";
 import { useSwipeable } from "react-swipeable";
 
+import "../styles/Quran.css";
+
 function QuranDisplay() {
   const [chapters, setChapters] = useState([]);
   const [currentChapterIndex, setCurrentChapterIndex] = useState(0);

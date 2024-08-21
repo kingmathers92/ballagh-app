@@ -1,6 +1,7 @@
 import useRandomHadith from "../hooks/useRandomHadith";
-import "./RandomHadith.css";
 import Spinner from "../components/Spinner";
+
+import "../styles/RandomHadith.css";
 
 function RandomHadith() {
   const { hadith, isLoading, fetchRandomHadith } = useRandomHadith();

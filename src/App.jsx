@@ -5,6 +5,7 @@ import Search from "./components/Search";
 import RandomHadith from "./components/RandomHadith";
 import Quran from "./components/Quran";
 import "./index.css";
+import Qibla from "./components/Qibla";
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -52,6 +53,7 @@ function App() {
             <Route path="/search" element={<Search />} />
             <Route path="/random" element={<RandomHadith />} />
             <Route path="/quran" element={<Quran />} />
+            <Route path="/qibla" element={<Qibla />} />
           </Routes>
         </main>
       </div>

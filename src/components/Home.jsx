@@ -15,6 +15,9 @@ function Home() {
       <Link to="/random" className="button">
         Get Random Hadith
       </Link>
+      <Link to="/qibla" className="button">
+        Qibla
+      </Link>
     </div>
   );
 }

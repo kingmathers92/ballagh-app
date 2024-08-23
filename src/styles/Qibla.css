@@ -1,0 +1,59 @@
+.qibla-direction {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.compass-container {
+  width: 200px;
+  height: 200px;
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.compass {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 2px solid #333;
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+.compass-arrow {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 20px solid red;
+  transform: translateX(-50%);
+}
+
+.qibla-marker {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: green;
+  font-weight: bold;
+  font-size: 30px;
+  transform-origin: center;
+  transition: transform 0.3s ease;
+}
+
+.qibla-marker::before {
+  content: "Q";
+  position: absolute;
+  top: -80px;
+  left: 50%;
+  transform: translateX(-50%);
+}

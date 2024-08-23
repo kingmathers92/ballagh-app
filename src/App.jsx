@@ -45,6 +45,11 @@ function App() {
                 Quran
               </Link>
             </li>
+            <li>
+              <Link to="/qibla" onClick={toggleMenu}>
+                Qibla
+              </Link>
+            </li>
           </ul>
         </nav>
         <main>

@@ -5,12 +5,32 @@ function Qibla() {
   const [qiblaDirection, setQiblaDirection] = useState(null);
   const [compassHeading, setCompassHeading] = useState(0);
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    // Explicit location permissions check
     if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+      navigator.permissions
+        .query({ name: "geolocation" })
+        .then((permissionStatus) => {
+          if (
+            permissionStatus.state === "granted" ||
+            permissionStatus.state === "prompt"
+          ) {
+            navigator.geolocation.getCurrentPosition(
+              successCallback,
+              errorCallback
+            );
+          } else {
+            setError(
+              "Location access is denied. Please allow location access in your browser settings."
+            );
+            setIsLoading(false);
+          }
+        });
     } else {
       setError("Geolocation is not supported by this browser.");
+      setIsLoading(false);
     }
 
     window.addEventListener("deviceorientation", handleOrientation, true);
@@ -24,10 +44,12 @@ function Qibla() {
     const { latitude, longitude } = position.coords;
     const direction = calculateQiblaDirection(latitude, longitude);
     setQiblaDirection(direction);
+    setIsLoading(false);
   };
 
   const errorCallback = () => {
     setError("Unable to retrieve your location.");
+    setIsLoading(false);
   };
 
   const calculateQiblaDirection = (latitude, longitude) => {
@@ -55,7 +77,9 @@ function Qibla() {
 
   return (
     <div className="qibla-direction">
-      {error ? (
+      {isLoading ? (
+        <p>Loading...</p>
+      ) : error ? (
         <p>{error}</p>
       ) : (
         <>

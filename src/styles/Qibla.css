@@ -3,12 +3,14 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100%;
+  height: 100vh;
+  background-color: #f8f9fa;
+  font-family: "Arial", sans-serif;
 }
 
 .compass-container {
-  width: 200px;
-  height: 200px;
+  width: 250px;
+  height: 250px;
   position: relative;
   margin-bottom: 20px;
 }
@@ -17,7 +19,9 @@
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  border: 2px solid #333;
+  background: radial-gradient(circle, #ffffff, #534c4c);
+  border: 8px solid #e0c9a6;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
   position: relative;
   transition: transform 0.3s ease;
 }
@@ -28,9 +32,9 @@
   left: 50%;
   width: 0;
   height: 0;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  border-bottom: 20px solid red;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-bottom: 30px solid #ff4757;
   transform: translateX(-50%);
 }
 
@@ -38,14 +42,16 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 30px;
-  height: 30px;
+  width: 40px;
+  height: 40px;
+  background-color: #2ed573;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: green;
+  color: #ffffff;
   font-weight: bold;
-  font-size: 30px;
+  font-size: 22px;
   transform-origin: center;
   transition: transform 0.3s ease;
 }
@@ -53,7 +59,6 @@
 .qibla-marker::before {
   content: "Q";
   position: absolute;
-  top: -80px;
-  left: 50%;
-  transform: translateX(-50%);
+  color: #ffffff;
+  font-size: 28px;
 }

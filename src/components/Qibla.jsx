@@ -71,7 +71,20 @@ function Qibla() {
   };
 
   const handleOrientation = (event) => {
-    let heading = event.webkitCompassHeading || Math.abs(event.alpha - 360);
+    let heading;
+    // Will be updated later to display a map instead of a compass on laptop
+    // Check if the device has the ability to provide orientation information
+    if (event.webkitCompassHeading !== undefined) {
+      heading = event.webkitCompassHeading; // iOS Safari
+    } else if (event.alpha !== null) {
+      heading = (event.alpha + 360) % 360; // Other browsers
+    } else {
+      setError(
+        "Compass heading not available. This feature may not be supported on your device."
+      );
+      return;
+    }
+
     setCompassHeading(heading);
   };
 

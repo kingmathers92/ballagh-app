@@ -44,7 +44,8 @@
   left: 50%;
   width: 40px;
   height: 40px;
-  background-color: #2ed573;
+  background-color: #00aaff;
+  border: 2px solid #003366;
   border-radius: 50%;
   display: flex;
   align-items: center;

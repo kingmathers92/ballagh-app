@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import Spinner from "../components/Spinner";
+
 import "../styles/Qibla.css";
 
 function Qibla() {
@@ -91,7 +93,7 @@ function Qibla() {
   return (
     <div className="qibla-direction">
       {isLoading ? (
-        <p>Loading...</p>
+        <Spinner />
       ) : error ? (
         <p>{error}</p>
       ) : (

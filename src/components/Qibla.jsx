@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import Spinner from "../components/Spinner";
-
 import "../styles/Qibla.css";
 
 function Qibla() {
@@ -10,26 +9,8 @@ function Qibla() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Explicit location permissions check
     if ("geolocation" in navigator) {
-      navigator.permissions
-        .query({ name: "geolocation" })
-        .then((permissionStatus) => {
-          if (
-            permissionStatus.state === "granted" ||
-            permissionStatus.state === "prompt"
-          ) {
-            navigator.geolocation.getCurrentPosition(
-              successCallback,
-              errorCallback
-            );
-          } else {
-            setError(
-              "Location access is denied. Please allow location access in your browser settings."
-            );
-            setIsLoading(false);
-          }
-        });
+      requestGeolocationPermission();
     } else {
       setError("Geolocation is not supported by this browser.");
       setIsLoading(false);
@@ -41,6 +22,28 @@ function Qibla() {
       window.removeEventListener("deviceorientation", handleOrientation, true);
     };
   }, []);
+
+  const requestGeolocationPermission = () => {
+    navigator.permissions
+      .query({ name: "geolocation" })
+      .then((permissionStatus) => {
+        if (
+          permissionStatus.state === "granted" ||
+          permissionStatus.state === "prompt"
+        ) {
+          getGeolocation();
+        } else {
+          setError(
+            "Location access is denied. Please allow location access in your browser settings."
+          );
+          setIsLoading(false);
+        }
+      });
+  };
+
+  const getGeolocation = () => {
+    navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+  };
 
   const successCallback = (position) => {
     const { latitude, longitude } = position.coords;
@@ -75,7 +78,7 @@ function Qibla() {
   const handleOrientation = (event) => {
     let heading;
     // Will be updated later to display a map instead of a compass on laptop
-    // Check if the device has the ability to provide orientation information
+    // Check if the device has the ability to provide orientation
     if (event.webkitCompassHeading !== undefined) {
       heading = event.webkitCompassHeading; // iOS Safari
     } else if (event.alpha !== null) {

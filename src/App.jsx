@@ -1,24 +1,49 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import Home from "./components/Home";
 import Search from "./components/Search";
 import RandomHadith from "./components/RandomHadith";
 import Quran from "./components/Quran";
 import Qibla from "./components/Qibla";
+import DarkModeToggle from "./components/ThemeToggle";
 
 import "./index.css";
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [theme, setTheme] = useState("light");
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
 
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme");
+    const systemPrefersDark = window.matchMedia(
+      "(prefers-color-scheme: dark)"
+    ).matches;
+
+    if (savedTheme) {
+      setTheme(savedTheme);
+      document.documentElement.setAttribute("data-theme", savedTheme);
+    } else if (systemPrefersDark) {
+      setTheme("dark");
+      document.documentElement.setAttribute("data-theme", "dark");
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    const newTheme = theme === "light" ? "dark" : "light";
+    setTheme(newTheme);
+    document.documentElement.setAttribute("data-theme", newTheme);
+    localStorage.setItem("theme", newTheme);
+  };
+
   return (
     <Router>
-      <div className="App">
+      <div className={`App ${theme === "dark" ? "dark-mode" : ""}`}>
         <header>
+          <DarkModeToggle theme={theme} toggleTheme={toggleTheme} />
           <button className="menu-toggle" onClick={toggleMenu}>
             <span className="menu-icon"></span>
           </button>

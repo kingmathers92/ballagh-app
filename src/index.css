@@ -1,6 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Amiri&family=Lateef&display=swap");
 
-/* Default (light mode) */
 :root[data-theme="light"] {
   --primary-color: #1f4e5f;
   --secondary-color: #e0c9a6;
@@ -9,13 +8,33 @@
   --accent-color: #8c5e58;
 }
 
-/* Dark mode */
 :root[data-theme="dark"] {
-  --primary-color: #a3cfd3;
-  --secondary-color: #4a3c2f;
-  --text-color: #e5e5e5;
-  --background-color: #2b2b2b;
-  --accent-color: #bcaaa4;
+  --primary-color: #88b3b5;
+  --secondary-color: #3b3129;
+  --text-color: #cfcfcf;
+  --background-color: #1f1f1f;
+  --accent-color: #a68d83;
+}
+
+.App {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+body {
+  font-family: "Lateef", Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+header {
+  background-color: var(--primary-color);
+  padding: 15px;
+  display: flex;
+  align-items: center;
 }
 
 .dark-mode-toggle {
@@ -31,27 +50,6 @@
 
 .dark-mode-toggle:focus {
   outline: none;
-}
-
-body {
-  font-family: "Lateef", Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: var(--background-color);
-  color: var(--text-color);
-}
-
-.App {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-header {
-  background-color: var(--primary-color);
-  padding: 15px;
-  display: flex;
-  align-items: center;
 }
 
 .app-title {

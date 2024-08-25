@@ -17,13 +17,13 @@
 .hadith-container {
   background-color: #f9f9f9;
   border-radius: 10px;
-  padding: 20px;
-  margin-bottom: 20px;
+  padding: 15px;
+  margin-bottom: 15px;
 }
 
 .hadith-text {
   font-family: "Uthmani", Arial, sans-serif;
-  font-size: 24px;
+  font-size: 20px;
   line-height: 1.6;
   margin-bottom: 20px;
 }
@@ -36,6 +36,13 @@
 .hadith-source {
   font-style: italic;
   text-align: right;
+}
+
+.hadith-grades {
+  font-size: 0.9em;
+  color: var(--accent-color);
+  font-style: italic;
+  margin-top: 5px;
 }
 
 .button {
@@ -53,4 +60,14 @@
 .button:disabled {
   background-color: #cccccc;
   cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .hadith-text {
+    font-size: 18px;
+  }
+
+  .button {
+    padding: 8px;
+  }
 }

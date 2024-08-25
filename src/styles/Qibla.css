@@ -3,7 +3,8 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  height: auto;
+  padding: 20px;
   background-color: #f8f9fa;
   font-family: "Arial", sans-serif;
 }
@@ -62,4 +63,21 @@
   position: absolute;
   color: #ffffff;
   font-size: 28px;
+}
+
+@media (max-width: 768px) {
+  .compass-container {
+    width: 150px;
+    height: 150px;
+  }
+
+  .compass-arrow {
+    border-bottom: 20px solid #ff4757;
+  }
+
+  .qibla-marker {
+    width: 30px;
+    height: 30px;
+    font-size: 18px;
+  }
 }

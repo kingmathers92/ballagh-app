@@ -1,0 +1,21 @@
+.filters {
+  margin-bottom: 15px;
+}
+
+.input {
+  padding: 8px;
+  font-size: 1rem;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .input {
+    padding: 6px;
+    font-size: 0.9rem;
+  }
+
+  .button {
+    padding: 8px;
+    font-size: 0.9rem;
+  }
+}

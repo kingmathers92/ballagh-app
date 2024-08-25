@@ -70,3 +70,23 @@
 .pagination-btn.active {
   background-color: #8c5e58;
 }
+
+@media (max-width: 768px) {
+  .chapter-title {
+    font-size: 1.5rem;
+  }
+
+  .ayah-list {
+    line-height: 1.6;
+  }
+
+  .play-chapter {
+    font-size: 0.9rem;
+    padding: 8px 15px;
+  }
+
+  .pagination-btn {
+    padding: 8px;
+    margin: 0 3px;
+  }
+}

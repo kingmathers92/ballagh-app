@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Spinner from "../components/Spinner";
 
+import "../styles/Search.css";
+
 function Search() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);

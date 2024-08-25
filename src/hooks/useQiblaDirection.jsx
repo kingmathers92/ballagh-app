@@ -3,6 +3,7 @@ import {
   calculateQiblaDirection,
   handleOrientation,
 } from "../utils/qiblaUtils";
+import { debounce } from "../utils/debounceUtils";
 
 export const useQiblaDirection = () => {
   const [qiblaDirection, setQiblaDirection] = useState(null);
@@ -52,6 +53,12 @@ export const useQiblaDirection = () => {
       setIsLoading(false);
     }
 
+    // Debounced event handler
+    const handleOrientationWrapper = debounce(
+      (event) => handleOrientation(event, setCompassHeading, setError),
+      100
+    );
+
     window.addEventListener(
       "deviceorientation",
       handleOrientationWrapper,
@@ -66,10 +73,6 @@ export const useQiblaDirection = () => {
       );
     };
   }, []);
-
-  const handleOrientationWrapper = (event) => {
-    handleOrientation(event, setCompassHeading, setError);
-  };
 
   return { qiblaDirection, compassHeading, error, isLoading };
 };

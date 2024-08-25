@@ -4,8 +4,9 @@ import Home from "./components/Home";
 import Search from "./components/Search";
 import RandomHadith from "./components/RandomHadith";
 import Quran from "./components/Quran";
-import "./index.css";
 import Qibla from "./components/Qibla";
+
+import "./index.css";
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);

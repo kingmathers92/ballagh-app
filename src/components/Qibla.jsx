@@ -1,5 +1,6 @@
 import { useQiblaDirection } from "../hooks/useQiblaDirection";
 import Spinner from "../components/Spinner";
+
 import "../styles/Qibla.css";
 
 function Qibla() {

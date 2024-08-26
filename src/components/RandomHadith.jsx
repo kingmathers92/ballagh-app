@@ -1,5 +1,6 @@
 import useRandomHadith from "../hooks/useRandomHadith";
 import Spinner from "../components/Spinner";
+import ShareButton from "./ShareButton";
 
 import "../styles/RandomHadith.css";
 
@@ -18,6 +19,7 @@ function RandomHadith() {
             Collection: {hadith.collection}, Edition: {hadith.edition}, Hadith
             Number: {hadith.number}
           </p>
+          <ShareButton textToCopy={hadith.text} />
         </div>
       )}
       <button

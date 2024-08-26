@@ -1,6 +1,7 @@
 import useRandomHadith from "../hooks/useRandomHadith";
 import Spinner from "../components/Spinner";
 import ShareButton from "../components/ShareButton";
+import ShareImageBox from "../components/ShareImageBox";
 
 import "../styles/RandomHadith.css";
 
@@ -13,13 +14,14 @@ function RandomHadith() {
       {isLoading || !hadith ? (
         <p>Loading...</p>
       ) : (
-        <div className="hadith-container">
+        <div id="hadith-text" className="hadith-container">
           <p className="hadith-text rtl">{hadith.text}</p>
           <p className="hadith-source">
             Collection: {hadith.collection}, Edition: {hadith.edition}, Hadith
             Number: {hadith.number}
           </p>
           <ShareButton textToCopy={hadith.text} />
+          <ShareImageBox textToShare={hadith.text} />
         </div>
       )}
       <button

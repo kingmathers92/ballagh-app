@@ -3,7 +3,7 @@
   display: inline-block;
 }
 
-.share-button {
+.social-button {
   background: none;
   border: none;
   cursor: pointer;
@@ -14,8 +14,6 @@
   position: absolute;
   top: 100%;
   left: 0;
-  background: white;
-  border: 1px solid #ccc;
   padding: 8px;
   display: flex;
   gap: 8px;

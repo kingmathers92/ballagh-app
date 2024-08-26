@@ -11,6 +11,8 @@ import {
 } from "react-share";
 import { toPng } from "html-to-image";
 
+import "../styles/ShareImageBox.css";
+
 const ShareImageBox = () => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -31,7 +33,7 @@ const ShareImageBox = () => {
 
   return (
     <div className="share-box">
-      <button onClick={toggleShareBox} className="share-button">
+      <button onClick={toggleShareBox} className="social-button">
         <span role="img" aria-label="share">
           📤
         </span>
@@ -44,7 +46,7 @@ const ShareImageBox = () => {
               handleShare(WhatsappShareButton, { title: "Check this Hadith" })
             }
           >
-            <WhatsappIcon size={32} round />
+            <WhatsappIcon size={26} round />
           </WhatsappShareButton>
 
           <FacebookShareButton
@@ -53,7 +55,7 @@ const ShareImageBox = () => {
               handleShare(FacebookShareButton, { quote: "Check this Hadith" })
             }
           >
-            <FacebookIcon size={32} round />
+            <FacebookIcon size={26} round />
           </FacebookShareButton>
 
           <TwitterShareButton
@@ -62,7 +64,7 @@ const ShareImageBox = () => {
               handleShare(TwitterShareButton, { title: "Check this Hadith" })
             }
           >
-            <TwitterIcon size={32} round />
+            <TwitterIcon size={26} round />
           </TwitterShareButton>
 
           <TelegramShareButton
@@ -71,7 +73,7 @@ const ShareImageBox = () => {
               handleShare(TelegramShareButton, { title: "Check this Hadith" })
             }
           >
-            <TelegramIcon size={32} round />
+            <TelegramIcon size={26} round />
           </TelegramShareButton>
         </div>
       )}

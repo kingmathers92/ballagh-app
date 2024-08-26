@@ -10,10 +10,11 @@ import {
   TelegramIcon,
 } from "react-share";
 import { toPng } from "html-to-image";
+import PropTypes from "prop-types";
 
 import "../styles/ShareImageBox.css";
 
-const ShareImageBox = () => {
+const ShareImageBox = ({ textToShare }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleShareBox = () => {
@@ -43,7 +44,7 @@ const ShareImageBox = () => {
           <WhatsappShareButton
             url=""
             onClick={() =>
-              handleShare(WhatsappShareButton, { title: "Check this Hadith" })
+              handleShare(WhatsappShareButton, { title: textToShare })
             }
           >
             <WhatsappIcon size={26} round />
@@ -52,7 +53,7 @@ const ShareImageBox = () => {
           <FacebookShareButton
             url=""
             onClick={() =>
-              handleShare(FacebookShareButton, { quote: "Check this Hadith" })
+              handleShare(FacebookShareButton, { quote: textToShare })
             }
           >
             <FacebookIcon size={26} round />
@@ -61,7 +62,7 @@ const ShareImageBox = () => {
           <TwitterShareButton
             url=""
             onClick={() =>
-              handleShare(TwitterShareButton, { title: "Check this Hadith" })
+              handleShare(TwitterShareButton, { title: textToShare })
             }
           >
             <TwitterIcon size={26} round />
@@ -70,7 +71,7 @@ const ShareImageBox = () => {
           <TelegramShareButton
             url=""
             onClick={() =>
-              handleShare(TelegramShareButton, { title: "Check this Hadith" })
+              handleShare(TelegramShareButton, { title: textToShare })
             }
           >
             <TelegramIcon size={26} round />
@@ -79,6 +80,10 @@ const ShareImageBox = () => {
       )}
     </div>
   );
+};
+
+ShareImageBox.propTypes = {
+  textToShare: PropTypes.string.isRequired,
 };
 
 export default ShareImageBox;

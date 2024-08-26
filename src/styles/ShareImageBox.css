@@ -12,10 +12,10 @@
 
 .share-options {
   position: absolute;
-  top: 100%;
-  left: 0;
-  padding: 8px;
+  top: 0;
+  left: 100%;
   display: flex;
   gap: 8px;
   z-index: 1000;
+  padding: 8px;
 }

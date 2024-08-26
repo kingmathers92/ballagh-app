@@ -1,6 +1,6 @@
 import useRandomHadith from "../hooks/useRandomHadith";
 import Spinner from "../components/Spinner";
-import ShareButton from "./ShareButton";
+import ShareButton from "../components/ShareButton";
 
 import "../styles/RandomHadith.css";
 

@@ -1,13 +1,11 @@
 import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
-import Home from "./components/Home";
-import Search from "./components/Search";
-import RandomHadith from "./components/RandomHadith";
-import Quran from "./components/Quran";
-import Qibla from "./components/Qibla";
+import Home from "./pages/Home";
+import Search from "./pages/Search";
+import RandomHadith from "./pages/RandomHadith";
+import Quran from "./pages/Quran";
+import Qibla from "./pages/Qibla";
 import DarkModeToggle from "./components/ThemeToggle";
-
-import "./index.css";
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);

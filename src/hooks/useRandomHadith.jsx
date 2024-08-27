@@ -4,6 +4,7 @@ import axios from "axios";
 const useRandomHadith = (apiVersion = "1") => {
   const [hadith, setHadith] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null); // Add error state
   const [arabicEditions, setArabicEditions] = useState([]);
 
   const fetchArabicEditions = async () => {
@@ -25,6 +26,7 @@ const useRandomHadith = (apiVersion = "1") => {
       setArabicEditions(arabicEditions);
     } catch (error) {
       console.error("Error fetching Data:", error);
+      setError("Failed to load Arabic editions. Please try again.");
     }
   };
 
@@ -32,6 +34,7 @@ const useRandomHadith = (apiVersion = "1") => {
     if (arabicEditions.length === 0) return;
 
     setIsLoading(true);
+    setError(null);
     const randomEdition =
       arabicEditions[Math.floor(Math.random() * arabicEditions.length)];
 
@@ -52,7 +55,8 @@ const useRandomHadith = (apiVersion = "1") => {
       });
     } catch (error) {
       console.error("Error fetching data:", error);
-      // Fallback to minified version if non minified version fails
+      setError("Failed to load random hadith. Please try again.");
+      // Fallback to minified version if non-minified version fails
       try {
         const fallbackResponse = await axios.get(
           randomEdition.link.replace(".json", ".min.json")
@@ -72,6 +76,9 @@ const useRandomHadith = (apiVersion = "1") => {
         });
       } catch (fallbackError) {
         console.error("Error fetching data (fallback):", fallbackError);
+        setError(
+          "Failed to load random hadith after fallback. Please try again."
+        );
       }
     } finally {
       setIsLoading(false);
@@ -88,7 +95,7 @@ const useRandomHadith = (apiVersion = "1") => {
     }
   }, [arabicEditions]);
 
-  return { hadith, isLoading, fetchRandomHadith };
+  return { hadith, isLoading, error, fetchRandomHadith };
 };
 
 export default useRandomHadith;

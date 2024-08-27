@@ -6,14 +6,14 @@ import ShareImageBox from "../components/ShareImageBox";
 import "../styles/RandomHadith.css";
 
 function RandomHadith() {
-  const { hadith, isLoading, fetchRandomHadith } = useRandomHadith();
+  const { hadith, isLoading, error, fetchRandomHadith } = useRandomHadith();
 
   return (
     <div className="container">
       <h2 className="title">Random Hadith</h2>
-      {isLoading || !hadith ? (
-        <p>Loading...</p>
-      ) : (
+      {isLoading && <Spinner />}
+      {error && <p className="error">{error}</p>} {/* Display error */}
+      {!isLoading && !error && hadith && (
         <div id="hadith-text" className="hadith-container">
           <p className="hadith-text rtl">{hadith.text}</p>
           <p className="hadith-source">

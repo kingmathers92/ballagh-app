@@ -9,15 +9,17 @@ function Home() {
         Welcome to the Hadith App. Here you can search for hadiths or get a
         random hadith.
       </p>
-      <Link to="/search" className="button">
-        Search Hadiths
-      </Link>
-      <Link to="/random" className="button">
-        Get Random Hadith
-      </Link>
-      <Link to="/qibla" className="button">
-        Qibla
-      </Link>
+      <div className="buttons-container">
+        <Link to="/search" className="button">
+          Search Hadiths
+        </Link>
+        <Link to="/random" className="button">
+          Get Random Hadith
+        </Link>
+        <Link to="/qibla" className="button">
+          Qibla
+        </Link>
+      </div>
     </div>
   );
 }

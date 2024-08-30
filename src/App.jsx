@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
-import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import Search from "./pages/Search";
 import RandomHadith from "./pages/RandomHadith";
 import Quran from "./pages/Quran";
 import Qibla from "./pages/Qibla";
 import DarkModeToggle from "./components/ThemeToggle";
+import NavLinks from "./components/NavLinks";
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -48,33 +49,7 @@ function App() {
           <h1 className="app-title">بلَّغ</h1>
         </header>
         <nav className={menuOpen ? "open" : ""}>
-          <ul>
-            <li>
-              <Link to="/" onClick={toggleMenu}>
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link to="/search" onClick={toggleMenu}>
-                Search Verses
-              </Link>
-            </li>
-            <li>
-              <Link to="/random" onClick={toggleMenu}>
-                Random Verse
-              </Link>
-            </li>
-            <li>
-              <Link to="/quran" onClick={toggleMenu}>
-                Quran
-              </Link>
-            </li>
-            <li>
-              <Link to="/qibla" onClick={toggleMenu}>
-                Qibla
-              </Link>
-            </li>
-          </ul>
+          <NavLinks toggleMenu={toggleMenu} />
         </nav>
         <main>
           <Routes>

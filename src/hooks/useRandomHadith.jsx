@@ -30,6 +30,15 @@ const useRandomHadith = (apiVersion = "1") => {
     }
   };
 
+  const handleHadithFetch = (hadiths, randomHadithNumber, randomEdition) => {
+    const selectedHadith = hadiths[randomHadithNumber];
+    setHadith({
+      text: selectedHadith.text,
+      number: randomHadithNumber,
+      collection: randomEdition.book,
+      edition: randomEdition.name,
+    });
+  };
   const fetchRandomHadith = async () => {
     if (arabicEditions.length === 0) return;
 
@@ -45,14 +54,7 @@ const useRandomHadith = (apiVersion = "1") => {
         Object.keys(hadiths)[
           Math.floor(Math.random() * Object.keys(hadiths).length)
         ];
-      const selectedHadith = hadiths[randomHadithNumber];
-
-      setHadith({
-        text: selectedHadith.text,
-        number: randomHadithNumber,
-        collection: randomEdition.book,
-        edition: randomEdition.name,
-      });
+      handleHadithFetch(hadiths, randomHadithNumber, randomEdition);
     } catch (error) {
       console.error("Error fetching data:", error);
       setError("Failed to load random hadith. Please try again.");
@@ -66,14 +68,7 @@ const useRandomHadith = (apiVersion = "1") => {
           Object.keys(hadiths)[
             Math.floor(Math.random() * Object.keys(hadiths).length)
           ];
-        const selectedHadith = hadiths[randomHadithNumber];
-
-        setHadith({
-          text: selectedHadith.text,
-          number: randomHadithNumber,
-          collection: randomEdition.book,
-          edition: randomEdition.name,
-        });
+        handleHadithFetch(hadiths, randomHadithNumber, randomEdition);
       } catch (fallbackError) {
         console.error("Error fetching data (fallback):", fallbackError);
         setError(

@@ -17,13 +17,14 @@
 .hadith-container {
   background-color: #f9f9f9;
   border-radius: 10px;
-  padding: 15px;
-  margin-bottom: 15px;
+  padding: 1rem;
+  max-width: 600px;
+  margin: auto;
 }
 
 .hadith-text {
   font-family: "Uthmani", Arial, sans-serif;
-  font-size: 20px;
+  font-size: 1.2rem;
   line-height: 1.6;
   margin-bottom: 20px;
 }
@@ -64,10 +65,32 @@
 
 @media (max-width: 768px) {
   .hadith-text {
-    font-size: 18px;
+    font-size: 1rem;
+  }
+
+  .hadith-container {
+    padding: 0.5rem;
+  }
+
+  .app-title {
+    font-size: 1.5rem;
   }
 
   .button {
     padding: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hadith-text {
+    font-size: 0.9rem;
+  }
+
+  .hadith-container {
+    padding: 0.5rem;
+  }
+
+  .app-title {
+    font-size: 1.2rem;
   }
 }

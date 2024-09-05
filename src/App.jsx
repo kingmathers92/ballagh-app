@@ -7,7 +7,7 @@ import Quran from "./pages/Quran";
 import Qibla from "./pages/Qibla";
 import DarkModeToggle from "./components/ThemeToggle";
 import NavLinks from "./components/NavLinks";
-import Journal from "./components/Journal";
+import Journal from "./pages/Journal";
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);

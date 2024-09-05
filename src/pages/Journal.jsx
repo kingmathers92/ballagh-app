@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 
+import "../styles/Journal.css";
+
 const ReflectionJournal = () => {
   const [reflection, setReflection] = useState("");
   const [journalEntries, setJournalEntries] = useState([]);

@@ -8,6 +8,7 @@ const NavLinks = ({ toggleMenu }) => {
     { path: "/random", label: "Random Verse" },
     { path: "/quran", label: "Quran" },
     { path: "/qibla", label: "Qibla" },
+    { path: "/journal", label: "Journal" },
   ];
 
   return (

@@ -7,6 +7,7 @@ import Quran from "./pages/Quran";
 import Qibla from "./pages/Qibla";
 import DarkModeToggle from "./components/ThemeToggle";
 import NavLinks from "./components/NavLinks";
+import Journal from "./components/Journal";
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -58,6 +59,7 @@ function App() {
             <Route path="/random" element={<RandomHadith />} />
             <Route path="/quran" element={<Quran />} />
             <Route path="/qibla" element={<Qibla />} />
+            <Route path="/journal" element={<Journal />} />
           </Routes>
         </main>
       </div>

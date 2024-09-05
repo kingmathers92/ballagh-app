@@ -20,6 +20,9 @@
   border-radius: 5px;
   border: 1px solid var(--primary-color);
   margin-bottom: 10px;
+  resize: vertical;
+  max-height: 300px;
+  overflow-y: auto;
 }
 
 .reflection-journal button {
@@ -47,4 +50,28 @@
   border-radius: 5px;
   margin-bottom: 10px;
   color: var(--text-color);
+}
+
+@media (max-width: 768px) {
+  .reflection-journal {
+    padding: 15px;
+    max-width: 100%;
+  }
+
+  .reflection-journal h2 {
+    font-size: 20px;
+  }
+
+  .reflection-journal textarea {
+    height: 80px;
+  }
+
+  .reflection-journal button {
+    width: 100%;
+    padding: 12px;
+  }
+
+  .reflection-journal li {
+    padding: 8px;
+  }
 }

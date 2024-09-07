@@ -5,7 +5,8 @@ import "../styles/Quran.css";
 
 function QuranDisplay() {
   const [surahs, setSurahs] = useState([]);
-  const [currentSurahIndex, setCurrentSurahIndex] = useState(0);
+  const [pages, setPages] = useState({});
+  const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -17,6 +18,18 @@ function QuranDisplay() {
         );
         if (response.data && response.data.data && response.data.data.surahs) {
           setSurahs(response.data.data.surahs);
+          const allPages = {};
+
+          // Group ayahs by pages
+          response.data.data.surahs.forEach((surah) => {
+            surah.ayahs.forEach((ayah) => {
+              if (!allPages[ayah.page]) {
+                allPages[ayah.page] = [];
+              }
+              allPages[ayah.page].push(ayah);
+            });
+          });
+          setPages(allPages);
         } else {
           setError("No surahs found in the response.");
         }
@@ -30,37 +43,35 @@ function QuranDisplay() {
     fetchQuranData();
   }, []);
 
-  const handleNextSurah = () => {
-    if (currentSurahIndex < surahs.length - 1) {
-      setCurrentSurahIndex(currentSurahIndex + 1);
+  const handleNextPage = () => {
+    if (pages[currentPage + 1]) {
+      setCurrentPage(currentPage + 1);
     }
   };
 
-  const handlePrevSurah = () => {
-    if (currentSurahIndex > 0) {
-      setCurrentSurahIndex(currentSurahIndex - 1);
+  const handlePrevPage = () => {
+    if (pages[currentPage - 1]) {
+      setCurrentPage(currentPage - 1);
     }
   };
 
   const swipeHandlers = useSwipeable({
-    onSwipedLeft: handleNextSurah,
-    onSwipedRight: handlePrevSurah,
+    onSwipedLeft: handleNextPage,
+    onSwipedRight: handlePrevPage,
   });
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
 
-  const currentSurah = surahs[currentSurahIndex];
+  const currentAyahs = pages[currentPage] || [];
 
   return (
     <div {...swipeHandlers} className="quran-container">
-      {currentSurah ? (
+      {currentAyahs.length > 0 ? (
         <>
-          <h3>
-            {currentSurah.name} ({currentSurah.englishName})
-          </h3>
+          <h3>Page {currentPage}</h3>
           <div className="ayah-list">
-            {currentSurah.ayahs.map((ayah) => (
+            {currentAyahs.map((ayah) => (
               <p key={ayah.number} className="ayah-text">
                 {ayah.text}
               </p>
@@ -68,15 +79,15 @@ function QuranDisplay() {
           </div>
           <div className="pagination-controls">
             <button
-              onClick={handlePrevSurah}
-              disabled={currentSurahIndex === 0}
+              onClick={handlePrevPage}
+              disabled={!pages[currentPage - 1]}
               className="pagination-btn"
             >
               Previous
             </button>
             <button
-              onClick={handleNextSurah}
-              disabled={currentSurahIndex === surahs.length - 1}
+              onClick={handleNextPage}
+              disabled={!pages[currentPage + 1]}
               className="pagination-btn"
             >
               Next
@@ -84,7 +95,7 @@ function QuranDisplay() {
           </div>
         </>
       ) : (
-        <p>No surah data available.</p>
+        <p>No ayah data available for this page.</p>
       )}
     </div>
   );

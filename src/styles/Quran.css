@@ -1,10 +1,4 @@
-@font-face {
-  font-family: "Uthmani";
-  src: url("/fonts/UthmanicHafs1Ver09.otf") format("opentype");
-}
-
 .quran-container {
-  font-family: "Uthmani", serif;
   font-size: 24px;
   line-height: 1.8;
   padding: 20px;

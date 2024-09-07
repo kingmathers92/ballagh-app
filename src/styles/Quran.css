@@ -1,8 +1,15 @@
+@font-face {
+  font-family: "Uthmani";
+  src: url("/fonts/UthmanicHafs1Ver09.otf") format("opentype");
+}
+
 .quran-container {
+  font-family: "Uthmani", serif;
+  font-size: 24px;
+  line-height: 1.8;
   padding: 20px;
   background-color: #f7f3e8;
   color: #333;
-  font-family: "Amiri", serif;
 }
 
 .chapter-page {
@@ -24,6 +31,8 @@
 }
 
 .ayah-text {
+  direction: rtl;
+  text-align: right;
   margin-bottom: 10px;
   font-size: 1.1rem;
   cursor: pointer;
@@ -32,6 +41,13 @@
 
 .ayah-text:hover {
   color: #8c5e58;
+}
+
+.ayah-details {
+  margin-top: 20px;
+  background-color: #e0c9a6;
+  padding: 15px;
+  border-radius: 5px;
 }
 
 .play-chapter {
@@ -56,19 +72,20 @@
 }
 
 .pagination-btn {
+  margin: 10px;
+  padding: 10px;
+  font-size: 18px;
   background-color: #1f4e5f;
   color: white;
   border: none;
-  padding: 10px;
-  margin: 0 5px;
   cursor: pointer;
-  border-radius: 50%;
+  border-radius: 5px;
   transition: background-color 0.3s;
 }
 
 .pagination-btn:hover,
 .pagination-btn.active {
-  background-color: #8c5e58;
+  background-color: #16414c;
 }
 
 @media (max-width: 768px) {

@@ -1,26 +1,27 @@
 import { useState, useEffect } from "react";
-import { quran } from "@quranjs/api";
+import axios from "axios";
 import { useSwipeable } from "react-swipeable";
-
 import "../styles/Quran.css";
 
 function QuranDisplay() {
-  const [chapters, setChapters] = useState([]);
-  const [currentChapterIndex, setCurrentChapterIndex] = useState(0);
+  const [surahs, setSurahs] = useState([]);
+  const [currentSurahIndex, setCurrentSurahIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchQuranData = async () => {
       try {
-        const response = await quran.v4.chapters.findAll();
-        if (response && response.chapters) {
-          setChapters(response.chapters);
+        const response = await axios.get(
+          "http://api.alquran.cloud/v1/quran/quran-uthmani"
+        );
+        if (response.data && response.data.data && response.data.data.surahs) {
+          setSurahs(response.data.data.surahs);
         } else {
-          setError("No chapters found in the response.");
+          setError("No surahs found in the response.");
         }
       } catch (error) {
-        setError("Error fetching Quran data");
+        setError("Error fetching Quran data.");
       } finally {
         setLoading(false);
       }
@@ -29,58 +30,61 @@ function QuranDisplay() {
     fetchQuranData();
   }, []);
 
-  const handleNextChapter = () => {
-    setCurrentChapterIndex((prevIndex) =>
-      prevIndex < chapters.length - 1 ? prevIndex + 1 : prevIndex
-    );
+  const handleNextSurah = () => {
+    if (currentSurahIndex < surahs.length - 1) {
+      setCurrentSurahIndex(currentSurahIndex + 1);
+    }
   };
 
-  const handlePrevChapter = () => {
-    setCurrentChapterIndex((prevIndex) =>
-      prevIndex > 0 ? prevIndex - 1 : prevIndex
-    );
+  const handlePrevSurah = () => {
+    if (currentSurahIndex > 0) {
+      setCurrentSurahIndex(currentSurahIndex - 1);
+    }
   };
 
   const swipeHandlers = useSwipeable({
-    onSwipedLeft: handleNextChapter,
-    onSwipedRight: handlePrevChapter,
+    onSwipedLeft: handleNextSurah,
+    onSwipedRight: handlePrevSurah,
   });
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
 
-  // Ensure `chapters` has been loaded and is not empty before accessing it
-  if (chapters.length === 0) return <p>No chapters available.</p>;
-
-  const currentChapter = chapters[currentChapterIndex];
+  const currentSurah = surahs[currentSurahIndex];
 
   return (
     <div {...swipeHandlers} className="quran-container">
-      {currentChapter ? (
+      {currentSurah ? (
         <>
-          <h3>{currentChapter.nameSimple}</h3>
-          {currentChapter.ayahs?.map((ayah) => (
-            <p key={ayah.id} className="ayah">
-              {ayah.text}
-            </p>
-          ))}
-          <div className="navigation-buttons">
+          <h3>
+            {currentSurah.name} ({currentSurah.englishName})
+          </h3>
+          <div className="ayah-list">
+            {currentSurah.ayahs.map((ayah) => (
+              <p key={ayah.number} className="ayah-text">
+                {ayah.text}
+              </p>
+            ))}
+          </div>
+          <div className="pagination-controls">
             <button
-              onClick={handlePrevChapter}
-              disabled={currentChapterIndex === 0}
+              onClick={handlePrevSurah}
+              disabled={currentSurahIndex === 0}
+              className="pagination-btn"
             >
               Previous
             </button>
             <button
-              onClick={handleNextChapter}
-              disabled={currentChapterIndex === chapters.length - 1}
+              onClick={handleNextSurah}
+              disabled={currentSurahIndex === surahs.length - 1}
+              className="pagination-btn"
             >
               Next
             </button>
           </div>
         </>
       ) : (
-        <p>No chapter data available.</p>
+        <p>No surah data available.</p>
       )}
     </div>
   );

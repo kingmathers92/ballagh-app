@@ -3,6 +3,8 @@ import axios from "axios";
 import { useSwipeable } from "react-swipeable";
 import "../styles/Quran.css";
 
+import { arabicNum } from "../utils/arabicNumbers";
+
 function QuranDisplay() {
   const [surahs, setSurahs] = useState([]);
   const [pages, setPages] = useState({});
@@ -69,12 +71,14 @@ function QuranDisplay() {
     <div {...swipeHandlers} className="quran-container">
       {currentAyahs.length > 0 ? (
         <>
-          <h3 className="page-title">Page {currentPage}</h3>
+          <h3 className="page-title">Page {arabicNum(currentPage)}</h3>
           <div className="ayah-list">
             {currentAyahs.map((ayah) => (
               <p key={ayah.number} className="ayah-text">
                 {ayah.text}{" "}
-                <span className="ayah-number">({ayah.numberInSurah})</span>
+                <span className="ayah-number">
+                  ({arabicNum(ayah.numberInSurah)})
+                </span>
               </p>
             ))}
           </div>

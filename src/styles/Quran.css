@@ -29,10 +29,17 @@
   font-size: 1.2rem;
   cursor: pointer;
   transition: color 0.3s ease;
+  position: relative;
 }
 
 .ayah-text:hover {
   color: #8c5e58;
+}
+
+.ayah-number {
+  font-size: 0.9rem;
+  color: #8c5e58;
+  margin-left: 10px;
 }
 
 .pagination-controls {

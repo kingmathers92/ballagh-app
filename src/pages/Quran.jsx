@@ -73,7 +73,8 @@ function QuranDisplay() {
           <div className="ayah-list">
             {currentAyahs.map((ayah) => (
               <p key={ayah.number} className="ayah-text">
-                {ayah.text}
+                {ayah.text}{" "}
+                <span className="ayah-number">({ayah.numberInSurah})</span>
               </p>
             ))}
           </div>

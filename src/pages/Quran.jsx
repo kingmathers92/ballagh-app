@@ -69,7 +69,7 @@ function QuranDisplay() {
     <div {...swipeHandlers} className="quran-container">
       {currentAyahs.length > 0 ? (
         <>
-          <h3>Page {currentPage}</h3>
+          <h3 className="page-title">Page {currentPage}</h3>
           <div className="ayah-list">
             {currentAyahs.map((ayah) => (
               <p key={ayah.number} className="ayah-text">
@@ -81,16 +81,16 @@ function QuranDisplay() {
             <button
               onClick={handlePrevPage}
               disabled={!pages[currentPage - 1]}
-              className="pagination-btn"
+              className="pagination-btn prev-btn"
             >
-              Previous
+              &larr; Previous
             </button>
             <button
               onClick={handleNextPage}
               disabled={!pages[currentPage + 1]}
-              className="pagination-btn"
+              className="pagination-btn next-btn"
             >
-              Next
+              Next &rarr;
             </button>
           </div>
         </>

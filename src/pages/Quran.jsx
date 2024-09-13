@@ -6,7 +6,7 @@ import "../styles/Quran.css";
 import { arabicNum } from "../utils/arabicNumbers";
 
 function QuranDisplay() {
-  const [surahs, setSurahs] = useState([]);
+  //const [surahs, setSurahs] = useState([]);
   const [pages, setPages] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);

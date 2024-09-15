@@ -1,16 +1,16 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import { useSwipeable } from "react-swipeable";
+import PropTypes from "prop-types";
+
 import "../styles/Quran.css";
 
 import { arabicNum } from "../utils/arabicNumbers";
 
 function QuranDisplay() {
-  //const [surahs, setSurahs] = useState([]);
-  const [pages, setPages] = useState({});
+  const [pages, setPages] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [status, setStatus] = useState({ loading: true, error: null });
 
   useEffect(() => {
     const fetchQuranData = async () => {
@@ -18,11 +18,8 @@ function QuranDisplay() {
         const response = await axios.get(
           "http://api.alquran.cloud/v1/quran/quran-uthmani"
         );
-        if (response.data && response.data.data && response.data.data.surahs) {
-          setSurahs(response.data.data.surahs);
+        if (response.data?.data?.surahs) {
           const allPages = {};
-
-          // Group ayahs by pages
           response.data.data.surahs.forEach((surah) => {
             surah.ayahs.forEach((ayah) => {
               if (!allPages[ayah.page]) {
@@ -33,12 +30,15 @@ function QuranDisplay() {
           });
           setPages(allPages);
         } else {
-          setError("No surahs found in the response.");
+          throw new Error("No surahs found in the response.");
         }
       } catch (error) {
-        setError("Error fetching Quran data.");
+        setStatus({
+          loading: false,
+          error: error.message || "Error fetching Quran data.",
+        });
       } finally {
-        setLoading(false);
+        setStatus({ loading: false, error: null });
       }
     };
 
@@ -62,10 +62,13 @@ function QuranDisplay() {
     onSwipedRight: handlePrevPage,
   });
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
+  const currentAyahs = useMemo(
+    () => pages?.[currentPage] || [],
+    [pages, currentPage]
+  );
 
-  const currentAyahs = pages[currentPage] || [];
+  if (status.loading) return <p>Loading...</p>;
+  if (status.error) return <p>{status.error}</p>;
 
   return (
     <div {...swipeHandlers} className="quran-container">
@@ -82,22 +85,12 @@ function QuranDisplay() {
               </p>
             ))}
           </div>
-          <div className="pagination-controls">
-            <button
-              onClick={handlePrevPage}
-              disabled={!pages[currentPage - 1]}
-              className="pagination-btn prev-btn"
-            >
-              &larr; Previous
-            </button>
-            <button
-              onClick={handleNextPage}
-              disabled={!pages[currentPage + 1]}
-              className="pagination-btn next-btn"
-            >
-              Next &rarr;
-            </button>
-          </div>
+          <PaginationControls
+            onPrev={handlePrevPage}
+            onNext={handleNextPage}
+            isPrevDisabled={!pages[currentPage - 1]}
+            isNextDisabled={!pages[currentPage + 1]}
+          />
         </>
       ) : (
         <p>No ayah data available for this page.</p>
@@ -105,5 +98,37 @@ function QuranDisplay() {
     </div>
   );
 }
+
+// Pagination controls as a separate component
+const PaginationControls = ({
+  onPrev,
+  onNext,
+  isPrevDisabled,
+  isNextDisabled,
+}) => (
+  <div className="pagination-controls">
+    <button
+      onClick={onPrev}
+      disabled={isPrevDisabled}
+      className={`pagination-btn prev-btn ${isPrevDisabled ? "disabled" : ""}`}
+    >
+      &larr; Previous
+    </button>
+    <button
+      onClick={onNext}
+      disabled={isNextDisabled}
+      className={`pagination-btn next-btn ${isNextDisabled ? "disabled" : ""}`}
+    >
+      Next &rarr;
+    </button>
+  </div>
+);
+
+PaginationControls.propTypes = {
+  onPrev: PropTypes.func.isRequired,
+  onNext: PropTypes.func.isRequired,
+  isPrevDisabled: PropTypes.bool.isRequired,
+  isNextDisabled: PropTypes.bool.isRequired,
+};
 
 export default QuranDisplay;

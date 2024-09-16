@@ -1,11 +1,11 @@
 import { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import { useSwipeable } from "react-swipeable";
-import PropTypes from "prop-types";
 
 import "../styles/Quran.css";
 
 import { arabicNum } from "../utils/arabicNumbers";
+import Pagination from "../components/Pagination";
 
 function QuranDisplay() {
   const [pages, setPages] = useState(null);
@@ -85,7 +85,7 @@ function QuranDisplay() {
               </p>
             ))}
           </div>
-          <PaginationControls
+          <Pagination
             onPrev={handlePrevPage}
             onNext={handleNextPage}
             isPrevDisabled={!pages[currentPage - 1]}
@@ -98,37 +98,5 @@ function QuranDisplay() {
     </div>
   );
 }
-
-// Pagination controls as a separate component
-const PaginationControls = ({
-  onPrev,
-  onNext,
-  isPrevDisabled,
-  isNextDisabled,
-}) => (
-  <div className="pagination-controls">
-    <button
-      onClick={onPrev}
-      disabled={isPrevDisabled}
-      className={`pagination-btn prev-btn ${isPrevDisabled ? "disabled" : ""}`}
-    >
-      &larr; Previous
-    </button>
-    <button
-      onClick={onNext}
-      disabled={isNextDisabled}
-      className={`pagination-btn next-btn ${isNextDisabled ? "disabled" : ""}`}
-    >
-      Next &rarr;
-    </button>
-  </div>
-);
-
-PaginationControls.propTypes = {
-  onPrev: PropTypes.func.isRequired,
-  onNext: PropTypes.func.isRequired,
-  isPrevDisabled: PropTypes.bool.isRequired,
-  isNextDisabled: PropTypes.bool.isRequired,
-};
 
 export default QuranDisplay;

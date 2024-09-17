@@ -38,7 +38,7 @@ function QuranDisplay() {
           error: error.message || "Error fetching Quran data.",
         });
       } finally {
-        setStatus({ loading: false, error: null });
+        setStatus((prevState) => ({ ...prevState, loading: false }));
       }
     };
 

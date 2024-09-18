@@ -30,7 +30,7 @@ function QuranDisplay() {
           });
           setPages(allPages);
         } else {
-          throw new Error("No surahs found in the response.");
+          setStatus({ loading: false, error: "Please try again later." });
         }
       } catch (error) {
         setStatus({

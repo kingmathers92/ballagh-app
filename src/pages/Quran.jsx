@@ -1,11 +1,10 @@
 import { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import { useSwipeable } from "react-swipeable";
-
-import "../styles/Quran.css";
-
 import { arabicNum } from "../utils/arabicNumbers";
 import Pagination from "../components/Pagination";
+
+import "../styles/Quran.css";
 
 function QuranDisplay() {
   const [pages, setPages] = useState(null);

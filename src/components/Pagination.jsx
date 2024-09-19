@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
-import "../styles/Pagination.css"; // Import your CSS file if needed
+
+import "../styles/Pagination.css";
 
 function Pagination({ onPrev, onNext, isPrevDisabled, isNextDisabled }) {
   return (

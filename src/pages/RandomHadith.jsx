@@ -11,7 +11,6 @@ function RandomHadith() {
   return (
     <div className="container">
       <h2 className="title">Random Hadith</h2>
-      {isLoading && <Spinner />}
       {error && <p className="error">{error}</p>}
       {!isLoading && !error && hadith && (
         <div id="hadith-text" className="hadith-container">

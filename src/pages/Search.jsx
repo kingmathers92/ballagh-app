@@ -14,15 +14,6 @@ function Search() {
 
   useEffect(() => {
     const fetchEditions = async () => {
-      if (!query.trim()) {
-        setError("Please enter a search term.");
-        return;
-      }
-
-      setLoading(true);
-      setError(null);
-      setResults([]);
-
       try {
         const response = await axios.get(
           `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions.json`

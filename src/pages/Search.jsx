@@ -39,6 +39,10 @@ function Search() {
   }, []);
 
   const searchHadith = async () => {
+    if (!query.trim()) {
+      setError("Please enter a search term.");
+      return;
+    }
     setLoading(true);
     setError(null);
     setResults([]);

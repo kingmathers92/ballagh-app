@@ -127,10 +127,11 @@ function Search() {
       <button
         className="button"
         onClick={searchHadith}
-        disabled={!selectedEdition}
+        disabled={loading || !query.trim() || !selectedEdition}
       >
         {loading ? <Spinner /> : "Search"}
       </button>
+
       {error && <p className="error">{error}</p>}
 
       {results.map((result, index) => (

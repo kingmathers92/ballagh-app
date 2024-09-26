@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Spinner from "../components/Spinner";
+import Pagination from "../components/Pagination";
 
 import "../styles/Search.css";
 
@@ -11,6 +12,8 @@ function Search() {
   const [error, setError] = useState(null);
   const [editions, setEditions] = useState([]);
   const [selectedEdition, setSelectedEdition] = useState("all");
+  const [currentPage, setCurrentPage] = useState(1);
+  const resultsPerPage = 5;
 
   const fetchHadithData = async (editionLink) => {
     const response = await axios.get(editionLink);
@@ -32,7 +35,6 @@ function Search() {
         const response = await axios.get(
           `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions.json`
         );
-        console.log("Editions API response:", response.data);
         const editionList = [];
         Object.values(response.data).forEach((book) => {
           book.collection.forEach((edition) => {
@@ -42,7 +44,6 @@ function Search() {
             });
           });
         });
-        console.log("Processed edition list:", editionList);
         setEditions(editionList);
       } catch (error) {
         console.error("Error fetching editions:", error);
@@ -89,6 +90,7 @@ function Search() {
         }
       }
       setResults(allResults);
+      setCurrentPage(1);
     } catch (error) {
       console.error("Error fetching Hadiths:", error);
       setError(
@@ -96,6 +98,23 @@ function Search() {
       );
     } finally {
       setLoading(false);
+    }
+  };
+
+  // calculating results for the current page
+  const indexOfLastResult = currentPage * resultsPerPage;
+  const indexOfFirstResult = indexOfLastResult - resultsPerPage;
+  const currentResults = results.slice(indexOfFirstResult, indexOfLastResult);
+
+  const nextPage = () => {
+    if (currentPage < Math.ceil(results.length / resultsPerPage)) {
+      setCurrentPage((prev) => prev + 1);
+    }
+  };
+
+  const prevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prev) => prev - 1);
     }
   };
 
@@ -134,13 +153,9 @@ function Search() {
 
       {error && <p className="error">{error}</p>}
 
-      {results.map((result, index) => (
+      {currentResults.map((result, index) => (
         <div key={index} className="hadith-container">
           <p className="hadith-text">{result.text}</p>
-          <p className="hadith-source">
-            Collection: {result.collection}, Edition: {result.edition}, Hadith
-            Number: {result.number || "Unknown"}
-          </p>
           <p className="hadith-source">
             Collection: {result.collection}, Edition: {result.edition}, Hadith
             Number: {result.number || "Unknown"}
@@ -158,6 +173,15 @@ function Search() {
           </p>
         </div>
       ))}
+
+      <Pagination
+        onPrev={prevPage}
+        onNext={nextPage}
+        isPrevDisabled={currentPage === 1}
+        isNextDisabled={
+          currentPage >= Math.ceil(results.length / resultsPerPage)
+        }
+      />
     </div>
   );
 }

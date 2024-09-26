@@ -12,6 +12,20 @@ function Search() {
   const [editions, setEditions] = useState([]);
   const [selectedEdition, setSelectedEdition] = useState("all");
 
+  const fetchHadithData = async (editionLink) => {
+    const response = await axios.get(editionLink);
+    return response.data.hadiths;
+  };
+
+  const formatHadithResults = (hadiths, edition) =>
+    Object.values(hadiths).map((hadith) => ({
+      text: hadith.text,
+      collection: edition.book,
+      edition: edition.name,
+      grades: hadith.grades || [],
+      number: hadith.number || "Unknown",
+    }));
+
   useEffect(() => {
     const fetchEditions = async () => {
       try {
@@ -43,9 +57,11 @@ function Search() {
       setError("Please enter a search term.");
       return;
     }
+
     setLoading(true);
     setError(null);
     setResults([]);
+
     try {
       let allResults = [];
       if (selectedEdition === "all") {
@@ -53,51 +69,34 @@ function Search() {
           axios.get(edition.link)
         );
         const responses = await Promise.allSettled(editionRequests);
-        console.log("Hadith API responses for all editions:", responses);
 
         responses.forEach((response, index) => {
-          const hadiths = response.data.hadiths;
-          const filteredHadiths = Object.values(hadiths).filter((hadith) =>
-            hadith.text.toLowerCase().includes(query.toLowerCase())
-          );
-          const formattedResults = filteredHadiths.map((hadith) => ({
-            text: hadith.text,
-            collection: editions[index].book,
-            edition: editions[index].name,
-            grades: hadith.grades || [],
-            number: hadith.number || "Unknown",
-          }));
-          allResults = [...allResults, ...formattedResults];
+          if (response.status === "fulfilled") {
+            const hadiths = response.value.data.hadiths;
+            allResults = [
+              ...allResults,
+              ...formatHadithResults(hadiths, editions[index]),
+            ];
+          }
         });
       } else {
         const edition = editions.find(
           (edition) => edition.name === selectedEdition
         );
         if (edition) {
-          const response = await axios.get(edition.link);
-          const hadiths = response.data.hadiths;
-          const filteredHadiths = Object.values(hadiths).filter((hadith) =>
-            hadith.text.toLowerCase().includes(query.toLowerCase())
-          );
-          const formattedResults = filteredHadiths.map((hadith) => ({
-            text: hadith.text,
-            collection: edition.book,
-            edition: edition.name,
-            grades: hadith.grades || [],
-            number: hadith.number || "Unknown",
-          }));
-          allResults = [...allResults, ...formattedResults];
+          const hadiths = await fetchHadithData(edition.link);
+          allResults = [...formatHadithResults(hadiths, edition)];
         }
       }
       setResults(allResults);
-      console.log("Search results after searching Hadith:", allResults);
     } catch (error) {
       console.error("Error fetching Hadiths:", error);
       setError(
         "An error occurred while fetching Hadiths. Please try again later."
       );
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (

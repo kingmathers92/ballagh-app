@@ -140,9 +140,13 @@ function Search() {
             Collection: {result.collection}, Edition: {result.edition}, Hadith
             Number: {result.number || "Unknown"}
           </p>
+          <p className="hadith-source">
+            Collection: {result.collection}, Edition: {result.edition}, Hadith
+            Number: {result.number || "Unknown"}
+          </p>
           <p className="hadith-grades">
             Grades:{" "}
-            {result.grades && result.grades.length > 0
+            {result.grades?.length > 0
               ? result.grades.map((grade, i) => (
                   <span key={i}>
                     {grade.name} ({grade.grade})

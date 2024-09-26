@@ -52,7 +52,7 @@ function Search() {
         const editionRequests = editions.map((edition) =>
           axios.get(edition.link)
         );
-        const responses = await Promise.all(editionRequests);
+        const responses = await Promise.allSettled(editionRequests);
         console.log("Hadith API responses for all editions:", responses);
 
         responses.forEach((response, index) => {

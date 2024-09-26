@@ -64,8 +64,8 @@ function Search() {
             text: hadith.text,
             collection: editions[index].book,
             edition: editions[index].name,
-            grades: hadith.grades || [], // Default to an empty array if undefined
-            number: hadith.number || "Unknown", // Default to "Unknown" if number is not defined
+            grades: hadith.grades || [],
+            number: hadith.number || "Unknown",
           }));
           allResults = [...allResults, ...formattedResults];
         });
@@ -83,8 +83,8 @@ function Search() {
             text: hadith.text,
             collection: edition.book,
             edition: edition.name,
-            grades: hadith.grades || [], // Default to an empty array if undefined
-            number: hadith.number || "Unknown", // Default to "Unknown" if number is not defined
+            grades: hadith.grades || [],
+            number: hadith.number || "Unknown",
           }));
           allResults = [...allResults, ...formattedResults];
         }

@@ -22,6 +22,12 @@ const ReflectionJournal = () => {
     }
   };
 
+  const handleDeleteEntry = (index) => {
+    const updatedEntries = journalEntries.filter((_, i) => i !== index);
+    setJournalEntries(updatedEntries);
+    localStorage.setItem("journalEntries", JSON.stringify(updatedEntries));
+  };
+
   return (
     <div className="reflection-journal">
       <h2>Reflection & Gratitude Journal</h2>
@@ -33,7 +39,15 @@ const ReflectionJournal = () => {
       <button onClick={handleAddEntry}>Add Entry</button>
       <ul>
         {journalEntries.map((entry, index) => (
-          <li key={index}>{entry}</li>
+          <li key={index}>
+            {entry}
+            <button
+              className="delete-button"
+              onClick={() => handleDeleteEntry(index)}
+            >
+              Delete
+            </button>
+          </li>
         ))}
       </ul>
     </div>

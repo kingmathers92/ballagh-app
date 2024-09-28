@@ -14,6 +14,10 @@ const ReflectionJournal = () => {
     }
   }, []);
 
+  useEffect(() => {
+    localStorage.setItem("journalEntries", JSON.stringify(journalEntries));
+  }, [journalEntries]);
+
   const handleAddEntry = () => {
     if (reflection.trim()) {
       const newEntry = {
@@ -22,7 +26,6 @@ const ReflectionJournal = () => {
       };
       const newEntries = [...journalEntries, newEntry];
       setJournalEntries(newEntries);
-      localStorage.setItem("journalEntries", JSON.stringify(newEntries));
       setReflection("");
     }
   };
@@ -31,7 +34,6 @@ const ReflectionJournal = () => {
     if (window.confirm("Are you sure you want to delete this entry?")) {
       const updatedEntries = journalEntries.filter((_, i) => i !== index);
       setJournalEntries(updatedEntries);
-      localStorage.setItem("journalEntries", JSON.stringify(updatedEntries));
     }
   };
 

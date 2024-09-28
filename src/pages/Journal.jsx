@@ -47,7 +47,9 @@ const ReflectionJournal = () => {
         />
         <div>{maxLength - reflection.length} characters remaining</div>
       </div>
-      <button onClick={handleAddEntry}>Add Entry</button>
+      <button onClick={handleAddEntry} disabled={!reflection.trim()}>
+        Add Entry
+      </button>
       <ul>
         {journalEntries.map((entry, index) => (
           <li key={index}>

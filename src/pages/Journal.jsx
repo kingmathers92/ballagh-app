@@ -5,6 +5,7 @@ import "../styles/Journal.css";
 const ReflectionJournal = () => {
   const [reflection, setReflection] = useState("");
   const [journalEntries, setJournalEntries] = useState([]);
+  const maxLength = 500;
 
   useEffect(() => {
     const storedEntries = JSON.parse(localStorage.getItem("journalEntries"));
@@ -35,11 +36,15 @@ const ReflectionJournal = () => {
   return (
     <div className="reflection-journal">
       <h2>Reflection & Gratitude Journal</h2>
-      <textarea
-        value={reflection}
-        onChange={(e) => setReflection(e.target.value)}
-        placeholder="Write your reflection or gratitude here..."
-      />
+      <div>
+        <textarea
+          value={reflection}
+          onChange={(e) => setReflection(e.target.value)}
+          placeholder="Write your reflection or gratitude here..."
+          maxLength={maxLength}
+        />
+        <div>{maxLength - reflection.length} characters remaining</div>
+      </div>
       <button onClick={handleAddEntry}>Add Entry</button>
       <ul>
         {journalEntries.map((entry, index) => (

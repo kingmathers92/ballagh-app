@@ -15,7 +15,11 @@ const ReflectionJournal = () => {
 
   const handleAddEntry = () => {
     if (reflection.trim()) {
-      const newEntries = [...journalEntries, reflection];
+      const newEntry = {
+        text: reflection,
+        timestamp: new Date().toLocaleString(),
+      };
+      const newEntries = [...journalEntries, newEntry];
       setJournalEntries(newEntries);
       localStorage.setItem("journalEntries", JSON.stringify(newEntries));
       setReflection("");
@@ -40,7 +44,8 @@ const ReflectionJournal = () => {
       <ul>
         {journalEntries.map((entry, index) => (
           <li key={index}>
-            {entry}
+            <p>{entry.text}</p>
+            <small>{entry.timestamp}</small>
             <button
               className="delete-button"
               onClick={() => handleDeleteEntry(index)}

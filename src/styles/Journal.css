@@ -38,6 +38,20 @@
   background-color: var(--accent-color);
 }
 
+.reflection-journal .delete-button {
+  background-color: var(--accent-color);
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.reflection-journal .delete-button:hover {
+  background-color: #b04b4b;
+}
+
 .reflection-journal ul {
   list-style: none;
   padding: 0;

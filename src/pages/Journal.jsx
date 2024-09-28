@@ -28,9 +28,11 @@ const ReflectionJournal = () => {
   };
 
   const handleDeleteEntry = (index) => {
-    const updatedEntries = journalEntries.filter((_, i) => i !== index);
-    setJournalEntries(updatedEntries);
-    localStorage.setItem("journalEntries", JSON.stringify(updatedEntries));
+    if (window.confirm("Are you sure you want to delete this entry?")) {
+      const updatedEntries = journalEntries.filter((_, i) => i !== index);
+      setJournalEntries(updatedEntries);
+      localStorage.setItem("journalEntries", JSON.stringify(updatedEntries));
+    }
   };
 
   return (

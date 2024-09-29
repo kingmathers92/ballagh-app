@@ -67,17 +67,17 @@
 
 @media (max-width: 768px) {
   .compass-container {
-    width: 150px;
-    height: 150px;
+    width: 180px;
+    height: 180px;
   }
 
   .compass-arrow {
-    border-bottom: 20px solid #ff4757;
+    border-bottom: 25px solid #ff4757;
   }
 
   .qibla-marker {
-    width: 30px;
-    height: 30px;
-    font-size: 18px;
+    width: 35px;
+    height: 35px;
+    font-size: 20px;
   }
 }

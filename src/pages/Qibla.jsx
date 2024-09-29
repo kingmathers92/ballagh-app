@@ -4,7 +4,7 @@ import Spinner from "../components/Spinner";
 import "../styles/Qibla.css";
 
 function Qibla() {
-  const { qiblaDirection, compassHeading, error, isLoading } =
+  const { qiblaDirection, compassHeading, error, isLoading, location } =
     useQiblaDirection();
 
   return (
@@ -32,6 +32,9 @@ function Qibla() {
             </div>
           </div>
           <p>Your Qibla direction is: {qiblaDirection?.toFixed(2)}°</p>
+          <p>
+            Your Location: Lat {location?.latitude}, Lon {location?.longitude}
+          </p>
         </>
       )}
     </div>

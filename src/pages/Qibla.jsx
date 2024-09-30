@@ -12,7 +12,11 @@ function Qibla() {
       {isLoading ? (
         <Spinner />
       ) : error ? (
-        <p>{error}</p>
+        <p>
+          {error === "PERMISSION_DENIED"
+            ? "Location access denied. Please enable location services."
+            : "Something went wrong. Please try again."}
+        </p>
       ) : (
         <>
           <div className="compass-container">

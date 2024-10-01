@@ -54,8 +54,8 @@
   color: #ffffff;
   font-weight: bold;
   font-size: 22px;
-  transform-origin: center;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease-in-out;
+  animation: pulse 1s infinite alternate;
 }
 
 .qibla-marker::before {
@@ -63,6 +63,15 @@
   position: absolute;
   color: #ffffff;
   font-size: 28px;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.2);
+  }
 }
 
 @media (max-width: 768px) {

@@ -39,6 +39,9 @@ function Qibla() {
           <p>
             Your Location: Lat {location?.latitude}, Lon {location?.longitude}
           </p>
+          <button onClick={() => window.location.reload()}>
+            Calibrate Compass
+          </button>
         </>
       )}
     </div>

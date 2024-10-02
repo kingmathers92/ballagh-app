@@ -74,6 +74,33 @@
   }
 }
 
+.calibrate-button {
+  background-color: #00aaff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.calibrate-button:hover {
+  background-color: #0088cc;
+  transform: translateY(-2px);
+}
+
+.calibrate-button:active {
+  background-color: #006699;
+  transform: translateY(0);
+}
+
+.calibrate-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 170, 255, 0.4);
+}
+
 @media (max-width: 768px) {
   .compass-container {
     width: 180px;
@@ -88,5 +115,10 @@
     width: 35px;
     height: 35px;
     font-size: 20px;
+  }
+
+  .calibrate-button {
+    font-size: 14px;
+    padding: 8px 16px;
   }
 }

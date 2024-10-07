@@ -24,7 +24,7 @@ function QuranDisplay() {
               if (!allPages[ayah.page]) {
                 allPages[ayah.page] = [];
               }
-              allPages[ayah.page].push(ayah);
+              allPages[ayah.page].push({ ...ayah, surahName: surah.name });
             });
           });
           setPages(allPages);
@@ -73,16 +73,17 @@ function QuranDisplay() {
     <div {...swipeHandlers} className="quran-container">
       {currentAyahs.length > 0 ? (
         <>
-          <h3 className="page-title">Page {arabicNum(currentPage)}</h3>
           <div className="ayah-list">
             {currentAyahs.map((ayah) => (
               <p key={ayah.number} className="ayah-text">
+                {ayah.name}
                 {ayah.text}{" "}
                 <span className="ayah-number">
                   ({arabicNum(ayah.numberInSurah)})
                 </span>
               </p>
             ))}
+            <h3 className="page-title">Page {arabicNum(currentPage)}</h3>
           </div>
           <Pagination
             onPrev={handlePrevPage}

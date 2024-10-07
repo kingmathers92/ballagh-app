@@ -10,6 +10,7 @@ function QuranDisplay() {
   const [pages, setPages] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [status, setStatus] = useState({ loading: true, error: null });
+  const [currentSurah, setCurrentSurah] = useState("");
 
   useEffect(() => {
     const fetchQuranData = async () => {
@@ -66,6 +67,12 @@ function QuranDisplay() {
     [pages, currentPage]
   );
 
+  useEffect(() => {
+    if (currentAyahs.length > 0) {
+      setCurrentSurah(currentAyahs[0].surahName);
+    }
+  }, [currentAyahs]);
+
   if (status.loading) return <p>Loading...</p>;
   if (status.error) return <p>{status.error}</p>;
 
@@ -73,10 +80,10 @@ function QuranDisplay() {
     <div {...swipeHandlers} className="quran-container">
       {currentAyahs.length > 0 ? (
         <>
+          <h3 className="page-title">{currentSurah}</h3>
           <div className="ayah-list">
             {currentAyahs.map((ayah) => (
               <p key={ayah.number} className="ayah-text">
-                {ayah.name}
                 {ayah.text}{" "}
                 <span className="ayah-number">
                   ({arabicNum(ayah.numberInSurah)})

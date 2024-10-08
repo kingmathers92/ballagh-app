@@ -22,6 +22,7 @@
   margin: 0 auto;
   text-align: right;
   direction: rtl;
+  line-height: 1.8;
 }
 
 .ayah-text {
@@ -30,6 +31,7 @@
   cursor: pointer;
   transition: color 0.3s ease;
   position: relative;
+  display: inline;
 }
 
 .ayah-text:hover {
@@ -40,6 +42,8 @@
   font-size: 0.9rem;
   color: #8c5e58;
   margin-left: 10px;
+  display: inline;
+  white-space: nowrap;
 }
 
 @media (max-width: 768px) {

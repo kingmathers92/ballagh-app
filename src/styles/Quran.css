@@ -39,9 +39,9 @@
 }
 
 .ayah-number {
-  font-size: 0.9rem;
-  color: #8c5e58;
-  margin-left: 10px;
+  font-size: 1.1rem;
+  color: #e41313;
+  margin-left: 5px;
   display: inline;
   white-space: nowrap;
 }

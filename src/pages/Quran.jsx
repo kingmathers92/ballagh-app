@@ -12,6 +12,7 @@ function QuranDisplay() {
   const [currentPage, setCurrentPage] = useState(1);
   const [status, setStatus] = useState({ loading: true, error: null });
   const [currentSurah, setCurrentSurah] = useState("");
+  const [surahList, setSurahList] = useState([]);
 
   useEffect(() => {
     const fetchQuranData = async () => {
@@ -21,7 +22,9 @@ function QuranDisplay() {
         );
         if (response.data?.data?.surahs) {
           const allPages = {};
+          const surahNames = [];
           response.data.data.surahs.forEach((surah) => {
+            surahNames.push(surah.name);
             surah.ayahs.forEach((ayah) => {
               if (!allPages[ayah.page]) {
                 allPages[ayah.page] = [];
@@ -30,6 +33,7 @@ function QuranDisplay() {
             });
           });
           setPages(allPages);
+          setSurahList(surahNames);
         } else {
           setStatus({ loading: false, error: "Please try again later." });
         }
@@ -45,6 +49,14 @@ function QuranDisplay() {
 
     fetchQuranData();
   }, []);
+
+  const handleSurahChange = (e) => {
+    const selectedSurah = e.target.value;
+    const surahPage = Object.keys(pages).find(
+      (page) => pages[page][0].surahName === selectedSurah
+    );
+    setCurrentPage(Number(surahPage));
+  };
 
   const handleNextPage = () => {
     if (pages[currentPage + 1]) {
@@ -81,6 +93,13 @@ function QuranDisplay() {
 
   return (
     <div {...swipeHandlers} className="quran-container">
+      <select onChange={handleSurahChange}>
+        {surahList.map((surah, index) => (
+          <option key={index} value={surah}>
+            {surah}
+          </option>
+        ))}
+      </select>
       {currentAyahs.length > 0 ? (
         <>
           <h3 className="page-title">{currentSurah}</h3>

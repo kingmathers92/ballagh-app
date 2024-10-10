@@ -4,8 +4,8 @@ import { Link } from "react-router-dom";
 const NavLinks = ({ toggleMenu }) => {
   const links = [
     { path: "/", label: "Home" },
-    { path: "/search", label: "Search Verses" },
-    { path: "/random", label: "Random Verse" },
+    { path: "/search", label: "Search Hadith" },
+    { path: "/random", label: "Random Hadith" },
     { path: "/quran", label: "Quran" },
     { path: "/qibla", label: "Qibla" },
     { path: "/journal", label: "Journal" },

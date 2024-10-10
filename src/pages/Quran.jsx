@@ -3,6 +3,7 @@ import axios from "axios";
 import { useSwipeable } from "react-swipeable";
 import { arabicNum } from "../utils/arabicNumbers";
 import Pagination from "../components/Pagination";
+import Spinner from "../components/Spinner";
 
 import "../styles/Quran.css";
 
@@ -73,7 +74,9 @@ function QuranDisplay() {
     }
   }, [currentAyahs]);
 
-  if (status.loading) return <p>Loading...</p>;
+  {
+    status.loading && <Spinner />;
+  }
   if (status.error) return <p>{status.error}</p>;
 
   return (

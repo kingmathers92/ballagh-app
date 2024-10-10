@@ -13,6 +13,8 @@ function QuranDisplay() {
   const [status, setStatus] = useState({ loading: true, error: null });
   const [currentSurah, setCurrentSurah] = useState("");
   const [surahList, setSurahList] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
 
   useEffect(() => {
     const fetchQuranData = async () => {
@@ -86,6 +88,23 @@ function QuranDisplay() {
     }
   }, [currentAyahs]);
 
+  const handleSearch = () => {
+    if (searchQuery.trim() === "") return;
+
+    const results = [];
+    Object.keys(pages).forEach((page) => {
+      pages[page].forEach((ayah) => {
+        if (ayah.text.includes(searchQuery)) {
+          results.push({
+            ...ayah,
+            page: page,
+          });
+        }
+      });
+    });
+    setSearchResults(results);
+  };
+
   {
     status.loading && <Spinner />;
   }
@@ -93,13 +112,42 @@ function QuranDisplay() {
 
   return (
     <div {...swipeHandlers} className="quran-container">
-      <select onChange={handleSurahChange}>
-        {surahList.map((surah, index) => (
-          <option key={index} value={surah}>
-            {surah}
-          </option>
-        ))}
-      </select>
+      <div className="search-surah-container">
+        <select onChange={handleSurahChange}>
+          {surahList.map((surah, index) => (
+            <option key={index} value={surah}>
+              {surah}
+            </option>
+          ))}
+        </select>
+
+        <div className="search-container">
+          <input
+            type="text"
+            placeholder="Search for Ayah..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <button onClick={handleSearch}>Search</button>
+        </div>
+      </div>
+      {searchResults.length > 0 ? (
+        <div className="search-results">
+          <h3>Search Results:</h3>
+          {searchResults.map((result, index) => (
+            <div key={index} className="search-result-item">
+              <p>
+                {result.surahName} (Page {arabicNum(result.page)}):{" "}
+                {result.text}{" "}
+                <span className="ayah-number">
+                  ({arabicNum(result.numberInSurah)})
+                </span>
+              </p>
+            </div>
+          ))}
+        </div>
+      ) : null}
+
       {currentAyahs.length > 0 ? (
         <>
           <h3 className="page-title">{currentSurah}</h3>

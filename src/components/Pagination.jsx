@@ -2,28 +2,51 @@ import PropTypes from "prop-types";
 
 import "../styles/Pagination.css";
 
-function Pagination({ onPrev, onNext, isPrevDisabled, isNextDisabled }) {
+function Pagination({
+  currentPage,
+  totalPages,
+  onPageChange,
+  onPrev,
+  onNext,
+  isPrevDisabled,
+  isNextDisabled,
+}) {
+  const pageNumbers = [];
+
+  const maxPageNumbersToShow = 5;
+  let startPage = Math.max(
+    1,
+    currentPage - Math.floor(maxPageNumbersToShow / 2)
+  );
+  let endPage = startPage + maxPageNumbersToShow - 1;
+
+  if (endPage > totalPages) {
+    endPage = totalPages;
+    startPage = Math.max(1, endPage - maxPageNumbersToShow + 1);
+  }
+
+  for (let i = startPage; i <= endPage; i++) {
+    pageNumbers.push(i);
+  }
+
   return (
-    <div className="pagination-controls">
-      <button
-        onClick={onPrev}
-        disabled={isPrevDisabled}
-        className={`pagination-btn prev-btn ${
-          isPrevDisabled ? "disabled" : ""
-        }`}
-        aria-label="Previous Page"
-      >
-        &larr; Previous
+    <div className="pagination-container">
+      <button disabled={isPrevDisabled} onClick={onPrev}>
+        Prev
       </button>
-      <button
-        onClick={onNext}
-        disabled={isNextDisabled}
-        className={`pagination-btn next-btn ${
-          isNextDisabled ? "disabled" : ""
-        }`}
-        aria-label="Next Page"
-      >
-        Next &rarr;
+
+      {pageNumbers.map((number) => (
+        <button
+          key={number}
+          className={number === currentPage ? "active" : ""}
+          onClick={() => onPageChange(number)}
+        >
+          {number}
+        </button>
+      ))}
+
+      <button disabled={isNextDisabled} onClick={onNext}>
+        Next
       </button>
     </div>
   );
@@ -34,6 +57,9 @@ Pagination.propTypes = {
   onNext: PropTypes.func.isRequired,
   isPrevDisabled: PropTypes.bool.isRequired,
   isNextDisabled: PropTypes.bool.isRequired,
+  currentPage: PropTypes.bool.isRequired,
+  totalPages: PropTypes.bool.isRequired,
+  onPageChange: PropTypes.func.isRequired,
 };
 
 export default Pagination;

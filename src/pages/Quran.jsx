@@ -72,6 +72,12 @@ function QuranDisplay() {
     }
   };
 
+  const handlePageChange = (pageNumber) => {
+    if (pages[pageNumber]) {
+      setCurrentPage(pageNumber);
+    }
+  };
+
   const swipeHandlers = useSwipeable({
     onSwipedLeft: handleNextPage,
     onSwipedRight: handlePrevPage,
@@ -87,6 +93,8 @@ function QuranDisplay() {
       setCurrentSurah(currentAyahs[0].surahName);
     }
   }, [currentAyahs]);
+
+  const totalPages = useMemo(() => Object.keys(pages || {}).length, [pages]);
 
   const handleSearch = () => {
     if (searchQuery.trim() === "") return;
@@ -163,6 +171,9 @@ function QuranDisplay() {
             <h3 className="page-title">Page {arabicNum(currentPage)}</h3>
           </div>
           <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
             onPrev={handlePrevPage}
             onNext={handleNextPage}
             isPrevDisabled={!pages[currentPage - 1]}

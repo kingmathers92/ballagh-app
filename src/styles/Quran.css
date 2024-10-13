@@ -93,11 +93,113 @@
 }
 
 @media (max-width: 768px) {
-  .page-title {
-    font-size: 1.5rem;
+  .quran-container {
+    padding: 15px;
+    margin: 10px auto;
+    max-width: 100%;
+    font-size: 16px;
   }
 
-  .ayah-text {
+  .quran-container h3.page-title {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+  }
+
+  .quran-container .ayah-list {
+    font-size: 1.4rem;
+    line-height: 1.6;
+  }
+
+  .quran-container .ayah-list .ayah-text {
+    padding: 8px;
+    margin-bottom: 8px;
+  }
+
+  .quran-container .ayah-list .ayah-number {
     font-size: 1rem;
+  }
+
+  .pagination-container {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .pagination-container button {
+    font-size: 1rem;
+    padding: 6px 10px;
+  }
+
+  .search-surah-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .search-surah-container select {
+    width: 100%;
+    margin-bottom: 10px;
+    font-size: 1rem;
+  }
+
+  .search-container {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .search-container input {
+    width: 65%;
+    font-size: 0.9rem;
+  }
+
+  .search-container button {
+    font-size: 0.9rem;
+    padding: 6px 8px;
+  }
+
+  .search-results {
+    font-size: 1rem;
+    padding: 10px;
+  }
+
+  .search-result-item {
+    padding: 6px;
+    margin-bottom: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .quran-container {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .quran-container h3.page-title {
+    font-size: 1.3rem;
+  }
+
+  .quran-container .ayah-list {
+    font-size: 1.2rem;
+    line-height: 1.4;
+  }
+
+  .quran-container .ayah-list .ayah-text {
+    padding: 6px;
+  }
+
+  .quran-container .ayah-list .ayah-number {
+    font-size: 0.9rem;
+  }
+
+  .pagination-container button {
+    font-size: 0.9rem;
+    padding: 5px 8px;
+  }
+
+  .search-surah-container select,
+  .search-container input {
+    font-size: 0.9rem;
+  }
+
+  .search-container button {
+    font-size: 0.85rem;
   }
 }

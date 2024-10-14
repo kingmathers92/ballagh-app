@@ -15,6 +15,7 @@ function QuranDisplay() {
   const [surahList, setSurahList] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  const [inputPage, setInputPage] = useState("");
 
   useEffect(() => {
     const fetchQuranData = async () => {
@@ -113,6 +114,18 @@ function QuranDisplay() {
     setSearchResults(results);
   };
 
+  const handlePageInputChange = (e) => {
+    setInputPage(e.target.value);
+  };
+
+  const handleGoToPage = () => {
+    const page = parseInt(inputPage, 10);
+    if (page && pages[page]) {
+      setCurrentPage(page);
+      setInputPage("");
+    }
+  };
+
   {
     status.loading && <Spinner />;
   }
@@ -155,6 +168,18 @@ function QuranDisplay() {
           ))}
         </div>
       ) : null}
+
+      <div className="page-input-container">
+        <input
+          type="number"
+          placeholder="Enter page number"
+          value={inputPage}
+          onChange={handlePageInputChange}
+        />
+        <button onClick={handleGoToPage} disabled={!inputPage}>
+          Go
+        </button>
+      </div>
 
       {currentAyahs.length > 0 ? (
         <>

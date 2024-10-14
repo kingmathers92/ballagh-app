@@ -92,6 +92,46 @@
   border-radius: 4px;
 }
 
+.page-input-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.page-input-container input {
+  width: 150px;
+  padding: 8px;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.page-input-container button {
+  padding: 8px 12px;
+  background-color: #1f4e5f;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.page-input-container button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Make pagination sticky */
+.pagination-container {
+  position: sticky;
+  bottom: 0;
+  background-color: white;
+  padding: 10px 0;
+  border-top: 1px solid #ccc;
+  z-index: 100;
+}
+
 @media (max-width: 768px) {
   .quran-container {
     padding: 15px;

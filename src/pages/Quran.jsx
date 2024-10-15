@@ -16,6 +16,7 @@ function QuranDisplay() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [inputPage, setInputPage] = useState("");
+  const [bookmarkedPages, setBookmarkedPages] = useState([]);
 
   useEffect(() => {
     const fetchQuranData = async () => {
@@ -51,6 +52,12 @@ function QuranDisplay() {
     };
 
     fetchQuranData();
+  }, []);
+
+  useEffect(() => {
+    const storedBookmarks =
+      JSON.parse(localStorage.getItem("bookmarkedPages")) || [];
+    setBookmarkedPages(storedBookmarks);
   }, []);
 
   const handleSurahChange = (e) => {
@@ -126,6 +133,20 @@ function QuranDisplay() {
     }
   };
 
+  const handleBookmarkPage = () => {
+    if (!bookmarkedPages.includes(currentPage)) {
+      const updatedBookmarks = [...bookmarkedPages, currentPage];
+      setBookmarkedPages(updatedBookmarks);
+      localStorage.setItem("bookmarkedPages", JSON.stringify(updatedBookmarks));
+    }
+  };
+
+  const handleRemoveBookmark = (page) => {
+    const updatedBookmarks = bookmarkedPages.filter((p) => p !== page);
+    setBookmarkedPages(updatedBookmarks);
+    localStorage.setItem("bookmarkedPages", JSON.stringify(updatedBookmarks));
+  };
+
   {
     status.loading && <Spinner />;
   }
@@ -169,6 +190,16 @@ function QuranDisplay() {
         </div>
       ) : null}
 
+      <button
+        onClick={handleBookmarkPage}
+        disabled={bookmarkedPages.includes(currentPage)}
+        className="bookmark-button"
+      >
+        {bookmarkedPages.includes(currentPage)
+          ? "Bookmarked"
+          : "Bookmark this page"}
+      </button>
+
       <div className="page-input-container">
         <input
           type="number"
@@ -204,6 +235,22 @@ function QuranDisplay() {
             isPrevDisabled={!pages[currentPage - 1]}
             isNextDisabled={!pages[currentPage + 1]}
           />
+
+          {bookmarkedPages.length > 0 && (
+            <div className="bookmarked-pages">
+              <h4>Bookmarked Pages:</h4>
+              {bookmarkedPages.map((page) => (
+                <div key={page} className="bookmarked-item">
+                  <span onClick={() => setCurrentPage(page)}>
+                    Page {arabicNum(page)}
+                  </span>
+                  <button onClick={() => handleRemoveBookmark(page)}>
+                    Remove
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
         </>
       ) : (
         <p>No ayah data available for this page.</p>

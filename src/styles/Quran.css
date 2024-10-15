@@ -132,6 +132,55 @@
   z-index: 100;
 }
 
+.bookmark-button {
+  background-color: #1f4e5f;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 20px 0;
+}
+
+.bookmark-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Bookmarked pages section */
+.bookmarked-pages {
+  margin-top: 20px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.bookmarked-pages h4 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.bookmarked-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 0;
+}
+
+.bookmarked-item span {
+  cursor: pointer;
+  color: #1f4e5f;
+}
+
+.bookmarked-item button {
+  background-color: #e41313;
+  color: white;
+  border: none;
+  padding: 5px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
 @media (max-width: 768px) {
   .quran-container {
     padding: 15px;

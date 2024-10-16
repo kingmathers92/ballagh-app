@@ -17,6 +17,8 @@ function QuranDisplay() {
   const [searchResults, setSearchResults] = useState([]);
   const [inputPage, setInputPage] = useState("");
   const [bookmarkedPages, setBookmarkedPages] = useState([]);
+  const [audioUrl, setAudioUrl] = useState("");
+  const [audioPlaying, setAudioPlaying] = useState(false);
 
   useEffect(() => {
     const fetchQuranData = async () => {
@@ -59,6 +61,28 @@ function QuranDisplay() {
       JSON.parse(localStorage.getItem("bookmarkedPages")) || [];
     setBookmarkedPages(storedBookmarks);
   }, []);
+
+  useEffect(() => {
+    const fetchAudio = async () => {
+      try {
+        const ayah = pages[currentPage]?.[0];
+        if (ayah) {
+          const response = await axios.get(
+            `http://api.alquran.cloud/v1/ayah/${ayah.number}/ar.alafasy`
+          );
+          if (response.data?.data?.audio) {
+            setAudioUrl(response.data.data.audio);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching audio", error);
+      }
+    };
+
+    if (pages && pages[currentPage]) {
+      fetchAudio();
+    }
+  }, [pages, currentPage]);
 
   const handleSurahChange = (e) => {
     const selectedSurah = e.target.value;
@@ -147,6 +171,16 @@ function QuranDisplay() {
     localStorage.setItem("bookmarkedPages", JSON.stringify(updatedBookmarks));
   };
 
+  const handleAudioToggle = () => {
+    const audioElement = document.getElementById("audioPlayer");
+    if (audioPlaying) {
+      audioElement.pause();
+    } else {
+      audioElement.play();
+    }
+    setAudioPlaying(!audioPlaying);
+  };
+
   {
     status.loading && <Spinner />;
   }
@@ -189,6 +223,15 @@ function QuranDisplay() {
           ))}
         </div>
       ) : null}
+
+      {audioUrl && (
+        <div className="audio-player">
+          <audio id="audioPlayer" src={audioUrl}></audio>
+          <button onClick={handleAudioToggle}>
+            {audioPlaying ? "Pause" : "Play"}
+          </button>
+        </div>
+      )}
 
       <button
         onClick={handleBookmarkPage}

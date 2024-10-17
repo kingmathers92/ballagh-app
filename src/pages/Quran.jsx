@@ -62,27 +62,19 @@ function QuranDisplay() {
     setBookmarkedPages(storedBookmarks);
   }, []);
 
-  useEffect(() => {
-    const fetchAudio = async () => {
-      try {
-        const ayah = pages[currentPage]?.[0];
-        if (ayah) {
-          const response = await axios.get(
-            `http://api.alquran.cloud/v1/ayah/${ayah.number}/ar.alafasy`
-          );
-          if (response.data?.data?.audio) {
-            setAudioUrl(response.data.data.audio);
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching audio", error);
+  const handlePlaySurah = async (surahNumber) => {
+    try {
+      const response = await axios.get(
+        `http://api.alquran.cloud/v1/surah/${surahNumber}/ar.alafasy`
+      );
+      if (response.data?.data?.ayahs) {
+        setAudioUrl(response.data.data.ayahs[0].audio);
+        setAudioPlaying(true);
       }
-    };
-
-    if (pages && pages[currentPage]) {
-      fetchAudio();
+    } catch (error) {
+      console.error("Error fetching audio:", error);
     }
-  }, [pages, currentPage]);
+  };
 
   const handleSurahChange = (e) => {
     const selectedSurah = e.target.value;
@@ -171,15 +163,15 @@ function QuranDisplay() {
     localStorage.setItem("bookmarkedPages", JSON.stringify(updatedBookmarks));
   };
 
-  const handleAudioToggle = () => {
-    const audioElement = document.getElementById("audioPlayer");
-    if (audioPlaying) {
-      audioElement.pause();
-    } else {
-      audioElement.play();
-    }
-    setAudioPlaying(!audioPlaying);
-  };
+  // const handleAudioToggle = () => {
+  //   const audioElement = document.getElementById("audioPlayer");
+  //   if (audioPlaying) {
+  //     audioElement.pause();
+  //   } else {
+  //     audioElement.play();
+  //   }
+  //   setAudioPlaying(!audioPlaying);
+  // };
 
   {
     status.loading && <Spinner />;
@@ -224,13 +216,18 @@ function QuranDisplay() {
         </div>
       ) : null}
 
-      {audioUrl && (
-        <div className="audio-player">
-          <audio id="audioPlayer" src={audioUrl}></audio>
-          <button onClick={handleAudioToggle}>
-            {audioPlaying ? "Pause" : "Play"}
-          </button>
-        </div>
+      <button
+        className="play-surah-button"
+        onClick={() => handlePlaySurah(currentAyahs[0].surahNumber)}
+      >
+        Play Surah
+      </button>
+
+      {audioPlaying && (
+        <audio controls autoPlay>
+          <source src={audioUrl} type="audio/mp3" />
+          Your browser does not support the audio element.
+        </audio>
       )}
 
       <button

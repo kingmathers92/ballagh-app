@@ -236,6 +236,20 @@
     padding: 6px 10px;
   }
 
+  .play-surah-button {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
+
+  .ayah-list {
+    margin-bottom: 20px;
+  }
+
+  audio {
+    width: 100%;
+    margin-top: 20px;
+  }
+
   .search-surah-container {
     flex-direction: column;
     align-items: flex-start;
@@ -275,7 +289,7 @@
 
 @media (max-width: 480px) {
   .quran-container {
-    font-size: 14px;
+    font-size: 1rem;
     padding: 10px;
   }
 
@@ -286,6 +300,7 @@
   .quran-container .ayah-list {
     font-size: 1.2rem;
     line-height: 1.4;
+    margin-bottom: 15px;
   }
 
   .quran-container .ayah-list .ayah-text {
@@ -298,7 +313,7 @@
 
   .pagination-container button {
     font-size: 0.9rem;
-    padding: 5px 8px;
+    padding: 6px 12px;
   }
 
   .search-surah-container select,
@@ -308,5 +323,9 @@
 
   .search-container button {
     font-size: 0.85rem;
+  }
+
+  audio {
+    margin-top: 10px;
   }
 }

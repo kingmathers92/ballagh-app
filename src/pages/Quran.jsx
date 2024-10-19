@@ -105,6 +105,7 @@ function QuranDisplay() {
   const swipeHandlers = useSwipeable({
     onSwipedLeft: handleNextPage,
     onSwipedRight: handlePrevPage,
+    trackMouse: true,
   });
 
   const currentAyahs = useMemo(

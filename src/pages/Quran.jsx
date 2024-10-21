@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import axios from "axios";
+import useBookmarks from "../hooks/useBookmarks";
 import { useSwipeable } from "react-swipeable";
 import { arabicNum } from "../utils/arabicNumbers";
 import Pagination from "../components/Pagination";
@@ -16,9 +17,9 @@ function QuranDisplay() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [inputPage, setInputPage] = useState("");
-  const [bookmarkedPages, setBookmarkedPages] = useState([]);
   const [audioUrl, setAudioUrl] = useState("");
   const [audioPlaying, setAudioPlaying] = useState(false);
+  const { bookmarkedPages, addBookmark, removeBookmark } = useBookmarks();
 
   useEffect(() => {
     const fetchQuranData = async () => {
@@ -54,12 +55,6 @@ function QuranDisplay() {
     };
 
     fetchQuranData();
-  }, []);
-
-  useEffect(() => {
-    const storedBookmarks =
-      JSON.parse(localStorage.getItem("bookmarkedPages")) || [];
-    setBookmarkedPages(storedBookmarks);
   }, []);
 
   const handlePlaySurah = async (surahNumber) => {
@@ -150,20 +145,6 @@ function QuranDisplay() {
     }
   };
 
-  const handleBookmarkPage = () => {
-    if (!bookmarkedPages.includes(currentPage)) {
-      const updatedBookmarks = [...bookmarkedPages, currentPage];
-      setBookmarkedPages(updatedBookmarks);
-      localStorage.setItem("bookmarkedPages", JSON.stringify(updatedBookmarks));
-    }
-  };
-
-  const handleRemoveBookmark = (page) => {
-    const updatedBookmarks = bookmarkedPages.filter((p) => p !== page);
-    setBookmarkedPages(updatedBookmarks);
-    localStorage.setItem("bookmarkedPages", JSON.stringify(updatedBookmarks));
-  };
-
   // const handleAudioToggle = () => {
   //   const audioElement = document.getElementById("audioPlayer");
   //   if (audioPlaying) {
@@ -232,7 +213,7 @@ function QuranDisplay() {
       )}
 
       <button
-        onClick={handleBookmarkPage}
+        onClick={() => addBookmark(currentPage)}
         disabled={bookmarkedPages.includes(currentPage)}
         className="bookmark-button"
       >
@@ -285,9 +266,7 @@ function QuranDisplay() {
                   <span onClick={() => setCurrentPage(page)}>
                     Page {arabicNum(page)}
                   </span>
-                  <button onClick={() => handleRemoveBookmark(page)}>
-                    Remove
-                  </button>
+                  <button onClick={() => removeBookmark(page)}>Remove</button>
                 </div>
               ))}
             </div>

@@ -212,6 +212,14 @@ main {
   background-color: var(--accent-color);
 }
 
+button:focus,
+.button:focus,
+.share-button:focus,
+.pagination-container button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--accent-color);
+}
+
 .error {
   color: #721c24;
   background-color: #f8d7da;

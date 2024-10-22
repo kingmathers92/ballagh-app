@@ -1,11 +1,11 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { fetchQuranData, fetchSurahAudio } from "../utils/api";
 import useBookmarks from "../hooks/useBookmarks";
 import { useSwipeable } from "react-swipeable";
 import { arabicNum } from "../utils/arabicNumbers";
 import Pagination from "../components/Pagination";
 import Spinner from "../components/Spinner";
-
+import debounce from "../utils/debounceUtils";
 import "../styles/Quran.css";
 
 function QuranDisplay() {
@@ -52,12 +52,14 @@ function QuranDisplay() {
   }, []);
 
   const handlePlaySurah = async () => {
+    if (audioPlaying) {
+      setAudioPlaying(false);
+      return;
+    }
     try {
-      const response = await fetchSurahAudio();
-      if (response.data?.data?.ayahs) {
-        setAudioUrl(response.data.data.ayahs[0].audio);
-        setAudioPlaying(true);
-      }
+      const audio = await fetchSurahAudio();
+      setAudioUrl(audio);
+      setAudioPlaying(true);
     } catch (error) {
       console.error("Error fetching audio:", error);
     }
@@ -71,27 +73,13 @@ function QuranDisplay() {
     setCurrentPage(Number(surahPage));
   };
 
-  const handleNextPage = () => {
-    if (pages[currentPage + 1]) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-
-  const handlePrevPage = () => {
-    if (pages[currentPage - 1]) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-
   const handlePageChange = (pageNumber) => {
-    if (pages[pageNumber]) {
-      setCurrentPage(pageNumber);
-    }
+    if (pages[pageNumber]) setCurrentPage(pageNumber);
   };
 
   const swipeHandlers = useSwipeable({
-    onSwipedLeft: handleNextPage,
-    onSwipedRight: handlePrevPage,
+    onSwipedLeft: () => handlePageChange(currentPage + 1),
+    onSwipedRight: () => handlePageChange(currentPage - 1),
     trackMouse: true,
   });
 
@@ -108,26 +96,31 @@ function QuranDisplay() {
 
   const totalPages = useMemo(() => Object.keys(pages || {}).length, [pages]);
 
-  const handleSearch = () => {
-    if (searchQuery.trim() === "") return;
+  const handleSearch = useCallback(
+    debounce(() => {
+      if (searchQuery.trim() === "") return;
 
-    const results = [];
-    Object.keys(pages).forEach((page) => {
-      pages[page].forEach((ayah) => {
-        if (ayah.text.includes(searchQuery)) {
-          results.push({
-            ...ayah,
-            page: page,
-          });
-        }
+      const results = [];
+      Object.keys(pages).forEach((page) => {
+        pages[page].forEach((ayah) => {
+          if (ayah.text.includes(searchQuery)) {
+            results.push({
+              ...ayah,
+              page: page,
+            });
+          }
+        });
       });
-    });
-    setSearchResults(results);
-  };
+      setSearchResults(results);
+    }, 500),
+    [searchQuery, pages]
+  );
 
-  const handlePageInputChange = (e) => {
-    setInputPage(e.target.value);
-  };
+  useEffect(() => {
+    handleSearch();
+  }, [searchQuery]);
+
+  const handlePageInputChange = (e) => setInputPage(e.target.value);
 
   const handleGoToPage = () => {
     const page = parseInt(inputPage, 10);
@@ -137,19 +130,7 @@ function QuranDisplay() {
     }
   };
 
-  // const handleAudioToggle = () => {
-  //   const audioElement = document.getElementById("audioPlayer");
-  //   if (audioPlaying) {
-  //     audioElement.pause();
-  //   } else {
-  //     audioElement.play();
-  //   }
-  //   setAudioPlaying(!audioPlaying);
-  // };
-
-  {
-    status.loading && <Spinner />;
-  }
+  if (status.loading) return <Spinner />;
   if (status.error) return <p>{status.error}</p>;
 
   return (
@@ -170,10 +151,9 @@ function QuranDisplay() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
-          <button onClick={handleSearch}>Search</button>
         </div>
       </div>
-      {searchResults.length > 0 ? (
+      {searchResults.length > 0 && (
         <div className="search-results">
           <h3>Search Results:</h3>
           {searchResults.map((result, index) => (
@@ -188,18 +168,14 @@ function QuranDisplay() {
             </div>
           ))}
         </div>
-      ) : null}
+      )}
 
-      <button
-        className="play-surah-button"
-        onClick={() => handlePlaySurah(currentAyahs[0].surahNumber)}
-      >
-        Play Surah
+      <button className="play-surah-button" onClick={handlePlaySurah}>
+        {audioPlaying ? "Stop Surah" : "Play Surah"}
       </button>
 
       {audioPlaying && (
-        <audio controls autoPlay>
-          <source src={audioUrl} type="audio/mp3" />
+        <audio controls autoPlay src={audioUrl}>
           Your browser does not support the audio element.
         </audio>
       )}
@@ -226,7 +202,7 @@ function QuranDisplay() {
         </button>
       </div>
 
-      {currentAyahs.length > 0 ? (
+      {currentAyahs.length > 0 && (
         <>
           <h3 className="page-title">{currentSurah}</h3>
           <div className="ayah-list">
@@ -244,8 +220,6 @@ function QuranDisplay() {
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={handlePageChange}
-            onPrev={handlePrevPage}
-            onNext={handleNextPage}
             isPrevDisabled={!pages[currentPage - 1]}
             isNextDisabled={!pages[currentPage + 1]}
           />
@@ -264,8 +238,6 @@ function QuranDisplay() {
             </div>
           )}
         </>
-      ) : (
-        <p>No ayah data available for this page.</p>
       )}
     </div>
   );

@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import axios from "axios";
+import { fetchQuranData, fetchSurahAudio } from "../utils/api";
 import useBookmarks from "../hooks/useBookmarks";
 import { useSwipeable } from "react-swipeable";
 import { arabicNum } from "../utils/arabicNumbers";
@@ -22,46 +22,38 @@ function QuranDisplay() {
   const { bookmarkedPages, addBookmark, removeBookmark } = useBookmarks();
 
   useEffect(() => {
-    const fetchQuranData = async () => {
+    const getData = async () => {
       try {
-        const response = await axios.get(
-          "http://api.alquran.cloud/v1/quran/quran-uthmani"
-        );
-        if (response.data?.data?.surahs) {
+        const surahs = await fetchQuranData();
+        if (surahs) {
           const allPages = {};
-          const surahNames = [];
-          response.data.data.surahs.forEach((surah) => {
-            surahNames.push(surah.name);
+          const surahNames = surahs.map((surah) => surah.name);
+
+          surahs.forEach((surah) => {
             surah.ayahs.forEach((ayah) => {
-              if (!allPages[ayah.page]) {
-                allPages[ayah.page] = [];
-              }
+              if (!allPages[ayah.page]) allPages[ayah.page] = [];
               allPages[ayah.page].push({ ...ayah, surahName: surah.name });
             });
           });
+
           setPages(allPages);
           setSurahList(surahNames);
         } else {
           setStatus({ loading: false, error: "Please try again later." });
         }
       } catch (error) {
-        setStatus({
-          loading: false,
-          error: error.message || "Error fetching Quran data.",
-        });
+        setStatus({ loading: false, error: error.message });
       } finally {
-        setStatus((prevState) => ({ ...prevState, loading: false }));
+        setStatus((prev) => ({ ...prev, loading: false }));
       }
     };
 
-    fetchQuranData();
+    getData();
   }, []);
 
-  const handlePlaySurah = async (surahNumber) => {
+  const handlePlaySurah = async () => {
     try {
-      const response = await axios.get(
-        `http://api.alquran.cloud/v1/surah/${surahNumber}/ar.alafasy`
-      );
+      const response = await fetchSurahAudio();
       if (response.data?.data?.ayahs) {
         setAudioUrl(response.data.data.ayahs[0].audio);
         setAudioPlaying(true);

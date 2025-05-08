@@ -5,7 +5,7 @@ import { useSwipeable } from "react-swipeable";
 import { arabicNum } from "../utils/arabicNumbers";
 import Pagination from "../components/Pagination";
 import Spinner from "../components/Spinner";
-import debounce from "../utils/debounceUtils";
+import { debounce } from "../utils/debounceUtils";
 import "../styles/Quran.css";
 
 function QuranDisplay() {

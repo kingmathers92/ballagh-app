@@ -12,8 +12,8 @@ function Pagination({
   isNextDisabled,
 }) {
   const pageNumbers = [];
-
   const maxPageNumbersToShow = 5;
+
   let startPage = Math.max(
     1,
     currentPage - Math.floor(maxPageNumbersToShow / 2)
@@ -31,7 +31,12 @@ function Pagination({
 
   return (
     <div className="pagination-container">
-      <button disabled={isPrevDisabled} onClick={onPrev}>
+      <button
+        disabled={isPrevDisabled}
+        onClick={onPrev}
+        className={isPrevDisabled ? "disabled" : ""}
+        aria-label="Go to previous page"
+      >
         Prev
       </button>
 
@@ -40,12 +45,18 @@ function Pagination({
           key={number}
           className={number === currentPage ? "active" : ""}
           onClick={() => onPageChange(number)}
+          aria-label={`Go to page ${number}`}
         >
           {number}
         </button>
       ))}
 
-      <button disabled={isNextDisabled} onClick={onNext}>
+      <button
+        disabled={isNextDisabled}
+        onClick={onNext}
+        className={isNextDisabled ? "disabled" : ""}
+        aria-label="Go to next page"
+      >
         Next
       </button>
     </div>
@@ -53,13 +64,13 @@ function Pagination({
 }
 
 Pagination.propTypes = {
+  currentPage: PropTypes.number.isRequired,
+  totalPages: PropTypes.number.isRequired,
+  onPageChange: PropTypes.func.isRequired,
   onPrev: PropTypes.func.isRequired,
   onNext: PropTypes.func.isRequired,
   isPrevDisabled: PropTypes.bool.isRequired,
   isNextDisabled: PropTypes.bool.isRequired,
-  currentPage: PropTypes.bool.isRequired,
-  totalPages: PropTypes.bool.isRequired,
-  onPageChange: PropTypes.func.isRequired,
 };
 
 export default Pagination;

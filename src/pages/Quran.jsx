@@ -1,14 +1,16 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
-import { fetchQuranData, fetchSurahAudio } from "../utils/api";
+import { fetchQuranData } from "../utils/api";
 import useBookmarks from "../hooks/useBookmarks";
 import { useSwipeable } from "react-swipeable";
 import { arabicNum } from "../utils/arabicNumbers";
 import Pagination from "../components/Pagination";
 import Spinner from "../components/Spinner";
-import { debounce } from "../utils/debounceUtils";
+import AudioPlayer from "react-h5-audio-player";
+import "react-h5-audio-player/lib/styles.css";
+
 import "../styles/Quran.css";
 
-function QuranDisplay() {
+function Quran() {
   const [pages, setPages] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [status, setStatus] = useState({ loading: true, error: null });
@@ -17,9 +19,8 @@ function QuranDisplay() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [inputPage, setInputPage] = useState("");
-  const [audioUrl, setAudioUrl] = useState("");
-  const [audioPlaying, setAudioPlaying] = useState(false);
-  const { bookmarkedPages, addBookmark, removeBookmark } = useBookmarks();
+  const [selectedSurahAudio, setSelectedSurahAudio] = useState(1);
+  const { bookmarkedPages, removeBookmark } = useBookmarks();
 
   useEffect(() => {
     const getData = async () => {
@@ -51,20 +52,6 @@ function QuranDisplay() {
     getData();
   }, []);
 
-  const handlePlaySurah = async () => {
-    if (audioPlaying) {
-      setAudioPlaying(false);
-      return;
-    }
-    try {
-      const audio = await fetchSurahAudio();
-      setAudioUrl(audio);
-      setAudioPlaying(true);
-    } catch (error) {
-      console.error("Error fetching audio:", error);
-    }
-  };
-
   const handleSurahChange = (e) => {
     const selectedSurah = e.target.value;
     const surahPage = Object.keys(pages).find(
@@ -77,9 +64,17 @@ function QuranDisplay() {
     if (pages[pageNumber]) setCurrentPage(pageNumber);
   };
 
+  const handlePrev = () => {
+    if (pages[currentPage - 1]) setCurrentPage((prev) => prev - 1);
+  };
+
+  const handleNext = () => {
+    if (pages[currentPage + 1]) setCurrentPage((prev) => prev + 1);
+  };
+
   const swipeHandlers = useSwipeable({
-    onSwipedLeft: () => handlePageChange(currentPage + 1),
-    onSwipedRight: () => handlePageChange(currentPage - 1),
+    onSwipedLeft: handleNext,
+    onSwipedRight: handlePrev,
     trackMouse: true,
   });
 
@@ -96,29 +91,34 @@ function QuranDisplay() {
 
   const totalPages = useMemo(() => Object.keys(pages || {}).length, [pages]);
 
-  const handleSearch = useCallback(
-    debounce(() => {
-      if (searchQuery.trim() === "") return;
+  const debouncedSearch = useCallback(() => {
+    const query = searchQuery.trim();
+    if (!query) {
+      setSearchResults([]);
+      return;
+    }
 
-      const results = [];
-      Object.keys(pages).forEach((page) => {
-        pages[page].forEach((ayah) => {
-          if (ayah.text.includes(searchQuery)) {
-            results.push({
-              ...ayah,
-              page: page,
-            });
-          }
-        });
+    const results = [];
+    Object.keys(pages).forEach((page) => {
+      pages[page].forEach((ayah) => {
+        if (ayah.text.includes(query)) {
+          results.push({
+            ...ayah,
+            page: page,
+          });
+        }
       });
-      setSearchResults(results);
-    }, 500),
-    [searchQuery, pages]
-  );
+    });
+    setSearchResults(results);
+  }, [searchQuery, pages]);
 
   useEffect(() => {
-    handleSearch();
-  }, [searchQuery]);
+    const delayDebounce = setTimeout(() => {
+      debouncedSearch();
+    }, 500);
+
+    return () => clearTimeout(delayDebounce);
+  }, [debouncedSearch]);
 
   const handlePageInputChange = (e) => setInputPage(e.target.value);
 
@@ -136,10 +136,22 @@ function QuranDisplay() {
   return (
     <div {...swipeHandlers} className="quran-container">
       <div className="search-surah-container">
-        <select onChange={handleSurahChange}>
+        <select onChange={handleSurahChange} className="surah-dropdown">
           {surahList.map((surah, index) => (
             <option key={index} value={surah}>
               {surah}
+            </option>
+          ))}
+        </select>
+
+        <select
+          value={selectedSurahAudio}
+          onChange={(e) => setSelectedSurahAudio(parseInt(e.target.value))}
+          className="audio-dropdown"
+        >
+          {surahList.map((surah, index) => (
+            <option key={index} value={index + 1}>
+              {surah} (Surah {arabicNum(index + 1)})
             </option>
           ))}
         </select>
@@ -153,6 +165,17 @@ function QuranDisplay() {
           />
         </div>
       </div>
+
+      <AudioPlayer
+        autoPlay={false}
+        src={`https://download.quranicaudio.com/quran/mishary_rashid_alafasy/${selectedSurahAudio}.mp3`}
+        className="quran-audio-player"
+        layout="horizontal"
+        showJumpControls={false}
+        customProgressBarSection={[]}
+        customControlsSection={["MAIN_CONTROLS", "VOLUME_CONTROLS"]}
+      />
+
       {searchResults.length > 0 && (
         <div className="search-results">
           <h3>Search Results:</h3>
@@ -160,7 +183,7 @@ function QuranDisplay() {
             <div key={index} className="search-result-item">
               <p>
                 {result.surahName} (Page {arabicNum(result.page)}):{" "}
-                {result.text}{" "}
+                {result.text}
                 <span className="ayah-number">
                   ({arabicNum(result.numberInSurah)})
                 </span>
@@ -169,26 +192,6 @@ function QuranDisplay() {
           ))}
         </div>
       )}
-
-      <button className="play-surah-button" onClick={handlePlaySurah}>
-        {audioPlaying ? "Stop Surah" : "Play Surah"}
-      </button>
-
-      {audioPlaying && (
-        <audio controls autoPlay src={audioUrl}>
-          Your browser does not support the audio element.
-        </audio>
-      )}
-
-      <button
-        onClick={() => addBookmark(currentPage)}
-        disabled={bookmarkedPages.includes(currentPage)}
-        className="bookmark-button"
-      >
-        {bookmarkedPages.includes(currentPage)
-          ? "Bookmarked"
-          : "Bookmark this page"}
-      </button>
 
       <div className="page-input-container">
         <input
@@ -208,7 +211,7 @@ function QuranDisplay() {
           <div className="ayah-list">
             {currentAyahs.map((ayah) => (
               <p key={ayah.number} className="ayah-text">
-                {ayah.text}{" "}
+                {ayah.text}
                 <span className="ayah-number">
                   ({arabicNum(ayah.numberInSurah)})
                 </span>
@@ -220,27 +223,29 @@ function QuranDisplay() {
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={handlePageChange}
+            onPrev={handlePrev}
+            onNext={handleNext}
             isPrevDisabled={!pages[currentPage - 1]}
             isNextDisabled={!pages[currentPage + 1]}
           />
-
-          {bookmarkedPages.length > 0 && (
-            <div className="bookmarked-pages">
-              <h4>Bookmarked Pages:</h4>
-              {bookmarkedPages.map((page) => (
-                <div key={page} className="bookmarked-item">
-                  <span onClick={() => setCurrentPage(page)}>
-                    Page {arabicNum(page)}
-                  </span>
-                  <button onClick={() => removeBookmark(page)}>Remove</button>
-                </div>
-              ))}
-            </div>
-          )}
         </>
+      )}
+
+      {bookmarkedPages.length > 0 && (
+        <div className="bookmarked-pages">
+          <h4>Bookmarked Pages:</h4>
+          {bookmarkedPages.map((page) => (
+            <div key={page} className="bookmarked-item">
+              <span onClick={() => setCurrentPage(page)}>
+                Page {arabicNum(page)}
+              </span>
+              <button onClick={() => removeBookmark(page)}>Remove</button>
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );
 }
 
-export default QuranDisplay;
+export default Quran;

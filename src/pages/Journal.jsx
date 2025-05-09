@@ -5,8 +5,7 @@ import "../styles/Journal.css";
 const ReflectionJournal = () => {
   const [reflection, setReflection] = useState("");
   const [journalEntries, setJournalEntries] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState("Reflection"); // Default category
-  const maxLength = 500;
+  const [selectedCategory, setSelectedCategory] = useState("Reflection");
 
   // Categories for dropdown
   const categories = [
@@ -32,7 +31,7 @@ const ReflectionJournal = () => {
     if (reflection.trim()) {
       const newEntry = {
         text: reflection,
-        category: selectedCategory, // Include category
+        category: selectedCategory,
         timestamp: new Date().toLocaleString(),
       };
       const newEntries = [...journalEntries, newEntry];

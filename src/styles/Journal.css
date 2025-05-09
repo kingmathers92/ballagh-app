@@ -66,6 +66,30 @@
   color: var(--text-color);
 }
 
+/* Search Input Styling */
+.search-input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid var(--primary-color);
+  border-radius: 5px;
+  font-family: "Lateef", Arial, sans-serif;
+  font-size: 1em;
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--accent-color);
+}
+
+.no-entries {
+  text-align: center;
+  color: var(--accent-color);
+  margin-top: 20px;
+}
+
 .journal-input-container {
   display: flex;
   flex-direction: column;
@@ -74,6 +98,8 @@
 }
 
 .category-dropdown {
+  width: 100%;
+  margin-bottom: 10px;
   padding: 8px;
   border-radius: 5px;
   border: 1px solid var(--primary-color);

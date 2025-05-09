@@ -6,6 +6,7 @@ const ReflectionJournal = () => {
   const [reflection, setReflection] = useState("");
   const [journalEntries, setJournalEntries] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("Reflection");
+  const maxLength = 500;
 
   // Categories for dropdown
   const categories = [

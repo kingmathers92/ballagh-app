@@ -168,12 +168,16 @@ function Quran() {
 
       <AudioPlayer
         autoPlay={false}
-        src={`https://download.quranicaudio.com/quran/mishary_rashid_alafasy/${selectedSurahAudio}.mp3`}
-        className="quran-audio-player"
-        layout="horizontal"
-        showJumpControls={false}
-        customProgressBarSection={[]}
-        customControlsSection={["MAIN_CONTROLS", "VOLUME_CONTROLS"]}
+        src={`https://download.quranicaudio.com/qdc/mishary_rashid_alafasy/murattal/${String(
+          selectedSurahAudio
+        ).padStart(3, "0")}.mp3`}
+        onPlayError={() => console.log("Playback failed")}
+        style={{
+          borderRadius: "10px",
+          backgroundColor: "var(--secondary-color)",
+          padding: "10px",
+          margin: "15px 0",
+        }}
       />
 
       {searchResults.length > 0 && (

@@ -289,9 +289,37 @@
     margin-bottom: 20px;
   }
 
-  audio {
+  .audio-controls-container {
+    margin: 20px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .rhap_container {
+    background-color: var(--secondary-color);
+    border-radius: 10px;
+    padding: 10px;
+  }
+
+  .rhap_progress-filled {
+    background-color: var(--accent-color);
+  }
+
+  .rhap_button-clear {
+    color: var(--primary-color);
+  }
+
+  /* Surah Selection Dropdown */
+  .surah-audio-selector {
     width: 100%;
-    margin-top: 20px;
+    padding: 8px;
+    border: 2px solid var(--primary-color);
+    border-radius: 5px;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-family: "Lateef", serif;
+    font-size: 1.1rem;
   }
 
   .search-surah-container {
@@ -371,5 +399,15 @@
 
   audio {
     margin-top: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .rhap_container {
+    padding: 5px;
+  }
+
+  .rhap_time {
+    font-size: 0.8rem;
   }
 }

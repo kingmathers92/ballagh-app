@@ -135,119 +135,148 @@ function Quran() {
 
   return (
     <div {...swipeHandlers} className="quran-container">
-      <div className="search-surah-container">
-        <select onChange={handleSurahChange} className="surah-dropdown">
-          {surahList.map((surah, index) => (
-            <option key={index} value={surah}>
-              {surah}
-            </option>
-          ))}
-        </select>
-
-        <select
-          value={selectedSurahAudio}
-          onChange={(e) => setSelectedSurahAudio(parseInt(e.target.value))}
-          className="audio-dropdown"
-        >
-          {surahList.map((surah, index) => (
-            <option key={index} value={index + 1}>
-              {surah} (Surah {arabicNum(index + 1)})
-            </option>
-          ))}
-        </select>
-
-        <div className="search-container">
-          <input
-            type="text"
-            placeholder="Search for Ayah..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
-      </div>
-
-      <AudioPlayer
-        autoPlay={false}
-        src={`https://download.quranicaudio.com/qdc/mishary_rashid_alafasy/murattal/${String(
-          selectedSurahAudio
-        ).padStart(3, "0")}.mp3`}
-        onPlayError={() => console.log("Playback failed")}
-        style={{
-          borderRadius: "10px",
-          backgroundColor: "var(--secondary-color)",
-          padding: "10px",
-          margin: "15px 0",
-        }}
-      />
-
-      {searchResults.length > 0 && (
-        <div className="search-results">
-          <h3>Search Results:</h3>
-          {searchResults.map((result, index) => (
-            <div key={index} className="search-result-item">
-              <p>
-                {result.surahName} (Page {arabicNum(result.page)}):{" "}
-                {result.text}
-                <span className="ayah-number">
-                  ({arabicNum(result.numberInSurah)})
-                </span>
-              </p>
-            </div>
-          ))}
+      <header className="quran-header">
+        <h1>القرآن الكريم</h1>
+      </header>
+      {/* Sidebar: Only render if pages is available */}
+      {pages && (
+        <div className="quran-sidebar">
+          <h4>الفهرس</h4>
+          <ul>
+            {surahList.map((surah, index) => {
+              const pageNumber = Object.keys(pages).find(
+                (page) => pages[page][0]?.surahName === surah
+              );
+              return (
+                <li
+                  key={index}
+                  onClick={() =>
+                    handleSurahChange({ target: { value: surah } })
+                  }
+                >
+                  {surah} - الصفحة {pageNumber ? arabicNum(pageNumber) : "?"}
+                </li>
+              );
+            })}
+          </ul>
         </div>
       )}
 
-      <div className="page-input-container">
-        <input
-          type="number"
-          placeholder="Enter page number"
-          value={inputPage}
-          onChange={handlePageInputChange}
-        />
-        <button onClick={handleGoToPage} disabled={!inputPage}>
-          Go
-        </button>
-      </div>
-
-      {currentAyahs.length > 0 && (
-        <>
-          <h3 className="page-title">{currentSurah}</h3>
-          <div className="ayah-list">
-            {currentAyahs.map((ayah) => (
-              <p key={ayah.number} className="ayah-text">
-                {ayah.text}
-                <span className="ayah-number">
-                  ({arabicNum(ayah.numberInSurah)})
-                </span>
-              </p>
+      <div className="quran-main-content">
+        <div className="search-surah-container">
+          <select onChange={handleSurahChange} className="surah-dropdown">
+            {surahList.map((surah, index) => (
+              <option key={index} value={surah}>
+                {surah}
+              </option>
             ))}
-            <h3 className="page-title">Page {arabicNum(currentPage)}</h3>
-          </div>
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
-            onPrev={handlePrev}
-            onNext={handleNext}
-            isPrevDisabled={!pages[currentPage - 1]}
-            isNextDisabled={!pages[currentPage + 1]}
-          />
-        </>
-      )}
+          </select>
 
-      {bookmarkedPages.length > 0 && (
-        <div className="bookmarked-pages">
-          <h4>Bookmarked Pages:</h4>
-          {bookmarkedPages.map((page) => (
-            <div key={page} className="bookmarked-item">
-              <span onClick={() => setCurrentPage(page)}>
-                Page {arabicNum(page)}
-              </span>
-              <button onClick={() => removeBookmark(page)}>Remove</button>
-            </div>
-          ))}
+          <select
+            value={selectedSurahAudio}
+            onChange={(e) => setSelectedSurahAudio(parseInt(e.target.value))}
+            className="audio-dropdown"
+          >
+            {surahList.map((surah, index) => (
+              <option key={index} value={index + 1}>
+                {surah} (Surah {arabicNum(index + 1)})
+              </option>
+            ))}
+          </select>
+
+          <div className="search-container">
+            <input
+              type="text"
+              placeholder="Search for Ayah..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
         </div>
-      )}
+
+        <AudioPlayer
+          autoPlay={false}
+          src={`https://download.quranicaudio.com/qdc/mishary_rashid_alafasy/murattal/${String(
+            selectedSurahAudio
+          ).padStart(3, "0")}.mp3`}
+          onPlayError={() => console.log("Playback failed")}
+          style={{
+            borderRadius: "10px",
+            backgroundColor: "var(--secondary-color)",
+            padding: "10px",
+            margin: "15px 0",
+          }}
+        />
+
+        {searchResults.length > 0 && (
+          <div className="search-results">
+            <h3>Search Results:</h3>
+            {searchResults.map((result, index) => (
+              <div key={index} className="search-result-item">
+                <p>
+                  {result.surahName} (Page {arabicNum(result.page)}):{" "}
+                  {result.text}
+                  <span className="ayah-number">
+                    ({arabicNum(result.numberInSurah)})
+                  </span>
+                </p>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <div className="page-input-container">
+          <input
+            type="number"
+            placeholder="Enter page number"
+            value={inputPage}
+            onChange={handlePageInputChange}
+          />
+          <button onClick={handleGoToPage} disabled={!inputPage}>
+            Go
+          </button>
+        </div>
+
+        {currentAyahs.length > 0 && (
+          <>
+            <h3 className="page-title">{currentSurah}</h3>
+            <div className="ayah-list">
+              {currentAyahs.map((ayah) => (
+                <p key={ayah.number} className="ayah-text">
+                  {ayah.text}
+                  <span className="ayah-number">
+                    ({arabicNum(ayah.numberInSurah)})
+                  </span>
+                </p>
+              ))}
+              <h3 className="page-title">Page {arabicNum(currentPage)}</h3>
+            </div>
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+              onPrev={handlePrev}
+              onNext={handleNext}
+              isPrevDisabled={!pages[currentPage - 1]}
+              isNextDisabled={!pages[currentPage + 1]}
+            />
+          </>
+        )}
+
+        {bookmarkedPages.length > 0 && (
+          <div className="bookmarked-pages">
+            <h4>Bookmarked Pages:</h4>
+            {bookmarkedPages.map((page) => (
+              <div key={page} className="bookmarked-item">
+                <span onClick={() => setCurrentPage(page)}>
+                  Page {arabicNum(page)}
+                </span>
+                <button onClick={() => removeBookmark(page)}>Remove</button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

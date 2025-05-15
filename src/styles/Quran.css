@@ -63,15 +63,40 @@
   border: 1px solid #d4af37;
 }
 
-.ayah-text:hover {
-  background-color: #f0e8d8;
+.quran-container .ayah-text {
+  margin-bottom: 25px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  padding: 15px 20px;
+  font-family: "Scheherazade New", serif;
+  color: #2f2f2f;
+  background: none;
+  box-shadow: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.quran-container .ayah-text:hover {
+  background-color: rgba(212, 175, 55, 0.1);
   color: #1f4e5f;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .quran-container .ayah-number {
-  font-size: 1.2rem;
-  color: var(--accent-color);
+  font-size: 1rem;
+  color: #d4af37;
+  background: url("https://www.transparenttextures.com/patterns/arabesque.png");
+  background-size: contain;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 2px solid #d4af37;
+  margin-left: 10px;
 }
 
 .search-surah-container {

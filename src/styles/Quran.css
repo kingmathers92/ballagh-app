@@ -12,7 +12,18 @@
   line-height: 1.8;
   padding: 0;
   background-color: #f5e9c5;
-  background-image: url("https://www.transparenttextures.com/patterns/paper-fibers.png");
+  background-image: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.1),
+      rgba(0, 0, 0, 0.05)
+    ),
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.02) 2px,
+      rgba(0, 0, 0, 0.02) 4px
+    );
   background-size: cover;
   background-repeat: repeat;
   color: #2f2f2f;
@@ -121,11 +132,23 @@
   min-width: 150px;
   max-width: 100%;
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%231f4e5f'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: left 10px center;
-  background-size: 20px;
-  padding-left: 35px;
+  position: relative;
+  padding-left: 30px;
+}
+
+/* Create a CSS arrow for the dropdown */
+.search-surah-container select::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid #1f4e5f;
+  pointer-events: none;
 }
 
 .search-container {
@@ -226,8 +249,12 @@
   display: inline-block;
   font-size: 0.9rem;
   color: #d4af37;
-  background: url("https://www.transparenttextures.com/patterns/arabesque.png");
-  background-size: contain;
+  background: radial-gradient(
+    circle,
+    rgba(212, 175, 55, 0.2) 20%,
+    rgba(255, 255, 255, 0.5) 60%,
+    rgba(212, 175, 55, 0.2) 100%
+  );
   width: 25px;
   height: 25px;
   line-height: 25px;
@@ -382,7 +409,6 @@
     min-width: 100%;
     max-width: 100%;
     padding-left: 30px;
-    background-size: 18px;
   }
 
   .search-container {
@@ -530,7 +556,6 @@
     font-size: 0.8rem;
     padding: 5px;
     padding-left: 25px;
-    background-size: 16px;
   }
 
   .search-container input {

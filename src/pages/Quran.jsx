@@ -7,10 +7,11 @@ import Pagination from "../components/Pagination";
 import Spinner from "../components/Spinner";
 import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
-
 import "../styles/Quran.css";
 
+// Quran Component
 function Quran() {
+  // State
   const [pages, setPages] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [status, setStatus] = useState({ loading: true, error: null });
@@ -22,6 +23,73 @@ function Quran() {
   const [selectedSurahAudio, setSelectedSurahAudio] = useState(1);
   const { bookmarkedPages, removeBookmark } = useBookmarks();
 
+  // Memoized Values
+  const currentAyahs = useMemo(
+    () => pages?.[currentPage] || [],
+    [pages, currentPage]
+  );
+  const totalPages = useMemo(() => Object.keys(pages || {}).length, [pages]);
+
+  // Handlers
+  // Search Handler (Moved above useEffect)
+  const debouncedSearch = useCallback(() => {
+    const query = searchQuery.trim();
+    if (!query) {
+      setSearchResults([]);
+      return;
+    }
+
+    const results = [];
+    Object.keys(pages).forEach((page) => {
+      pages[page].forEach((ayah) => {
+        if (ayah.text.includes(query)) {
+          results.push({ ...ayah, page });
+        }
+      });
+    });
+    setSearchResults(results);
+  }, [searchQuery, pages]);
+
+  // Navigation Handlers
+  const handleSurahChange = (e) => {
+    const selectedSurah = e.target.value;
+    const surahPage = Object.keys(pages).find(
+      (page) => pages[page][0].surahName === selectedSurah
+    );
+    setCurrentPage(Number(surahPage));
+  };
+
+  const handlePageChange = (pageNumber) => {
+    if (pages[pageNumber]) setCurrentPage(pageNumber);
+  };
+
+  const handlePrev = () => {
+    if (pages[currentPage - 1]) setCurrentPage((prev) => prev - 1);
+  };
+
+  const handleNext = () => {
+    if (pages[currentPage + 1]) setCurrentPage((prev) => prev + 1);
+  };
+
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: handleNext,
+    onSwipedRight: handlePrev,
+    trackMouse: true,
+  });
+
+  // Page Input Handler
+  const handlePageInputChange = (e) => setInputPage(e.target.value);
+
+  const handleGoToPage = () => {
+    const page = parseInt(inputPage, 10);
+    if (page && pages[page]) {
+      setCurrentPage(page);
+      setInputPage("");
+    }
+  };
+
+  // Effects
+  // Fetch Quran data on mount
   useEffect(() => {
     const getData = async () => {
       try {
@@ -52,66 +120,14 @@ function Quran() {
     getData();
   }, []);
 
-  const handleSurahChange = (e) => {
-    const selectedSurah = e.target.value;
-    const surahPage = Object.keys(pages).find(
-      (page) => pages[page][0].surahName === selectedSurah
-    );
-    setCurrentPage(Number(surahPage));
-  };
-
-  const handlePageChange = (pageNumber) => {
-    if (pages[pageNumber]) setCurrentPage(pageNumber);
-  };
-
-  const handlePrev = () => {
-    if (pages[currentPage - 1]) setCurrentPage((prev) => prev - 1);
-  };
-
-  const handleNext = () => {
-    if (pages[currentPage + 1]) setCurrentPage((prev) => prev + 1);
-  };
-
-  const swipeHandlers = useSwipeable({
-    onSwipedLeft: handleNext,
-    onSwipedRight: handlePrev,
-    trackMouse: true,
-  });
-
-  const currentAyahs = useMemo(
-    () => pages?.[currentPage] || [],
-    [pages, currentPage]
-  );
-
+  // Update current surah when ayahs change
   useEffect(() => {
     if (currentAyahs.length > 0) {
       setCurrentSurah(currentAyahs[0].surahName);
     }
   }, [currentAyahs]);
 
-  const totalPages = useMemo(() => Object.keys(pages || {}).length, [pages]);
-
-  const debouncedSearch = useCallback(() => {
-    const query = searchQuery.trim();
-    if (!query) {
-      setSearchResults([]);
-      return;
-    }
-
-    const results = [];
-    Object.keys(pages).forEach((page) => {
-      pages[page].forEach((ayah) => {
-        if (ayah.text.includes(query)) {
-          results.push({
-            ...ayah,
-            page: page,
-          });
-        }
-      });
-    });
-    setSearchResults(results);
-  }, [searchQuery, pages]);
-
+  // Debounced search effect
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
       debouncedSearch();
@@ -120,28 +136,15 @@ function Quran() {
     return () => clearTimeout(delayDebounce);
   }, [debouncedSearch]);
 
-  const handlePageInputChange = (e) => setInputPage(e.target.value);
-
-  const handleGoToPage = () => {
-    const page = parseInt(inputPage, 10);
-    if (page && pages[page]) {
-      setCurrentPage(page);
-      setInputPage("");
-    }
-  };
-
+  // Render
   if (status.loading) return <Spinner />;
   if (status.error) return <p>{status.error}</p>;
 
   return (
     <div {...swipeHandlers} className="quran-container">
-      <header className="quran-header">
-        <h1>القرآن الكريم</h1>
-      </header>
-      {/* Sidebar: Only render if pages is available */}
+      {/* Sidebar */}
       {pages && (
         <div className="quran-sidebar">
-          <h4>الفهرس</h4>
           <ul>
             {surahList.map((surah, index) => {
               const pageNumber = Object.keys(pages).find(
@@ -154,7 +157,7 @@ function Quran() {
                     handleSurahChange({ target: { value: surah } })
                   }
                 >
-                  {surah} - الصفحة {pageNumber ? arabicNum(pageNumber) : "?"}
+                  {surah} ({pageNumber ? arabicNum(pageNumber) : "?"})
                 </li>
               );
             })}
@@ -162,59 +165,56 @@ function Quran() {
         </div>
       )}
 
+      {/* Main Content */}
       <div className="quran-main-content">
+        {/* Combined Search, Surah, and Page Navigation */}
         <div className="search-surah-container">
+          <div className="search-container">
+            <input
+              type="text"
+              placeholder="البحث في الآيات"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
           <select onChange={handleSurahChange} className="surah-dropdown">
+            <option value="">اختر سورة</option>
             {surahList.map((surah, index) => (
               <option key={index} value={surah}>
                 {surah}
               </option>
             ))}
           </select>
-
-          <select
-            value={selectedSurahAudio}
-            onChange={(e) => setSelectedSurahAudio(parseInt(e.target.value))}
-            className="audio-dropdown"
-          >
-            {surahList.map((surah, index) => (
-              <option key={index} value={index + 1}>
-                {surah} (Surah {arabicNum(index + 1)})
-              </option>
-            ))}
-          </select>
-
-          <div className="search-container">
+          <div className="page-input-container">
             <input
-              type="text"
-              placeholder="Search for Ayah..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              type="number"
+              placeholder="أدخل رقم الصفحة"
+              value={inputPage}
+              onChange={handlePageInputChange}
             />
+            <button onClick={handleGoToPage} disabled={!inputPage}>
+              اذهب
+            </button>
           </div>
         </div>
 
+        {/* Audio Player */}
         <AudioPlayer
           autoPlay={false}
           src={`https://download.quranicaudio.com/qdc/mishary_rashid_alafasy/murattal/${String(
             selectedSurahAudio
           ).padStart(3, "0")}.mp3`}
           onPlayError={() => console.log("Playback failed")}
-          style={{
-            borderRadius: "10px",
-            backgroundColor: "var(--secondary-color)",
-            padding: "10px",
-            margin: "15px 0",
-          }}
         />
 
+        {/* Search Results */}
         {searchResults.length > 0 && (
           <div className="search-results">
-            <h3>Search Results:</h3>
+            <h3>نتائج البحث:</h3>
             {searchResults.map((result, index) => (
               <div key={index} className="search-result-item">
                 <p>
-                  {result.surahName} (Page {arabicNum(result.page)}):{" "}
+                  {result.surahName} (الصفحة {arabicNum(result.page)}):{" "}
                   {result.text}
                   <span className="ayah-number">
                     ({arabicNum(result.numberInSurah)})
@@ -225,18 +225,7 @@ function Quran() {
           </div>
         )}
 
-        <div className="page-input-container">
-          <input
-            type="number"
-            placeholder="Enter page number"
-            value={inputPage}
-            onChange={handlePageInputChange}
-          />
-          <button onClick={handleGoToPage} disabled={!inputPage}>
-            Go
-          </button>
-        </div>
-
+        {/* Ayah Display */}
         {currentAyahs.length > 0 && (
           <>
             <h3 className="page-title">{currentSurah}</h3>
@@ -249,7 +238,7 @@ function Quran() {
                   </span>
                 </p>
               ))}
-              <h3 className="page-title">Page {arabicNum(currentPage)}</h3>
+              <h3 className="page-title">الصفحة {arabicNum(currentPage)}</h3>
             </div>
             <Pagination
               currentPage={currentPage}
@@ -263,15 +252,16 @@ function Quran() {
           </>
         )}
 
+        {/* Bookmarked Pages */}
         {bookmarkedPages.length > 0 && (
           <div className="bookmarked-pages">
-            <h4>Bookmarked Pages:</h4>
+            <h4>الصفحات المحفوظة:</h4>
             {bookmarkedPages.map((page) => (
               <div key={page} className="bookmarked-item">
                 <span onClick={() => setCurrentPage(page)}>
-                  Page {arabicNum(page)}
+                  الصفحة {arabicNum(page)}
                 </span>
-                <button onClick={() => removeBookmark(page)}>Remove</button>
+                <button onClick={() => removeBookmark(page)}>إزالة</button>
               </div>
             ))}
           </div>

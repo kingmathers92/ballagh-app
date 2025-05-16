@@ -1,3 +1,9 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 /* Root Container */
 .quran-container {
   display: flex;
@@ -12,11 +18,34 @@
   color: #2f2f2f;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
   border-radius: 10px;
-  max-width: 900px;
+  max-width: 100%;
+  width: 100%;
   margin: 20px auto;
   border: 3px solid #d4af37;
   position: relative;
   touch-action: pan-y;
+  overflow-x: hidden;
+}
+
+/* Sidebar Toggle Button */
+.sidebar-toggle {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  padding: 8px 16px;
+  background-color: #1f4e5f;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-family: "Scheherazade New", serif;
+  z-index: 1000;
+  transition: background-color 0.3s ease;
+}
+
+.sidebar-toggle:hover {
+  background-color: #163d4a;
 }
 
 /* Sidebar */
@@ -28,6 +57,20 @@
   overflow-y: auto;
   font-family: "Scheherazade New", serif;
   border-left: 2px solid #d4af37;
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 999;
+  transition: transform 0.3s ease;
+}
+
+/* Sidebar States */
+.quran-sidebar.closed {
+  transform: translateX(100%);
+}
+
+.quran-sidebar.open {
+  transform: translateX(0);
 }
 
 .quran-sidebar ul {
@@ -53,6 +96,7 @@
 .quran-main-content {
   flex: 1;
   padding: 15px;
+  width: 100%;
 }
 
 /* Search and Surah Selection */
@@ -62,6 +106,8 @@
   gap: 10px;
   margin-bottom: 15px;
   flex-wrap: wrap;
+  width: 100%;
+}
 
 .search-surah-container select {
   padding: 8px;
@@ -73,6 +119,7 @@
   font-family: "Scheherazade New", serif;
   flex: 1;
   min-width: 150px;
+  max-width: 100%;
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%231f4e5f'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
@@ -83,7 +130,8 @@
 
 .search-container {
   flex: 1;
-  min-width: 200px;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .search-container input {
@@ -101,7 +149,8 @@
   align-items: center;
   gap: 5px;
   flex: 1;
-  min-width: 200px;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .page-input-container input {
@@ -135,11 +184,11 @@
   margin: 20px auto;
   text-align: right;
   direction: rtl;
-  line-height: 2;
   padding: 15px;
   background: rgba(255, 255, 255, 0.3);
   border-radius: 8px;
   border: 1px solid #d4af37;
+  width: 100%;
 }
 
 .quran-container h3.page-title {
@@ -154,37 +203,38 @@
   border: 1px solid #d4af37;
 }
 
-.quran-container .ayah-text {
-  margin-bottom: 15px;
+.quran-container .ayah-paragraph {
   font-size: 1.3rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  padding: 10px 15px;
   font-family: "Scheherazade New", serif;
   color: #2f2f2f;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  line-height: 2;
+  margin: 0;
+  word-wrap: break-word;
+}
+
+.quran-container .ayah-text {
+  display: inline;
+  cursor: pointer;
+  transition: color 0.3s ease;
 }
 
 .quran-container .ayah-text:hover {
-  background-color: rgba(212, 175, 55, 0.1);
   color: #1f4e5f;
 }
 
 .quran-container .ayah-number {
+  display: inline-block;
   font-size: 0.9rem;
   color: #d4af37;
   background: url("https://www.transparenttextures.com/patterns/arabesque.png");
   background-size: contain;
   width: 25px;
   height: 25px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  line-height: 25px;
+  text-align: center;
   border-radius: 50%;
   border: 2px solid #d4af37;
-  margin-left: 10px;
+  margin: 0 5px;
 }
 
 /* Search Results */
@@ -194,6 +244,7 @@
   padding: 10px;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
 }
 
 .search-result-item {
@@ -212,6 +263,8 @@
   border: 1px solid #d4af37;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   margin: 15px 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .rhap_progress-filled {
@@ -235,6 +288,11 @@
   padding: 10px 0;
   border-top: 1px solid #ccc;
   z-index: 100;
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 /* Bookmark Section */
@@ -243,6 +301,7 @@
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 8px;
+  width: 100%;
 }
 
 .bookmarked-pages h4 {
@@ -255,6 +314,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 5px 0;
+  width: 100%;
 }
 
 .bookmarked-item span {
@@ -276,105 +336,281 @@
   .quran-container {
     flex-direction: column;
     max-width: 100%;
-    font-size: 16px;
-    padding: 10px;
+    width: 100%;
+    margin: 10px 0;
+    padding: 5px;
+    font-size: 14px;
+    border-radius: 5px;
+    border: 2px solid #d4af37;
   }
 
   .quran-sidebar {
-    width: 100%;
-    border-left: none;
-    border-bottom: 2px solid #d4af37;
-    max-height: 150px;
+    width: 70%;
+    max-width: 250px;
+    height: 100%;
+    top: 0;
+  }
+
+  .quran-sidebar li {
+    font-size: 0.9rem;
+    padding: 6px 8px;
+  }
+
+  .sidebar-toggle {
+    top: 10px;
+    right: 10px;
+    padding: 6px 12px;
+    font-size: 0.9rem;
   }
 
   .quran-main-content {
     padding: 10px;
-  }
-
-  .quran-container h3.page-title {
-    font-size: 1.4rem;
-  }
-
-  .quran-container .ayah-list {
-    font-size: 1.3rem;
-    line-height: 1.6;
-    margin-bottom: 10px;
-  }
-
-  .quran-container .ayah-text {
-    font-size: 1.2rem;
-    padding: 8px;
-  }
-
-  .quran-container .ayah-number {
-    width: 22px;
-    height: 22px;
-    font-size: 0.8rem;
+    padding-top: 50px;
+    width: 100%;
   }
 
   .search-surah-container {
     flex-direction: column;
-    gap: 10px;
-  }
-
-  .search-surah-container select,
-  .search-container,
-  .page-input-container {
+    gap: 8px;
+    margin-bottom: 10px;
     width: 100%;
-    min-width: unset;
   }
 
-  .rhap_container {
-    padding: 5px;
+  .search-surah-container select {
+    font-size: 0.9rem;
+    padding: 6px;
+    min-width: 100%;
+    max-width: 100%;
+    padding-left: 30px;
+    background-size: 18px;
   }
 
-  .rhap_time {
-    font-size: 0.8rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .quran-container {
-    font-size: 14px;
-    padding: 8px;
+  .search-container {
+    min-width: 0;
+    max-width: 100%;
   }
 
-  .quran-container h3.page-title {
-    font-size: 1.2rem;
-  }
-
-  .quran-container .ayah-list {
-    font-size: 1.1rem;
-    line-height: 1.4;
-  }
-
-  .quran-container .ayah-text {
-    font-size: 1rem;
+  .search-container input {
+    font-size: 0.9rem;
     padding: 6px;
   }
 
-  .quran-container .ayah-number {
-    font-size: 0.7rem;
-    width: 20px;
-    height: 20px;
-  }
-
-  .pagination-container button {
-    font-size: 0.8rem;
-    padding: 5px 10px;
-  }
-
-  .search-surah-container select,
-  .search-container input {
-    font-size: 0.9rem;
+  .page-input-container {
+    min-width: 0;
+    max-width: 100%;
+    gap: 5px;
   }
 
   .page-input-container input {
-    width: 80px;
+    width: 70px;
+    font-size: 0.9rem;
+    padding: 6px;
   }
 
   .page-input-container button {
     font-size: 0.9rem;
     padding: 6px 10px;
+  }
+
+  .quran-container h3.page-title {
+    font-size: 1.2rem;
+    margin: 10px 0;
+    padding: 6px;
+  }
+
+  .quran-container .ayah-list {
+    margin: 10px auto;
+    padding: 10px;
+    max-width: 100%;
+  }
+
+  .quran-container .ayah-paragraph {
+    font-size: 1.1rem;
+    line-height: 1.8;
+  }
+
+  .quran-container .ayah-number {
+    width: 20px;
+    height: 20px;
+    font-size: 0.7rem;
+    line-height: 20px;
+    margin: 0 3px;
+  }
+
+  .rhap_container {
+    padding: 5px;
+    margin: 10px 0;
+  }
+
+  .rhap_time {
+    font-size: 0.7rem;
+  }
+
+  .rhap_button-clear {
+    font-size: 0.8rem;
+  }
+
+  .search-results {
+    margin-top: 10px;
+    padding: 8px;
+  }
+
+  .search-result-item {
+    padding: 6px;
+    margin-bottom: 8px;
+  }
+
+  .pagination-container {
+    padding: 8px 0;
+    gap: 3px;
+  }
+
+  .pagination-container button {
+    font-size: 0.8rem;
+    padding: 5px 8px;
+  }
+
+  .bookmarked-pages {
+    margin-top: 15px;
+    padding: 8px;
+  }
+
+  .bookmarked-pages h4 {
+    font-size: 1rem;
+  }
+
+  .bookmarked-item {
+    padding: 3px 0;
+  }
+
+  .bookmarked-item span {
+    font-size: 0.9rem;
+  }
+
+  .bookmarked-item button {
+    font-size: 0.8rem;
+    padding: 4px 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .quran-container {
+    font-size: 12px;
+    margin: 5px 0;
+    padding: 3px;
+  }
+
+  .quran-sidebar {
+    width: 80%;
+    max-width: 200px;
+  }
+
+  .quran-sidebar li {
+    font-size: 0.8rem;
+    padding: 5px 6px;
+  }
+
+  .sidebar-toggle {
+    top: 5px;
+    right: 5px;
+    padding: 5px 10px;
+    font-size: 0.8rem;
+  }
+
+  .quran-main-content {
+    padding: 8px;
+    padding-top: 40px;
+  }
+
+  .search-surah-container {
+    gap: 6px;
+  }
+
+  .search-surah-container select {
+    font-size: 0.8rem;
+    padding: 5px;
+    padding-left: 25px;
+    background-size: 16px;
+  }
+
+  .search-container input {
+    font-size: 0.8rem;
+    padding: 5px;
+  }
+
+  .page-input-container input {
+    width: 60px;
+    font-size: 0.8rem;
+    padding: 5px;
+  }
+
+  .page-input-container button {
+    font-size: 0.8rem;
+    padding: 5px 8px;
+  }
+
+  .quran-container h3.page-title {
+    font-size: 1rem;
+    margin: 8px 0;
+    padding: 5px;
+  }
+
+  .quran-container .ayah-list {
+    margin: 8px auto;
+    padding: 8px;
+  }
+
+  .quran-container .ayah-paragraph {
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .quran-container .ayah-number {
+    width: 18px;
+    height: 18px;
+    font-size: 0.6rem;
+    line-height: 18px;
+    margin: 0 2px;
+  }
+
+  .rhap_container {
+    padding: 3px;
+    margin: 8px 0;
+  }
+
+  .rhap_time {
+    font-size: 0.6rem;
+  }
+
+  .rhap_button-clear {
+    font-size: 0.7rem;
+  }
+
+  .pagination-container {
+    padding: 5px 0;
+    gap: 2px;
+  }
+
+  .pagination-container button {
+    font-size: 0.7rem;
+    padding: 4px 6px;
+  }
+
+  .bookmarked-pages {
+    margin-top: 10px;
+    padding: 5px;
+  }
+
+  .bookmarked-pages h4 {
+    font-size: 0.9rem;
+  }
+
+  .bookmarked-item span {
+    font-size: 0.8rem;
+  }
+
+  .bookmarked-item button {
+    font-size: 0.7rem;
+    padding: 3px 5px;
   }
 }

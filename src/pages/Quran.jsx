@@ -7,11 +7,10 @@ import Pagination from "../components/Pagination";
 import Spinner from "../components/Spinner";
 import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
+
 import "../styles/Quran.css";
 
-// Quran Component
 function Quran() {
-  // State
   const [pages, setPages] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [status, setStatus] = useState({ loading: true, error: null });
@@ -21,17 +20,15 @@ function Quran() {
   const [searchResults, setSearchResults] = useState([]);
   const [inputPage, setInputPage] = useState("");
   const [selectedSurahAudio, setSelectedSurahAudio] = useState(1);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { bookmarkedPages, removeBookmark } = useBookmarks();
 
-  // Memoized Values
   const currentAyahs = useMemo(
     () => pages?.[currentPage] || [],
     [pages, currentPage]
   );
   const totalPages = useMemo(() => Object.keys(pages || {}).length, [pages]);
 
-  // Handlers
-  // Search Handler (Moved above useEffect)
   const debouncedSearch = useCallback(() => {
     const query = searchQuery.trim();
     if (!query) {
@@ -50,7 +47,6 @@ function Quran() {
     setSearchResults(results);
   }, [searchQuery, pages]);
 
-  // Navigation Handlers
   const handleSurahChange = (e) => {
     const selectedSurah = e.target.value;
     const surahPage = Object.keys(pages).find(
@@ -77,7 +73,6 @@ function Quran() {
     trackMouse: true,
   });
 
-  // Page Input Handler
   const handlePageInputChange = (e) => setInputPage(e.target.value);
 
   const handleGoToPage = () => {
@@ -86,6 +81,10 @@ function Quran() {
       setCurrentPage(page);
       setInputPage("");
     }
+  };
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen((prev) => !prev);
   };
 
   // Effects
@@ -142,9 +141,14 @@ function Quran() {
 
   return (
     <div {...swipeHandlers} className="quran-container">
+      {/* Sidebar Toggle Button */}
+      <button className="sidebar-toggle" onClick={toggleSidebar}>
+        {isSidebarOpen ? "إخفاء" : "السور"} {/* Simplified labels */}
+      </button>
+
       {/* Sidebar */}
       {pages && (
-        <div className="quran-sidebar">
+        <div className={`quran-sidebar ${isSidebarOpen ? "open" : "closed"}`}>
           <ul>
             {surahList.map((surah, index) => {
               const pageNumber = Object.keys(pages).find(
@@ -153,9 +157,10 @@ function Quran() {
               return (
                 <li
                   key={index}
-                  onClick={() =>
-                    handleSurahChange({ target: { value: surah } })
-                  }
+                  onClick={() => {
+                    handleSurahChange({ target: { value: surah } });
+                    setIsSidebarOpen(false); // Close sidebar after selection
+                  }}
                 >
                   {surah} ({pageNumber ? arabicNum(pageNumber) : "?"})
                 </li>
@@ -230,14 +235,17 @@ function Quran() {
           <>
             <h3 className="page-title">{currentSurah}</h3>
             <div className="ayah-list">
-              {currentAyahs.map((ayah) => (
-                <p key={ayah.number} className="ayah-text">
-                  {ayah.text}
-                  <span className="ayah-number">
-                    ({arabicNum(ayah.numberInSurah)})
+              <p className="ayah-paragraph">
+                {currentAyahs.map((ayah, index) => (
+                  <span key={ayah.number} className="ayah-text">
+                    {ayah.text}
+                    <span className="ayah-number">
+                      ({arabicNum(ayah.numberInSurah)})
+                    </span>
+                    {index < currentAyahs.length - 1 && " "}
                   </span>
-                </p>
-              ))}
+                ))}
+              </p>
               <h3 className="page-title">الصفحة {arabicNum(currentPage)}</h3>
             </div>
             <Pagination

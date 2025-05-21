@@ -9,6 +9,8 @@ export const useQiblaDirection = () => {
   const [accuracy, setAccuracy] = useState(null);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [orientationSupported, setOrientationSupported] = useState(true);
+  const [orientationDataReceived, setOrientationDataReceived] = useState(false);
 
   const getGeolocation = useCallback(() => {
     console.log("getGeolocation: Starting geolocation fetch...");
@@ -50,18 +52,30 @@ export const useQiblaDirection = () => {
   }, []);
 
   const handleOrientation = useCallback((event) => {
+    console.log("handleOrientation: Event received -", event);
     if (event.alpha !== null) {
-      const heading = event.alpha;
+      let heading = event.alpha;
+      if (event.webkitCompassHeading !== undefined) {
+        console.log("handleOrientation: Using webkitCompassHeading for iOS...");
+        heading = event.webkitCompassHeading;
+      }
+      if (!event.absolute && event.alpha !== null) {
+        console.warn(
+          "handleOrientation: Absolute orientation not available, using relative alpha..."
+        );
+      }
       console.log(`handleOrientation: Compass Heading: ${heading}°`);
       setCompassHeading(heading);
+      setOrientationDataReceived(true);
     } else {
       console.warn(
         "handleOrientation: Alpha is null, device orientation may not be supported"
       );
+      setOrientationSupported(false);
+      setError("ORIENTATION_DATA_UNAVAILABLE");
     }
   }, []);
 
-  // Memoize the debounced function to prevent recreation on every render
   const debouncedOrientation = useMemo(
     () => debounce(handleOrientation, 100),
     [handleOrientation]
@@ -89,11 +103,17 @@ export const useQiblaDirection = () => {
                 debouncedOrientation,
                 true
               );
+              window.addEventListener(
+                "deviceorientationabsolute",
+                debouncedOrientation,
+                true
+              );
             } else {
               console.error(
                 "setupOrientation: Device orientation permission denied"
               );
               setError("ORIENTATION_PERMISSION_DENIED");
+              setOrientationSupported(false);
               setIsLoading(false);
             }
           } catch (err) {
@@ -102,6 +122,7 @@ export const useQiblaDirection = () => {
               err.message
             );
             setError("ORIENTATION_ERROR");
+            setOrientationSupported(false);
             setIsLoading(false);
           }
         } else {
@@ -113,28 +134,59 @@ export const useQiblaDirection = () => {
             debouncedOrientation,
             true
           );
+          window.addEventListener(
+            "deviceorientationabsolute",
+            debouncedOrientation,
+            true
+          );
         }
       } else {
         console.error("setupOrientation: Device orientation not supported");
         setError("ORIENTATION_UNSUPPORTED");
+        setOrientationSupported(false);
         setIsLoading(false);
       }
     };
 
     setupOrientation();
 
+    // Timeout to check if orientation data is received
+    const orientationTimeout = setTimeout(() => {
+      if (!orientationDataReceived && orientationSupported) {
+        console.warn(
+          "setupOrientation: No orientation data received after 5 seconds"
+        );
+        setError("ORIENTATION_DATA_UNAVAILABLE");
+        setOrientationSupported(false);
+      }
+    }, 5000);
+
     return () => {
-      console.log("useEffect: Cleaning up event listener...");
+      console.log("useEffect: Cleaning up event listeners...");
       window.removeEventListener(
         "deviceorientation",
         debouncedOrientation,
         true
       );
+      window.removeEventListener(
+        "deviceorientationabsolute",
+        debouncedOrientation,
+        true
+      );
+      clearTimeout(orientationTimeout);
     };
-  }, [getGeolocation, debouncedOrientation]);
+  }, [
+    getGeolocation,
+    debouncedOrientation,
+    orientationDataReceived,
+    orientationSupported,
+  ]);
 
   const recalibrate = useCallback(() => {
     console.log("recalibrate: Recalibrating...");
+    setOrientationSupported(true);
+    setOrientationDataReceived(false);
+    setError(null);
     getGeolocation();
 
     if (typeof DeviceOrientationEvent.requestPermission === "function") {
@@ -150,9 +202,15 @@ export const useQiblaDirection = () => {
               debouncedOrientation,
               true
             );
+            window.addEventListener(
+              "deviceorientationabsolute",
+              debouncedOrientation,
+              true
+            );
           } else {
             console.error("recalibrate: Device orientation permission denied");
             setError("ORIENTATION_PERMISSION_DENIED");
+            setOrientationSupported(false);
           }
         })
         .catch((err) => {
@@ -161,6 +219,7 @@ export const useQiblaDirection = () => {
             err.message
           );
           setError("ORIENTATION_ERROR");
+          setOrientationSupported(false);
         });
     }
   }, [getGeolocation, debouncedOrientation]);
@@ -173,5 +232,6 @@ export const useQiblaDirection = () => {
     error,
     isLoading,
     recalibrate,
+    orientationSupported,
   };
 };

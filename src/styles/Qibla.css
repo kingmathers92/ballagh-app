@@ -29,7 +29,7 @@
   border: 8px solid var(--accent-color);
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
   position: relative;
-  transition: transform 0.3s ease-out;
+  transition: transform 0.1s linear;
 }
 
 .compass-rose {
@@ -122,10 +122,69 @@
   transform: translateY(-50%);
 } /* W */
 
+/* Static Qibla Direction Fallback */
+.static-qibla-container {
+  position: relative;
+  width: 280px;
+  height: 280px;
+  margin: 20px auto;
+}
+
+.static-qibla-direction {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.static-qibla-arrow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-bottom: 40px solid #2ecc71;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+}
+
+.static-instruction {
+  position: absolute;
+  bottom: 20px;
+  font-size: 0.9rem;
+  color: #666;
+  max-width: 200px;
+  text-align: center;
+}
+
 .qibla-info {
   margin: 20px 0;
   font-size: 1.1rem;
   line-height: 1.6;
+}
+
+.qibla-info .instruction {
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: 10px;
+  max-width: 300px;
+}
+
+.qibla-info .error-text {
+  color: #e74c3c;
+  font-size: 0.9rem;
+  margin-top: 10px;
+}
+
+.qibla-info .retry-button.inline {
+  display: inline-block;
+  margin-left: 10px;
+  padding: 5px 10px;
+  font-size: 0.8rem;
 }
 
 .action-buttons {
@@ -170,7 +229,6 @@
   max-width: 300px;
 }
 
-/* Ensure spinner is centered and doesn’t overlap */
 .qibla-direction .spinner {
   margin: 0 auto;
   display: block;
@@ -192,7 +250,8 @@
 }
 
 @media (max-width: 768px) {
-  .compass-container {
+  .compass-container,
+  .static-qibla-container {
     width: 220px;
     height: 220px;
   }
@@ -207,5 +266,21 @@
 
   .qibla-line {
     transform-origin: 50% 70px;
+  }
+
+  .static-qibla-arrow {
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-bottom: 30px solid #2ecc71;
+  }
+
+  .static-instruction {
+    font-size: 0.8rem;
+    max-width: 180px;
+  }
+
+  .qibla-info .instruction {
+    font-size: 0.8rem;
+    max-width: 250px;
   }
 }

@@ -3,28 +3,49 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: auto;
+  min-height: 80vh;
   padding: 20px;
-  background-color: #f8f9fa;
-  font-family: "Arial", sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  text-align: center;
 }
 
 .compass-container {
-  width: 250px;
-  height: 250px;
   position: relative;
-  margin-bottom: 20px;
+  width: 280px;
+  height: 280px;
+  margin: 20px auto;
 }
 
 .compass {
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background: radial-gradient(circle, #ffffff, #534c4c);
-  border: 8px solid #e0c9a6;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  background: radial-gradient(
+    circle,
+    var(--secondary-color) 60%,
+    var(--primary-color) 100%
+  );
+  border: 8px solid var(--accent-color);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
   position: relative;
-  transition: transform 0.5s ease-in-out;
+  transition: transform 0.3s ease-out;
+}
+
+.compass-rose {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.compass-mark {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 2px;
+  height: 15px;
+  background-color: var(--text-color);
+  transform-origin: 50% 140px;
 }
 
 .compass-arrow {
@@ -35,90 +56,150 @@
   height: 0;
   border-left: 12px solid transparent;
   border-right: 12px solid transparent;
-  border-bottom: 30px solid #ff4757;
+  border-bottom: 30px solid #e74c3c;
   transform: translateX(-50%);
+  z-index: 2;
 }
 
 .qibla-marker {
   position: absolute;
-  top: 50%;
+  top: 20px;
   left: 50%;
-  width: 40px;
-  height: 40px;
-  background-color: #00aaff;
-  border: 2px solid #003366;
+  width: 30px;
+  height: 30px;
+  background-color: #2ecc71;
+  border: 3px solid #27ae60;
   border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #ffffff;
-  font-weight: bold;
-  font-size: 22px;
-  transition: transform 0.3s ease-in-out;
-  animation: pulse 1s infinite alternate;
+  transform-origin: 50% 120px;
+  z-index: 3;
+  animation: pulse 1.5s infinite ease-in-out;
 }
 
-.qibla-marker::before {
-  content: "Q";
+.qibla-line {
   position: absolute;
-  color: #ffffff;
-  font-size: 28px;
+  top: 50px;
+  left: 50%;
+  width: 4px;
+  height: 80px;
+  background: linear-gradient(to bottom, transparent, #2ecc71);
+  transform-origin: 50% 90px;
+  z-index: 1;
+}
+
+.compass-labels {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+
+.compass-labels span {
+  position: absolute;
+  font-weight: bold;
+  color: var(--text-color);
+  font-size: 1.2rem;
+}
+
+.compass-labels span:nth-child(1) {
+  top: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+} /* N */
+.compass-labels span:nth-child(2) {
+  top: 50%;
+  right: 5%;
+  transform: translateY(-50%);
+} /* E */
+.compass-labels span:nth-child(3) {
+  bottom: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+} /* S */
+.compass-labels span:nth-child(4) {
+  top: 50%;
+  left: 5%;
+  transform: translateY(-50%);
+} /* W */
+
+.qibla-info {
+  margin: 20px 0;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.calibrate-button,
+.guide-button,
+.retry-button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.calibrate-button {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.guide-button {
+  background-color: var(--accent-color);
+  color: white;
+}
+
+.retry-button {
+  background-color: #3498db;
+  color: white;
+  margin-top: 15px;
+}
+
+.error-message {
+  color: #e74c3c;
+  max-width: 300px;
 }
 
 @keyframes pulse {
   0% {
-    transform: scale(1);
+    transform: rotate(var(--rotation)) scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: rotate(var(--rotation)) scale(1.1);
+    opacity: 1;
   }
   100% {
-    transform: scale(1.2);
+    transform: rotate(var(--rotation)) scale(1);
+    opacity: 0.8;
   }
-}
-
-.calibrate-button {
-  background-color: #00aaff;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.calibrate-button:hover {
-  background-color: #0088cc;
-  transform: translateY(-2px);
-}
-
-.calibrate-button:active {
-  background-color: #006699;
-  transform: translateY(0);
-}
-
-.calibrate-button:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(0, 170, 255, 0.4);
 }
 
 @media (max-width: 768px) {
   .compass-container {
-    width: 180px;
-    height: 180px;
+    width: 220px;
+    height: 220px;
   }
 
-  .compass-arrow {
-    border-bottom: 25px solid #ff4757;
+  .compass-mark {
+    transform-origin: 50% 110px;
   }
 
   .qibla-marker {
-    width: 35px;
-    height: 35px;
-    font-size: 20px;
+    transform-origin: 50% 100px;
   }
 
-  .calibrate-button {
-    font-size: 14px;
-    padding: 8px 16px;
+  .qibla-line {
+    transform-origin: 50% 70px;
   }
 }

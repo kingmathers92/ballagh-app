@@ -1,6 +1,5 @@
 import { useQiblaDirection } from "../hooks/useQiblaDirection";
 import Spinner from "../components/Spinner";
-
 import "../styles/Qibla.css";
 
 function Qibla() {
@@ -30,17 +29,32 @@ function Qibla() {
     return "#F44336"; // Red
   };
 
+  const getErrorMessage = () => {
+    switch (error) {
+      case "PERMISSION_DENIED":
+        return "Location access denied. Please enable location services.";
+      case "LOCATION_UNAVAILABLE":
+        return "Unable to retrieve location. Please try again.";
+      case "GEOLOCATION_UNSUPPORTED":
+        return "Geolocation is not supported on this device.";
+      case "ORIENTATION_PERMISSION_DENIED":
+        return "Device orientation permission denied. Please allow motion access.";
+      case "ORIENTATION_UNSUPPORTED":
+        return "Device orientation is not supported on this device.";
+      case "ORIENTATION_ERROR":
+        return "An error occurred while accessing device orientation.";
+      default:
+        return "Something went wrong. Please try again.";
+    }
+  };
+
   return (
     <div className="qibla-direction">
       {isLoading ? (
         <Spinner />
       ) : error ? (
         <div className="error-message">
-          <p>
-            {error === "PERMISSION_DENIED"
-              ? "Location access denied. Please enable location services."
-              : "Something went wrong. Please try again."}
-          </p>
+          <p>{getErrorMessage()}</p>
           <button className="retry-button" onClick={recalibrate}>
             Try Again
           </button>

@@ -170,6 +170,12 @@
   max-width: 300px;
 }
 
+/* Ensure spinner is centered and doesn’t overlap */
+.qibla-direction .spinner {
+  margin: 0 auto;
+  display: block;
+}
+
 @keyframes pulse {
   0% {
     transform: rotate(var(--rotation)) scale(1);

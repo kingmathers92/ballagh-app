@@ -1,3 +1,16 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
 .qibla-direction {
   display: flex;
   flex-direction: column;
@@ -8,11 +21,15 @@
   background-color: var(--background-color);
   color: var(--text-color);
   text-align: center;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
 }
 
 .compass-container {
   position: relative;
   width: 280px;
+  max-width: 90vw;
   height: 280px;
   margin: 15px auto;
 }
@@ -126,6 +143,7 @@
 .static-qibla-container {
   position: relative;
   width: 280px;
+  max-width: 90vw;
   height: 280px;
   margin: 15px auto;
 }
@@ -189,12 +207,15 @@
   color: #666;
   max-width: 200px;
   text-align: center;
+  word-wrap: break-word;
 }
 
 .qibla-info {
   margin: 15px 0;
   font-size: 1.1rem;
   line-height: 1.6;
+  max-width: 100%;
+  padding: 0 10px;
 }
 
 .qibla-info .instruction {
@@ -202,12 +223,14 @@
   color: #666;
   margin-top: 8px;
   max-width: 300px;
+  word-wrap: break-word;
 }
 
 .qibla-info .error-text {
   color: #e74c3c;
   font-size: 0.9rem;
   margin-top: 8px;
+  word-wrap: break-word;
 }
 
 .qibla-info .retry-button.inline {
@@ -223,6 +246,8 @@
   gap: 10px;
   margin-top: 15px;
   justify-content: center;
+  width: 100%;
+  padding: 0 10px;
 }
 
 .calibrate-button,
@@ -238,6 +263,8 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  flex: 1 1 auto;
+  max-width: 150px;
 }
 
 .calibrate-button {
@@ -260,6 +287,8 @@
   color: #e74c3c;
   max-width: 300px;
   font-size: 0.9rem;
+  word-wrap: break-word;
+  padding: 0 10px;
 }
 
 .qibla-direction .spinner {
@@ -304,6 +333,7 @@
   .compass-container,
   .static-qibla-container {
     width: 200px;
+    max-width: 90vw;
     height: 200px;
   }
 
@@ -380,6 +410,7 @@
     margin: 10px 0;
     font-size: 0.95rem;
     line-height: 1.5;
+    padding: 0 8px;
   }
 
   .qibla-info .instruction {
@@ -402,6 +433,7 @@
   .action-buttons {
     gap: 8px;
     margin-top: 10px;
+    padding: 0 8px;
   }
 
   .calibrate-button,
@@ -410,6 +442,7 @@
     padding: 8px 14px;
     font-size: 0.85rem;
     gap: 6px;
+    max-width: 120px;
   }
 
   .retry-button {
@@ -419,10 +452,10 @@
   .error-message {
     font-size: 0.8rem;
     max-width: 260px;
+    padding: 0 8px;
   }
 }
 
-/* Extra small screens (e.g., phones below 480px) */
 @media (max-width: 480px) {
   .qibla-direction {
     padding: 8px;
@@ -432,6 +465,7 @@
   .compass-container,
   .static-qibla-container {
     width: 160px;
+    max-width: 90vw;
     height: 160px;
   }
 
@@ -507,6 +541,7 @@
     margin: 8px 0;
     font-size: 0.85rem;
     line-height: 1.4;
+    padding: 0 6px;
   }
 
   .qibla-info .instruction {
@@ -529,6 +564,7 @@
   .action-buttons {
     gap: 6px;
     margin-top: 8px;
+    padding: 0 6px;
   }
 
   .calibrate-button,
@@ -537,6 +573,7 @@
     padding: 6px 12px;
     font-size: 0.75rem;
     gap: 5px;
+    max-width: 100px;
   }
 
   .retry-button {
@@ -546,5 +583,102 @@
   .error-message {
     font-size: 0.7rem;
     max-width: 220px;
+    padding: 0 6px;
+  }
+}
+
+@media (max-width: 320px) {
+  .compass-container,
+  .static-qibla-container {
+    width: 140px;
+    max-width: 90vw;
+    height: 140px;
+  }
+
+  .compass-mark {
+    height: 8px;
+    transform-origin: 50% 70px;
+  }
+
+  .compass-arrow {
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 16px solid #e74c3c;
+    top: 5px;
+  }
+
+  .qibla-marker {
+    top: 10px;
+    width: 16px;
+    height: 16px;
+    transform-origin: 50% 60px;
+    border: 1px solid #27ae60;
+  }
+
+  .qibla-line {
+    top: 25px;
+    width: 2px;
+    height: 40px;
+    transform-origin: 50% 45px;
+  }
+
+  .compass-labels span {
+    font-size: 0.75rem;
+  }
+
+  .static-qibla-arrow {
+    width: 5px;
+    height: 40px;
+  }
+
+  .static-qibla-arrow::after {
+    top: -8px;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 10px solid #2ecc71;
+  }
+
+  .static-qibla-arrow::before {
+    bottom: -2px;
+    width: 8px;
+    height: 3px;
+  }
+
+  .static-instruction {
+    font-size: 0.6rem;
+    max-width: 120px;
+    bottom: 8px;
+  }
+
+  .qibla-info {
+    font-size: 0.75rem;
+    padding: 0 5px;
+  }
+
+  .qibla-info .instruction {
+    font-size: 0.6rem;
+    max-width: 180px;
+  }
+
+  .qibla-info .error-text {
+    font-size: 0.6rem;
+  }
+
+  .qibla-info .retry-button.inline {
+    padding: 2px 5px;
+    font-size: 0.55rem;
+  }
+
+  .action-buttons {
+    gap: 5px;
+    padding: 0 5px;
+  }
+
+  .calibrate-button,
+  .guide-button,
+  .retry-button {
+    padding: 5px 10px;
+    font-size: 0.65rem;
+    max-width: 90px;
   }
 }

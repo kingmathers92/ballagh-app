@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { calculateQiblaDirection } from "../utils/qiblaUtils";
 import { debounce } from "../utils/debounceUtils";
 
@@ -51,7 +51,7 @@ export const useQiblaDirection = () => {
 
   const handleOrientation = useCallback((event) => {
     if (event.alpha !== null) {
-      const heading = event.alpha; // Compass heading (0-360)
+      const heading = event.alpha;
       console.log(`handleOrientation: Compass Heading: ${heading}°`);
       setCompassHeading(heading);
     } else {
@@ -61,7 +61,11 @@ export const useQiblaDirection = () => {
     }
   }, []);
 
-  const debouncedOrientation = debounce(handleOrientation, 100);
+  // Memoize the debounced function to prevent recreation on every render
+  const debouncedOrientation = useMemo(
+    () => debounce(handleOrientation, 100),
+    [handleOrientation]
+  );
 
   useEffect(() => {
     console.log("useEffect: Initial setup...");
@@ -70,7 +74,6 @@ export const useQiblaDirection = () => {
     const setupOrientation = async () => {
       console.log("setupOrientation: Checking device orientation support...");
       if (window.DeviceOrientationEvent) {
-        // For iOS 13+ and some Android devices, we need to request permission
         if (typeof DeviceOrientationEvent.requestPermission === "function") {
           console.log(
             "setupOrientation: Requesting device orientation permission..."
@@ -102,7 +105,6 @@ export const useQiblaDirection = () => {
             setIsLoading(false);
           }
         } else {
-          // For devices that don’t require permission (e.g., Android, older browsers)
           console.log(
             "setupOrientation: Adding event listener (no permission required)..."
           );

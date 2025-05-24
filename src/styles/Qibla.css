@@ -11,6 +11,16 @@ body {
   overflow-x: hidden;
 }
 
+/* Define CSS Variables (Fallback if not defined elsewhere) */
+:root {
+  --background-color: #f5f5f5;
+  --text-color: #333;
+  --primary-color: #3498db;
+  --secondary-color: #ecf0f1;
+  --accent-color: #2ecc71;
+}
+
+/* Main Qibla Direction Container */
 .qibla-direction {
   display: flex;
   flex-direction: column;
@@ -26,6 +36,7 @@ body {
   overflow-x: hidden;
 }
 
+/* Compass Container */
 .compass-container {
   position: relative;
   width: 280px;
@@ -49,6 +60,23 @@ body {
   transition: transform 0.1s linear;
 }
 
+/* Leaflet Map Container */
+.qibla-map-container {
+  margin: 15px 0;
+  border: 2px solid var(--accent-color);
+  border-radius: 10px;
+  overflow: hidden;
+  width: 100%;
+  max-width: 600px;
+}
+
+/* Ensure Leaflet map has proper dimensions */
+.qibla-map-container .leaflet-container {
+  height: 200px;
+  width: 100%;
+}
+
+/* Compass Rose and Markings */
 .compass-rose {
   position: absolute;
   width: 100%;
@@ -103,6 +131,7 @@ body {
   z-index: 1;
 }
 
+/* Compass Labels (N, E, S, W) */
 .compass-labels {
   position: absolute;
   width: 100%;
@@ -207,9 +236,10 @@ body {
   color: #666;
   max-width: 200px;
   text-align: center;
-  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
+/* Qibla Info Section */
 .qibla-info {
   margin: 15px 0;
   font-size: 1.1rem;
@@ -223,14 +253,14 @@ body {
   color: #666;
   margin-top: 8px;
   max-width: 300px;
-  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .qibla-info .error-text {
   color: #e74c3c;
   font-size: 0.9rem;
   margin-top: 8px;
-  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .qibla-info .retry-button.inline {
@@ -240,6 +270,7 @@ body {
   font-size: 0.8rem;
 }
 
+/* Action Buttons */
 .action-buttons {
   display: flex;
   flex-wrap: wrap;
@@ -283,11 +314,12 @@ body {
   margin-top: 10px;
 }
 
+/* Error Message */
 .error-message {
   color: #e74c3c;
   max-width: 300px;
   font-size: 0.9rem;
-  word-wrap: break-word;
+  overflow-wrap: break-word;
   padding: 0 10px;
 }
 
@@ -296,6 +328,43 @@ body {
   display: block;
 }
 
+/* Error Boundary Styling */
+.error-boundary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  padding: 20px;
+  text-align: center;
+  color: #e74c3c;
+}
+
+.error-boundary h2 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.error-boundary p {
+  font-size: 1rem;
+  margin-bottom: 20px;
+}
+
+.error-boundary button {
+  padding: 10px 20px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.error-boundary button:hover {
+  background-color: #2980b9;
+}
+
+/* Animations */
 @keyframes pulse {
   0% {
     transform: scale(1);
@@ -462,6 +531,10 @@ body {
     min-height: 60vh;
   }
 
+  .qibla-map-container {
+    margin: 10px 0;
+  }
+
   .compass-container,
   .static-qibla-container {
     width: 160px;
@@ -532,7 +605,7 @@ body {
   }
 
   .static-instruction {
-    font-size: 0.65rem;
+    font-size: 0.75rem;
     max-width: 140px;
     bottom: 10px;
   }
@@ -545,20 +618,20 @@ body {
   }
 
   .qibla-info .instruction {
-    font-size: 0.65rem;
+    font-size: 0.75rem;
     max-width: 200px;
     margin-top: 5px;
   }
 
   .qibla-info .error-text {
-    font-size: 0.65rem;
+    font-size: 0.75rem;
     margin-top: 5px;
   }
 
   .qibla-info .retry-button.inline {
     margin-left: 5px;
     padding: 3px 6px;
-    font-size: 0.6rem;
+    font-size: 0.75rem;
   }
 
   .action-buttons {
@@ -581,7 +654,7 @@ body {
   }
 
   .error-message {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     max-width: 220px;
     padding: 0 6px;
   }
@@ -645,7 +718,7 @@ body {
   }
 
   .static-instruction {
-    font-size: 0.6rem;
+    font-size: 0.75rem;
     max-width: 120px;
     bottom: 8px;
   }
@@ -656,17 +729,17 @@ body {
   }
 
   .qibla-info .instruction {
-    font-size: 0.6rem;
+    font-size: 0.75rem;
     max-width: 180px;
   }
 
   .qibla-info .error-text {
-    font-size: 0.6rem;
+    font-size: 0.75rem;
   }
 
   .qibla-info .retry-button.inline {
     padding: 2px 5px;
-    font-size: 0.55rem;
+    font-size: 0.75rem;
   }
 
   .action-buttons {
@@ -678,7 +751,7 @@ body {
   .guide-button,
   .retry-button {
     padding: 5px 10px;
-    font-size: 0.65rem;
+    font-size: 0.75rem;
     max-width: 90px;
   }
 }

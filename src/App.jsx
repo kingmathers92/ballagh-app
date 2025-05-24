@@ -8,6 +8,7 @@ import Qibla from "./pages/Qibla";
 import DarkModeToggle from "./components/ThemeToggle";
 import NavLinks from "./components/NavLinks";
 import Journal from "./pages/Journal";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -58,7 +59,14 @@ function App() {
             <Route path="/search" element={<Search />} />
             <Route path="/random" element={<RandomHadith />} />
             <Route path="/quran" element={<Quran />} />
-            <Route path="/qibla" element={<Qibla />} />
+            <Route
+              path="/qibla"
+              element={
+                <ErrorBoundary>
+                  <Qibla />
+                </ErrorBoundary>
+              }
+            />
             <Route path="/journal" element={<Journal />} />
           </Routes>
         </main>

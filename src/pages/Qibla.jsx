@@ -1,7 +1,90 @@
+import { useState, useEffect, useCallback, useRef } from "react";
+import PropTypes from "prop-types";
 import { useQiblaDirection } from "../hooks/useQiblaDirection";
 import Spinner from "../components/Spinner";
-
+import "leaflet/dist/leaflet.css";
+import L from "leaflet";
+import { MapContainer, TileLayer, Marker, Polyline } from "react-leaflet";
 import "../styles/Qibla.css";
+
+// this fixes for default marker icon in Leaflet (ensure this runs after DOM is ready)
+if (typeof window !== "undefined") {
+  delete L.Icon.Default.prototype._getIconUrl;
+  L.Icon.Default.mergeOptions({
+    iconRetinaUrl:
+      "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
+    iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+    shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+  });
+}
+
+// a separate component for the map to control its lifecycle
+function QiblaMap({ location, qiblaDirection }) {
+  const mapRef = useRef(null);
+
+  const calculateQiblaPoint = (lat, lon, direction, distance = 0.1) => {
+    const R = 6371;
+    const bearing = (direction * Math.PI) / 180;
+    const lat1 = (lat * Math.PI) / 180;
+    const lon1 = (lon * Math.PI) / 180;
+
+    const lat2 = Math.asin(
+      Math.sin(lat1) * Math.cos(distance / R) +
+        Math.cos(lat1) * Math.sin(distance / R) * Math.cos(bearing)
+    );
+    const lon2 =
+      lon1 +
+      Math.atan2(
+        Math.sin(bearing) * Math.sin(distance / R) * Math.cos(lat1),
+        Math.cos(distance / R) - Math.sin(lat1) * Math.sin(lat2)
+      );
+
+    return [(lat2 * 180) / Math.PI, (lon2 * 180) / Math.PI];
+  };
+
+  useEffect(() => {
+    if (mapRef.current) {
+      mapRef.current.setView([location.latitude, location.longitude], 15);
+    }
+  }, [location]);
+
+  return (
+    <MapContainer
+      center={[location.latitude, location.longitude]}
+      zoom={15}
+      style={{ height: "200px", width: "100%", borderRadius: "10px" }}
+      whenCreated={(map) => {
+        mapRef.current = map;
+      }}
+    >
+      <TileLayer
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        attribution='© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      />
+      <Marker position={[location.latitude, location.longitude]} />
+      <Polyline
+        positions={[
+          [location.latitude, location.longitude],
+          calculateQiblaPoint(
+            location.latitude,
+            location.longitude,
+            qiblaDirection
+          ),
+        ]}
+        color="#2ecc71"
+        weight={3}
+      />
+    </MapContainer>
+  );
+}
+
+QiblaMap.propTypes = {
+  location: PropTypes.shape({
+    latitude: PropTypes.number.isRequired,
+    longitude: PropTypes.number.isRequired,
+  }).isRequired,
+  qiblaDirection: PropTypes.number.isRequired,
+};
 
 function Qibla() {
   const {
@@ -14,6 +97,69 @@ function Qibla() {
     recalibrate,
     orientationSupported,
   } = useQiblaDirection();
+
+  const [mosques, setMosques] = useState([]);
+  const [fetchingMosques, setFetchingMosques] = useState(false);
+  const [fetchError, setFetchError] = useState(null);
+
+  const fetchNearbyMosques = useCallback(async () => {
+    if (!location) return;
+    setFetchingMosques(true);
+    setFetchError(null);
+    try {
+      const overpassQuery = `
+        [out:json];
+        node["amenity"="place_of_worship"]["religion"="muslim"]
+        (around:5000,${location.latitude},${location.longitude});
+        out body;
+      `;
+      const response = await fetch("https://overpass-api.de/api/interpreter", {
+        method: "POST",
+        body: overpassQuery,
+      });
+      if (!response.ok) {
+        throw new Error(`Failed to fetch mosques: ${response.statusText}`);
+      }
+      const data = await response.json();
+      const mosqueList = data.elements.map((element) => ({
+        name: element.tags.name || "Unnamed Mosque",
+        lat: element.lat,
+        lon: element.lon,
+        distance: calculateDistance(
+          location.latitude,
+          location.longitude,
+          element.lat,
+          element.lon
+        ),
+      }));
+      setMosques(mosqueList.sort((a, b) => a.distance - b.distance));
+    } catch (_err) {
+      console.error("Error fetching mosques:", _err);
+      setFetchError("Failed to fetch nearby mosques. Please try again later.");
+    } finally {
+      setFetchingMosques(false);
+    }
+  }, [location]);
+
+  const calculateDistance = (lat1, lon1, lat2, lon2) => {
+    const R = 6371;
+    const dLat = ((lat2 - lat1) * Math.PI) / 180;
+    const dLon = ((lon2 - lon1) * Math.PI) / 180;
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos((lat1 * Math.PI) / 180) *
+        Math.cos((lat2 * Math.PI) / 180) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  };
+
+  useEffect(() => {
+    if (location) {
+      fetchNearbyMosques();
+    }
+  }, [location, fetchNearbyMosques]);
 
   const getCompassStyle = () => ({
     transform: `rotate(${compassHeading}deg)`,
@@ -65,6 +211,12 @@ function Qibla() {
         </div>
       ) : (
         <>
+          {location && qiblaDirection !== null && (
+            <div className="qibla-map-container">
+              <QiblaMap location={location} qiblaDirection={qiblaDirection} />
+            </div>
+          )}
+
           {orientationSupported ? (
             <div className="compass-container">
               <div className="compass" style={getCompassStyle()}>
@@ -112,6 +264,34 @@ function Qibla() {
               </div>
             </div>
           )}
+
+          <div className="nearby-mosques">
+            <h3>Nearby Mosques</h3>
+            {fetchingMosques ? (
+              <Spinner />
+            ) : fetchError ? (
+              <p className="error-text">{fetchError}</p>
+            ) : mosques.length > 0 ? (
+              <ul>
+                {mosques.slice(0, 5).map((mosque, index) => (
+                  <li key={index} className="mosque-item">
+                    <span>{mosque.name}</span>
+                    <span>{mosque.distance.toFixed(2)} km away</span>
+                    <a
+                      href={`https://www.google.com/maps/dir/?api=1&destination=${mosque.lat},${mosque.lon}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mosque-directions"
+                    >
+                      Get Directions
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No mosques found nearby.</p>
+            )}
+          </div>
 
           <div className="qibla-info">
             <p>

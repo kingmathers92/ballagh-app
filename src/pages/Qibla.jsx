@@ -5,7 +5,8 @@ import QiblaMap from "../components/QiblaMap";
 import Compass from "../components/Compass";
 import StaticQibla from "../components/StaticQibla";
 import NearbyMosques from "../components/NearbyMosques";
-import QiblaInfo from "../components/QiblaInfo"; // New import
+import QiblaInfo from "../components/QiblaInfo";
+import ActionButtons from "../components/ActionButtons";
 import { calculateDistance, getErrorMessage } from "../utils/qiblaUtils";
 
 import "../styles/Qibla.css";
@@ -114,19 +115,7 @@ function Qibla() {
             recalibrate={recalibrate}
           />
 
-          <div className="action-buttons">
-            <button className="calibrate-button" onClick={recalibrate}>
-              <i className="icon-sync"></i> Recalibrate
-            </button>
-            <button
-              className="guide-button"
-              onClick={() =>
-                window.open("https://qiblafinder.withgoogle.com", "_blank")
-              }
-            >
-              <i className="icon-help"></i> Qibla Guide
-            </button>
-          </div>
+          <ActionButtons recalibrate={recalibrate} />
         </>
       )}
     </div>

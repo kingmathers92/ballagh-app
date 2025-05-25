@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from "react";
-import { calculateQiblaDirection, debounce } from "../utils/qiblaUtils";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { calculateQiblaDirection } from "../utils/qiblaUtils";
 
 export const useQiblaDirection = () => {
   const [qiblaDirection, setQiblaDirection] = useState(null);
@@ -55,23 +55,31 @@ export const useQiblaDirection = () => {
     );
   }, []);
 
+  const debounceTimeoutRef = useRef(null);
+
   const handleOrientation = useCallback(
-    debounce((event) => {
-      if (event.alpha === null || event.alpha === undefined) {
-        setOrientationSupported(false);
-        setError("ORIENTATION_DATA_UNAVAILABLE");
-        return;
+    (event) => {
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
       }
 
-      let heading = event.webkitCompassHeading || event.alpha;
-      if (event.webkitCompassHeading) {
-        setCompassHeading(heading);
-      } else {
-        heading = 360 - event.alpha;
-        setCompassHeading(heading);
-      }
-    }, 100),
-    [] // Dependencies are empty because setOrientationSupported, setError, and setCompassHeading are stable
+      debounceTimeoutRef.current = setTimeout(() => {
+        if (event.alpha === null || event.alpha === undefined) {
+          setOrientationSupported(false);
+          setError("ORIENTATION_DATA_UNAVAILABLE");
+          return;
+        }
+
+        let heading = event.webkitCompassHeading || event.alpha;
+        if (event.webkitCompassHeading) {
+          setCompassHeading(heading);
+        } else {
+          heading = 360 - event.alpha;
+          setCompassHeading(heading);
+        }
+      }, 100);
+    },
+    [setOrientationSupported, setError, setCompassHeading]
   );
 
   useEffect(() => {
@@ -113,6 +121,9 @@ export const useQiblaDirection = () => {
 
     return () => {
       window.removeEventListener("deviceorientation", handleOrientation, true);
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
     };
   }, [getGeolocation, handleOrientation]);
 

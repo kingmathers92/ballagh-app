@@ -2,6 +2,13 @@ import { useState, useEffect, useCallback } from "react";
 import { useQiblaDirection } from "../hooks/useQiblaDirection";
 import Spinner from "../components/Spinner";
 import QiblaMap from "../components/QiblaMap";
+import {
+  calculateDistance,
+  getCompassStyle,
+  getQiblaMarkerStyle,
+  getAccuracyColor,
+  getErrorMessage,
+} from "../utils/qiblaUtils";
 
 import "../styles/Qibla.css";
 
@@ -60,62 +67,11 @@ function Qibla() {
     }
   }, [location]);
 
-  const calculateDistance = (lat1, lon1, lat2, lon2) => {
-    const R = 6371;
-    const dLat = ((lat2 - lat1) * Math.PI) / 180;
-    const dLon = ((lon2 - lon1) * Math.PI) / 180;
-    const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos((lat1 * Math.PI) / 180) *
-        Math.cos((lat2 * Math.PI) / 180) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c;
-  };
-
   useEffect(() => {
     if (location) {
       fetchNearbyMosques();
     }
   }, [location, fetchNearbyMosques]);
-
-  const getCompassStyle = () => ({
-    transform: `rotate(${compassHeading}deg)`,
-  });
-
-  const getQiblaMarkerStyle = () => ({
-    transform: `rotate(${qiblaDirection}deg)`,
-    animationDelay: `${Math.random() * 0.5}s`,
-  });
-
-  const getAccuracyColor = () => {
-    if (!accuracy) return "gray";
-    if (accuracy <= 15) return "#4CAF50";
-    if (accuracy <= 30) return "#FFC107";
-    return "#F44336";
-  };
-
-  const getErrorMessage = () => {
-    switch (error) {
-      case "PERMISSION_DENIED":
-        return "Location access denied. Please enable location services.";
-      case "LOCATION_UNAVAILABLE":
-        return "Unable to retrieve location. Please try again.";
-      case "GEOLOCATION_UNSUPPORTED":
-        return "Geolocation is not supported on this device.";
-      case "ORIENTATION_PERMISSION_DENIED":
-        return "Device orientation permission denied. Please allow motion access.";
-      case "ORIENTATION_UNSUPPORTED":
-        return "Device orientation is not supported on this device. Please use the Qibla direction value manually.";
-      case "ORIENTATION_ERROR":
-        return "An error occurred while accessing device orientation.";
-      case "ORIENTATION_DATA_UNAVAILABLE":
-        return "Device orientation data is unavailable. Please use the Qibla direction value manually.";
-      default:
-        return "Something went wrong. Please try again.";
-    }
-  };
 
   return (
     <div className="qibla-direction">
@@ -123,7 +79,7 @@ function Qibla() {
         <Spinner />
       ) : error && !qiblaDirection ? (
         <div className="error-message">
-          <p>{getErrorMessage()}</p>
+          <p>{getErrorMessage(error)}</p>
           <button className="retry-button" onClick={recalibrate}>
             Try Again
           </button>
@@ -138,7 +94,7 @@ function Qibla() {
 
           {orientationSupported ? (
             <div className="compass-container">
-              <div className="compass" style={getCompassStyle()}>
+              <div className="compass" style={getCompassStyle(compassHeading)}>
                 <div className="compass-rose">
                   {[...Array(8)].map((_, i) => (
                     <div
@@ -153,11 +109,11 @@ function Qibla() {
                   <>
                     <div
                       className="qibla-marker"
-                      style={getQiblaMarkerStyle()}
+                      style={getQiblaMarkerStyle(qiblaDirection)}
                     ></div>
                     <div
                       className="qibla-line"
-                      style={getQiblaMarkerStyle()}
+                      style={getQiblaMarkerStyle(qiblaDirection)}
                     ></div>
                   </>
                 )}
@@ -226,7 +182,7 @@ function Qibla() {
             {accuracy && (
               <p>
                 Accuracy:{" "}
-                <strong style={{ color: getAccuracyColor() }}>
+                <strong style={{ color: getAccuracyColor(accuracy) }}>
                   {accuracy.toFixed(0)} meters
                 </strong>
               </p>
@@ -239,7 +195,7 @@ function Qibla() {
             )}
             {error && (
               <p className="error-text">
-                {getErrorMessage()}
+                {getErrorMessage(error)}
                 <button className="retry-button inline" onClick={recalibrate}>
                   Try Again
                 </button>

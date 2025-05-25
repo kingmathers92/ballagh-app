@@ -1,4 +1,17 @@
 export const calculateQiblaDirection = (latitude, longitude) => {
+  if (
+    typeof latitude !== "number" ||
+    typeof longitude !== "number" ||
+    isNaN(latitude) ||
+    isNaN(longitude) ||
+    latitude < -90 ||
+    latitude > 90 ||
+    longitude < -180 ||
+    longitude > 180
+  ) {
+    throw new Error("Invalid latitude or longitude");
+  }
+
   const kaabaLat = 21.4225;
   const kaabaLon = 39.8262;
 

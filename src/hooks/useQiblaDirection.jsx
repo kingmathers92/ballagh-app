@@ -25,9 +25,14 @@ export const useQiblaDirection = () => {
         const { latitude, longitude, accuracy } = position.coords;
         setLocation({ latitude, longitude });
         setAccuracy(accuracy);
-        const direction = calculateQiblaDirection(latitude, longitude);
-        setQiblaDirection(direction);
-        setIsLoading(false);
+        try {
+          const direction = calculateQiblaDirection(latitude, longitude);
+          setQiblaDirection(direction);
+        } catch (err) {
+          setError("Failed to calculate Qibla direction: " + err.message);
+        } finally {
+          setIsLoading(false);
+        }
       },
       (err) => {
         setError(
@@ -43,7 +48,6 @@ export const useQiblaDirection = () => {
     );
   }, []);
 
-  // Debounce function to limit how often handleOrientation updates state
   const debounce = (func, wait) => {
     let timeout;
     return (...args) => {

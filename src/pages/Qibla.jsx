@@ -4,12 +4,9 @@ import Spinner from "../components/Spinner";
 import QiblaMap from "../components/QiblaMap";
 import Compass from "../components/Compass";
 import StaticQibla from "../components/StaticQibla";
-import NearbyMosques from "../components/NearbyMosques"; // New import
-import {
-  calculateDistance,
-  getAccuracyColor,
-  getErrorMessage,
-} from "../utils/qiblaUtils";
+import NearbyMosques from "../components/NearbyMosques";
+import QiblaInfo from "../components/QiblaInfo"; // New import
+import { calculateDistance, getErrorMessage } from "../utils/qiblaUtils";
 
 import "../styles/Qibla.css";
 
@@ -108,40 +105,14 @@ function Qibla() {
             fetchError={fetchError}
           />
 
-          <div className="qibla-info">
-            <p>
-              Qibla Direction: <strong>{qiblaDirection?.toFixed(1)}°</strong>
-            </p>
-            <p>
-              Your Location:{" "}
-              <strong>
-                {location?.latitude?.toFixed(4)},{" "}
-                {location?.longitude?.toFixed(4)}
-              </strong>
-            </p>
-            {accuracy && (
-              <p>
-                Accuracy:{" "}
-                <strong style={{ color: getAccuracyColor(accuracy) }}>
-                  {accuracy.toFixed(0)} meters
-                </strong>
-              </p>
-            )}
-            {orientationSupported && (
-              <p className="instruction">
-                Rotate your device until the compass needle (North) aligns with
-                the Qibla marker to face the Qibla.
-              </p>
-            )}
-            {error && (
-              <p className="error-text">
-                {getErrorMessage(error)}
-                <button className="retry-button inline" onClick={recalibrate}>
-                  Try Again
-                </button>
-              </p>
-            )}
-          </div>
+          <QiblaInfo
+            qiblaDirection={qiblaDirection}
+            location={location}
+            accuracy={accuracy}
+            orientationSupported={orientationSupported}
+            error={error}
+            recalibrate={recalibrate}
+          />
 
           <div className="action-buttons">
             <button className="calibrate-button" onClick={recalibrate}>

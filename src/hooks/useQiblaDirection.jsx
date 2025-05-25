@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { calculateQiblaDirection } from "../utils/qiblaUtils";
+import { calculateQiblaDirection, debounce } from "../utils/qiblaUtils";
 
 export const useQiblaDirection = () => {
   const [qiblaDirection, setQiblaDirection] = useState(null);
@@ -20,7 +20,6 @@ export const useQiblaDirection = () => {
       return;
     }
 
-    // Set a timeout for geolocation request
     const timeoutId = setTimeout(() => {
       setError("LOCATION_TIMEOUT");
       setIsLoading(false);
@@ -56,14 +55,6 @@ export const useQiblaDirection = () => {
     );
   }, []);
 
-  const debounce = (func, wait) => {
-    let timeout;
-    return (...args) => {
-      clearTimeout(timeout);
-      timeout = setTimeout(() => func(...args), wait);
-    };
-  };
-
   const handleOrientation = useCallback(
     debounce((event) => {
       if (event.alpha === null || event.alpha === undefined) {
@@ -80,7 +71,7 @@ export const useQiblaDirection = () => {
         setCompassHeading(heading);
       }
     }, 100),
-    []
+    [] // Dependencies are empty because setOrientationSupported, setError, and setCompassHeading are stable
   );
 
   useEffect(() => {

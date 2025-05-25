@@ -20,8 +20,15 @@ export const useQiblaDirection = () => {
       return;
     }
 
+    // Set a timeout for geolocation request
+    const timeoutId = setTimeout(() => {
+      setError("LOCATION_TIMEOUT");
+      setIsLoading(false);
+    }, 15000);
+
     navigator.geolocation.getCurrentPosition(
       (position) => {
+        clearTimeout(timeoutId);
         const { latitude, longitude, accuracy } = position.coords;
         setLocation({ latitude, longitude });
         setAccuracy(accuracy);
@@ -35,6 +42,7 @@ export const useQiblaDirection = () => {
         }
       },
       (err) => {
+        clearTimeout(timeoutId);
         setError(
           err.code === 1
             ? "PERMISSION_DENIED"

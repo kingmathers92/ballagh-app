@@ -77,7 +77,11 @@ export const getErrorMessage = (error) => {
       return "An error occurred while accessing device orientation.";
     case "ORIENTATION_DATA_UNAVAILABLE":
       return "Device orientation data is unavailable. Please use the Qibla direction value manually.";
+    case "LOCATION_TIMEOUT":
+      return "Location request timed out. Please try again.";
     default:
-      return "Something went wrong. Please try again.";
+      return error?.startsWith?.("Failed to calculate Qibla direction")
+        ? error
+        : "Something went wrong. Please try again.";
   }
 };

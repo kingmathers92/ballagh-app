@@ -2,7 +2,8 @@ import { useState, useEffect, useCallback } from "react";
 import { useQiblaDirection } from "../hooks/useQiblaDirection";
 import Spinner from "../components/Spinner";
 import QiblaMap from "../components/QiblaMap";
-import Compass from "../components/Compass"; // New import
+import Compass from "../components/Compass";
+import StaticQibla from "../components/StaticQibla"; // New import
 import {
   calculateDistance,
   getAccuracyColor,
@@ -97,18 +98,7 @@ function Qibla() {
               compassHeading={compassHeading}
             />
           ) : (
-            <div className="static-qibla-container">
-              <div className="static-qibla-direction">
-                <div
-                  className="static-qibla-arrow"
-                  style={{ transform: `rotate(${qiblaDirection}deg)` }}
-                ></div>
-                <p className="static-instruction">
-                  Qibla is at {qiblaDirection?.toFixed(1)}°. Face this direction
-                  to align with the Qibla.
-                </p>
-              </div>
-            </div>
+            <StaticQibla qiblaDirection={qiblaDirection} />
           )}
 
           <div className="nearby-mosques">

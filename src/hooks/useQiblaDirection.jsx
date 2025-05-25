@@ -43,21 +43,33 @@ export const useQiblaDirection = () => {
     );
   }, []);
 
-  const handleOrientation = (event) => {
-    if (event.alpha === null || event.alpha === undefined) {
-      setOrientationSupported(false);
-      setError("ORIENTATION_DATA_UNAVAILABLE");
-      return;
-    }
-
-    let heading = event.webkitCompassHeading || event.alpha;
-    if (event.webkitCompassHeading) {
-      setCompassHeading(heading);
-    } else {
-      heading = 360 - event.alpha;
-      setCompassHeading(heading);
-    }
+  // Debounce function to limit how often handleOrientation updates state
+  const debounce = (func, wait) => {
+    let timeout;
+    return (...args) => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func(...args), wait);
+    };
   };
+
+  const handleOrientation = useCallback(
+    debounce((event) => {
+      if (event.alpha === null || event.alpha === undefined) {
+        setOrientationSupported(false);
+        setError("ORIENTATION_DATA_UNAVAILABLE");
+        return;
+      }
+
+      let heading = event.webkitCompassHeading || event.alpha;
+      if (event.webkitCompassHeading) {
+        setCompassHeading(heading);
+      } else {
+        heading = 360 - event.alpha;
+        setCompassHeading(heading);
+      }
+    }, 100),
+    []
+  );
 
   useEffect(() => {
     if (
@@ -99,7 +111,7 @@ export const useQiblaDirection = () => {
     return () => {
       window.removeEventListener("deviceorientation", handleOrientation, true);
     };
-  }, [getGeolocation]);
+  }, [getGeolocation, handleOrientation]);
 
   const recalibrate = () => {
     setCompassHeading(0);

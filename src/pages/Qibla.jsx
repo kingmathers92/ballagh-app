@@ -2,10 +2,9 @@ import { useState, useEffect, useCallback } from "react";
 import { useQiblaDirection } from "../hooks/useQiblaDirection";
 import Spinner from "../components/Spinner";
 import QiblaMap from "../components/QiblaMap";
+import Compass from "../components/Compass"; // New import
 import {
   calculateDistance,
-  getCompassStyle,
-  getQiblaMarkerStyle,
   getAccuracyColor,
   getErrorMessage,
 } from "../utils/qiblaUtils";
@@ -93,38 +92,10 @@ function Qibla() {
           )}
 
           {orientationSupported ? (
-            <div className="compass-container">
-              <div className="compass" style={getCompassStyle(compassHeading)}>
-                <div className="compass-rose">
-                  {[...Array(8)].map((_, i) => (
-                    <div
-                      key={i}
-                      className="compass-mark"
-                      style={{ transform: `rotate(${i * 45}deg)` }}
-                    />
-                  ))}
-                </div>
-                <div className="compass-arrow"></div>
-                {qiblaDirection !== null && (
-                  <>
-                    <div
-                      className="qibla-marker"
-                      style={getQiblaMarkerStyle(qiblaDirection)}
-                    ></div>
-                    <div
-                      className="qibla-line"
-                      style={getQiblaMarkerStyle(qiblaDirection)}
-                    ></div>
-                  </>
-                )}
-              </div>
-              <div className="compass-labels">
-                <span>N</span>
-                <span>E</span>
-                <span>S</span>
-                <span>W</span>
-              </div>
-            </div>
+            <Compass
+              qiblaDirection={qiblaDirection}
+              compassHeading={compassHeading}
+            />
           ) : (
             <div className="static-qibla-container">
               <div className="static-qibla-direction">

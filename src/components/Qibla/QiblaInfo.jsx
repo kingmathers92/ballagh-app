@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { getAccuracyColor, getErrorMessage } from "../utils/qiblaUtils";
+import { getAccuracyColor, getErrorMessage } from "../../utils/qiblaUtils";
 
 function QiblaInfo({
   qiblaDirection,

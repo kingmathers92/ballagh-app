@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { getCompassStyle, getQiblaMarkerStyle } from "../utils/qiblaUtils";
+import { getCompassStyle, getQiblaMarkerStyle } from "../../utils/qiblaUtils";
 
 function Compass({ qiblaDirection, compassHeading }) {
   return (

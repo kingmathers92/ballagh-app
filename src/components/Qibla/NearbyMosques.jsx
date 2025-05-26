@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import Spinner from "./Spinner";
+import Spinner from "../Spinner";
 
 function NearbyMosques({ mosques, fetchingMosques, fetchError }) {
   return (

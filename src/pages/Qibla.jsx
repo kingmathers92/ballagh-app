@@ -1,12 +1,12 @@
 import { useState, useEffect, useCallback } from "react";
 import { useQiblaDirection } from "../hooks/useQiblaDirection";
 import Spinner from "../components/Spinner";
-import QiblaMap from "../components/QiblaMap";
-import Compass from "../components/Compass";
-import StaticQibla from "../components/StaticQibla";
-import NearbyMosques from "../components/NearbyMosques";
-import QiblaInfo from "../components/QiblaInfo";
-import ActionButtons from "../components/ActionButtons";
+import QiblaMap from "../components/Qibla/QiblaMap";
+import Compass from "../components/Qibla/Compass";
+import StaticQibla from "../components/Qibla/StaticQibla";
+import NearbyMosques from "../components/Qibla/NearbyMosques";
+import QiblaInfo from "../components/Qibla/QiblaInfo";
+import ActionButtons from "../components/Qibla/ActionButtons";
 import { calculateDistance, getErrorMessage } from "../utils/qiblaUtils";
 
 import "../styles/Qibla.css";

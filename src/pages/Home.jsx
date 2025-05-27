@@ -1,4 +1,6 @@
 import { Link } from "react-router-dom";
+// Import Font Awesome icons
+import { FaSearch, FaRandom, FaKaaba } from "react-icons/fa";
 
 function Home() {
   return (
@@ -11,13 +13,13 @@ function Home() {
       </p>
       <div className="buttons-container">
         <Link to="/search" className="button">
-          Search Verses
+          <FaSearch className="button-icon" /> Search Verses
         </Link>
         <Link to="/random" className="button">
-          Get Random Verse
+          <FaRandom className="button-icon" /> Get Random Verse
         </Link>
         <Link to="/qibla" className="button">
-          Qibla Direction
+          <FaKaaba className="button-icon" /> Qibla Direction
         </Link>
       </div>
     </div>

@@ -31,7 +31,6 @@ body {
   background-image: url("https://www.transparenttextures.com/patterns/arabesque.png");
   background-size: 200px 200px;
   background-attachment: fixed;
-  background-opacity: 0.1;
   position: relative;
 }
 
@@ -164,6 +163,36 @@ main {
   box-sizing: border-box;
 }
 
+.hero-section {
+  position: relative;
+  height: 200px;
+  background-image: url("../public/images/okba.jpg");
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.hero-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1;
+}
+
+.hero-section .title {
+  position: relative;
+  z-index: 2;
+  color: #fff;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
 .container {
   background-color: var(--background-color);
   padding: 20px;
@@ -261,6 +290,10 @@ button:focus,
 }
 
 @media (min-width: 768px) {
+  .hero-section {
+    height: 300px;
+  }
+
   .container {
     padding: 15px;
   }

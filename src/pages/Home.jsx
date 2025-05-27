@@ -15,13 +15,25 @@ function Home() {
           enhance your spiritual journey.
         </p>
         <div className="buttons-container">
-          <Link to="/search" className="button">
+          <Link
+            to="/search"
+            className="button"
+            aria-label="Search for Quran verses"
+          >
             <FaSearch className="button-icon" /> Search Verses
           </Link>
-          <Link to="/random" className="button">
+          <Link
+            to="/random"
+            className="button"
+            aria-label="Get a random Quran verse"
+          >
             <FaRandom className="button-icon" /> Get Random Verse
           </Link>
-          <Link to="/qibla" className="button">
+          <Link
+            to="/qibla"
+            className="button"
+            aria-label="Find the Qibla direction"
+          >
             <FaKaaba className="button-icon" /> Qibla Direction
           </Link>
         </div>

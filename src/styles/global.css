@@ -5,7 +5,7 @@
   --secondary-color: #e0c9a6;
   --text-color: #333;
   --background-color: #f7f3e8;
-  --accent-color: #a67c00;
+  --accent-color: #8a6700;
 }
 
 :root[data-theme="dark"] {
@@ -201,6 +201,13 @@ main {
   max-width: 800px;
   margin: 0 auto;
   text-align: center;
+  border: 2px solid transparent;
+  border-image: linear-gradient(
+      to right,
+      var(--primary-color),
+      var(--accent-color)
+    )
+    1;
 }
 
 .title {
@@ -259,6 +266,7 @@ main {
   display: flex;
   align-items: center;
   gap: 8px;
+  animation: fadeIn 0.5s ease-in;
 }
 
 .button:hover,
@@ -287,6 +295,17 @@ button:focus,
   padding: 10px;
   border-radius: 5px;
   margin-top: 10px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @media (min-width: 768px) {

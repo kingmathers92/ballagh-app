@@ -5,19 +5,19 @@ function Home() {
     <div className="container">
       <h1 className="title">بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ</h1>
       <h2 className="subtitle">Welcome to the Quran App</h2>
-      <p>
-        Welcome to the Hadith App. Here you can search for hadiths or get a
-        random hadith.
+      <p className="description">
+        Explore the Holy Quran, search for verses, listen to recitations, or
+        find the Qibla direction with ease.
       </p>
       <div className="buttons-container">
         <Link to="/search" className="button">
-          Search Hadiths
+          Search Verses
         </Link>
         <Link to="/random" className="button">
-          Get Random Hadith
+          Get Random Verse
         </Link>
         <Link to="/qibla" className="button">
-          Qibla
+          Qibla Direction
         </Link>
       </div>
     </div>

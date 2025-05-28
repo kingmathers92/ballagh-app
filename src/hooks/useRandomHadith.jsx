@@ -4,7 +4,7 @@ import axios from "axios";
 const useRandomHadith = (apiVersion = "1") => {
   const [hadith, setHadith] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null); // Add error state
+  const [error, setError] = useState(null);
   const [arabicEditions, setArabicEditions] = useState([]);
 
   const fetchArabicEditions = async () => {
@@ -37,8 +37,10 @@ const useRandomHadith = (apiVersion = "1") => {
       number: randomHadithNumber,
       collection: randomEdition.book,
       edition: randomEdition.name,
+      grades: selectedHadith.grades || [],
     });
   };
+
   const fetchRandomHadith = async () => {
     if (arabicEditions.length === 0) return;
 
@@ -58,7 +60,6 @@ const useRandomHadith = (apiVersion = "1") => {
     } catch (error) {
       console.error("Error fetching data:", error);
       setError("Failed to load random hadith. Please try again.");
-      // Fallback to minified version if non-minified version fails
       try {
         const fallbackResponse = await axios.get(
           randomEdition.link.replace(".json", ".min.json")
@@ -90,7 +91,7 @@ const useRandomHadith = (apiVersion = "1") => {
     }
   }, [arabicEditions]);
 
-  return { hadith, isLoading, error, fetchRandomHadith };
+  return { hadith, isLoading, error, arabicEditions, fetchRandomHadith };
 };
 
 export default useRandomHadith;

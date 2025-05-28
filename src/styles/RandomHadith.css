@@ -7,19 +7,72 @@
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
+  background-image: url("https://www.transparenttextures.com/patterns/arabesque.png");
+  background-size: 200px 200px;
+  background-attachment: fixed;
+  position: relative;
+}
+
+.container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: inherit;
+  opacity: 0.1;
+  z-index: -1;
 }
 
 .title {
   text-align: center;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  text-align: center;
+  font-size: 1.1rem;
+  color: var(--primary-color);
   margin-bottom: 20px;
 }
 
+.loading-placeholder {
+  text-align: center;
+  font-style: italic;
+  color: var(--text-color);
+  opacity: 0.7;
+  margin-bottom: 20px;
+}
+
+.error-container {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.error {
+  color: #721c24;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
 .hadith-container {
-  background-color: #f9f9f9;
+  background-color: var(--background-color);
   border-radius: 10px;
   padding: 1rem;
   max-width: 600px;
   margin: auto;
+  border: 2px solid transparent;
+  border-image: linear-gradient(
+      to right,
+      var(--primary-color),
+      var(--accent-color)
+    )
+    1;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
 .hadith-text {
@@ -35,7 +88,9 @@
 }
 
 .hadith-source {
+  font-family: "Amiri", serif;
   font-style: italic;
+  color: var(--primary-color);
   text-align: right;
 }
 
@@ -44,23 +99,101 @@
   color: var(--accent-color);
   font-style: italic;
   margin-top: 5px;
+  text-align: right;
+}
+
+.share-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.skeleton {
+  opacity: 0.7;
+}
+
+.skeleton-text {
+  width: 100%;
+  height: 100px;
+  background: linear-gradient(90deg, #ddd 25%, #e8e8e8 50%, #ddd 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.skeleton-source {
+  width: 60%;
+  height: 16px;
+  background: linear-gradient(90deg, #ddd 25%, #e8e8e8 50%, #ddd 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+  margin-left: auto;
+}
+
+.skeleton-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.skeleton-buttons::before,
+.skeleton-buttons::after {
+  content: "";
+  width: 100px;
+  height: 36px;
+  background: linear-gradient(90deg, #ddd 25%, #e8e8e8 50%, #ddd 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 .button {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   width: 100%;
   padding: 10px;
-  background-color: #4caf50;
+  background-color: var(--primary-color);
   color: white;
   border: none;
   border-radius: 5px;
   font-size: 16px;
   cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s;
+}
+
+.button:hover {
+  background-color: var(--accent-color);
+  transform: scale(1.05);
 }
 
 .button:disabled {
-  background-color: #cccccc;
+  background-color: color-mix(in srgb, var(--primary-color) 40%, #ccc);
   cursor: not-allowed;
+}
+
+.button-icon {
+  font-size: 1.2em;
+}
+
+.retry-button {
+  width: auto;
+  padding: 8px 16px;
+  margin: 0 auto;
 }
 
 @media (max-width: 768px) {

@@ -38,14 +38,21 @@ function RandomHadith() {
             Collection: {hadith.collection}, Edition: {hadith.edition}, Hadith
             Number: {hadith.number}
           </p>
-          {hadith.grades && hadith.grades.length > 0 && (
-            <p className="hadith-grades">
+          {hadith.grades && hadith.grades.length > 0 ? (
+            <p>
               Grades:{" "}
-              {hadith.grades
-                .map((grade) => `${grade.grade} (${grade.narrator})`)
-                .join(", ")}
+              {hadith.grades.map((grade, index) => (
+                <span key={index}>
+                  {grade.grade}
+                  {grade.scholar ? ` (${grade.scholar})` : ""}
+                  {index < hadith.grades.length - 1 ? ", " : ""}
+                </span>
+              ))}
             </p>
+          ) : (
+            <p>Grades: Not available</p>
           )}
+
           <div className="share-buttons">
             <ShareButton textToCopy={hadith.text} />
             <ShareImageBox textToShare={hadith.text} />

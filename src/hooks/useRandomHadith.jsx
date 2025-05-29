@@ -32,12 +32,23 @@ const useRandomHadith = (apiVersion = "1") => {
 
   const handleHadithFetch = (hadiths, randomHadithNumber, randomEdition) => {
     const selectedHadith = hadiths[randomHadithNumber];
+
+    const deduplicatedGrades = selectedHadith.grades?.filter(
+      (grade, index, self) =>
+        index ===
+        self.findIndex(
+          (g) =>
+            g.grade === grade.grade &&
+            (g.scholar || "Unknown") === (grade.scholar || "Unknown")
+        )
+    );
+
     setHadith({
       text: selectedHadith.text,
       number: randomHadithNumber,
       collection: randomEdition.book,
       edition: randomEdition.name,
-      grades: selectedHadith.grades || [],
+      grades: deduplicatedGrades || [],
     });
   };
 

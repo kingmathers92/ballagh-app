@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 
 const useRandomHadith = (apiVersion = "1") => {
@@ -7,7 +7,7 @@ const useRandomHadith = (apiVersion = "1") => {
   const [error, setError] = useState(null);
   const [arabicEditions, setArabicEditions] = useState([]);
 
-  const fetchArabicEditions = async () => {
+  const fetchArabicEditions = useCallback(async () => {
     try {
       const response = await axios.get(
         `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@${apiVersion}/editions.json`
@@ -28,7 +28,7 @@ const useRandomHadith = (apiVersion = "1") => {
       console.error("Error fetching Data:", error);
       setError("Failed to load Arabic editions. Please try again.");
     }
-  };
+  }, [apiVersion]);
 
   const handleHadithFetch = (hadiths, randomHadithNumber, randomEdition) => {
     const selectedHadith = hadiths[randomHadithNumber];
@@ -41,7 +41,7 @@ const useRandomHadith = (apiVersion = "1") => {
     });
   };
 
-  const fetchRandomHadith = async () => {
+  const fetchRandomHadith = useCallback(async () => {
     if (arabicEditions.length === 0) return;
 
     setIsLoading(true);
@@ -79,19 +79,25 @@ const useRandomHadith = (apiVersion = "1") => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [arabicEditions]);
 
   useEffect(() => {
     fetchArabicEditions();
-  }, []);
+  }, [fetchArabicEditions]);
 
   useEffect(() => {
     if (arabicEditions.length > 0) {
       fetchRandomHadith();
     }
-  }, [arabicEditions]);
+  }, [arabicEditions, fetchRandomHadith]);
 
-  return { hadith, isLoading, error, arabicEditions, fetchRandomHadith };
+  return {
+    hadith,
+    isLoading,
+    error,
+    arabicEditions: arabicEditions || [],
+    fetchRandomHadith,
+  };
 };
 
 export default useRandomHadith;

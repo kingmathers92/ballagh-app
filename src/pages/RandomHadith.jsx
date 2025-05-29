@@ -14,9 +14,10 @@ function RandomHadith() {
     <div className="container">
       <h2 className="title">Random Hadith</h2>
       <p className="subtitle">Explore Hadiths Alongside the Quran</p>
-      {arabicEditions.length === 0 && !error && (
+      {arabicEditions?.length === 0 && !error && (
         <p className="loading-placeholder">Fetching a Hadith for You…</p>
       )}
+
       {error && (
         <div className="error-container">
           <p className="error">{error}</p>

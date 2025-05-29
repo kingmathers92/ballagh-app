@@ -31,6 +31,7 @@ function RandomHadith() {
           </button>
         </div>
       )}
+
       {!isLoading && !error && hadith && (
         <div id="hadith-text" className="hadith-container">
           <p className="hadith-text rtl">{hadith.text}</p>
@@ -39,7 +40,7 @@ function RandomHadith() {
             Number: {hadith.number}
           </p>
           {hadith.grades && hadith.grades.length > 0 ? (
-            <p>
+            <p className="hadith-grades">
               Grades:{" "}
               {hadith.grades.map((grade, index) => (
                 <span key={index}>
@@ -50,7 +51,7 @@ function RandomHadith() {
               ))}
             </p>
           ) : (
-            <p>Grades: Not available</p>
+            <p className="hadith-grades">Grades: Not available</p>
           )}
 
           <div className="share-buttons">
@@ -59,6 +60,7 @@ function RandomHadith() {
           </div>
         </div>
       )}
+
       {isLoading && !error && (
         <div className="hadith-container skeleton">
           <div className="skeleton-text"></div>
@@ -66,23 +68,26 @@ function RandomHadith() {
           <div className="skeleton-buttons"></div>
         </div>
       )}
-      <button
-        className="button"
-        onClick={fetchRandomHadith}
-        disabled={isLoading}
-        aria-label={
-          isLoading ? "Loading new hadith" : "Get another random hadith"
-        }
-        aria-busy={isLoading}
-      >
-        {isLoading ? (
-          <Spinner />
-        ) : (
-          <>
-            <FaRandom className="button-icon" /> Get Another Random Hadith
-          </>
-        )}
-      </button>
+
+      <div className="button-wrapper">
+        <button
+          className="button"
+          onClick={fetchRandomHadith}
+          disabled={isLoading}
+          aria-label={
+            isLoading ? "Loading new hadith" : "Get another random hadith"
+          }
+          aria-busy={isLoading}
+        >
+          {isLoading ? (
+            <Spinner />
+          ) : (
+            <>
+              <FaRandom className="button-icon" /> Get Another Random Hadith
+            </>
+          )}
+        </button>
+      </div>
     </div>
   );
 }

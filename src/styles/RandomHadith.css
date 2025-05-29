@@ -195,6 +195,11 @@
   padding: 8px 16px;
   margin: 0 auto;
 }
+.button-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
 
 @media (max-width: 768px) {
   .hadith-text {
@@ -203,6 +208,10 @@
 
   .hadith-container {
     padding: 0.5rem;
+  }
+
+  .button-wrapper {
+    margin-top: 20px;
   }
 
   .app-title {

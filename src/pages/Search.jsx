@@ -78,10 +78,14 @@ function Search() {
         responses.forEach((response, index) => {
           if (response.status === "fulfilled") {
             const hadiths = response.value.data.hadiths;
-            allResults = [
-              ...allResults,
-              ...formatHadithResults(hadiths, editions[index]),
-            ];
+            const formattedResults = formatHadithResults(
+              hadiths,
+              editions[index]
+            );
+            const filteredResults = formattedResults.filter((result) =>
+              result.text.toLowerCase().includes(query.toLowerCase())
+            );
+            allResults = [...allResults, ...filteredResults];
           }
         });
       } else {
@@ -90,7 +94,11 @@ function Search() {
         );
         if (edition) {
           const hadiths = await fetchHadithData(edition.link);
-          allResults = [...formatHadithResults(hadiths, edition)];
+          const formattedResults = formatHadithResults(hadiths, edition);
+          const filteredResults = formattedResults.filter((result) =>
+            result.text.toLowerCase().includes(query.toLowerCase())
+          );
+          allResults = [...filteredResults];
         }
       }
       setResults(allResults);

@@ -101,7 +101,13 @@ function Search() {
     }
   };
 
-  // calculating results for the current page
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && !loading && query.trim() && selectedEdition) {
+      searchHadith();
+    }
+  };
+
+  // Calculating results for the current page
   const indexOfLastResult = currentPage * resultsPerPage;
   const indexOfFirstResult = indexOfLastResult - resultsPerPage;
   const currentResults = results.slice(indexOfFirstResult, indexOfLastResult);
@@ -140,6 +146,7 @@ function Search() {
         type="text"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
+        onKeyDown={handleKeyDown}
         placeholder="Enter search term"
         disabled={!selectedEdition}
       />

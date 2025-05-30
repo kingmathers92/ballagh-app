@@ -154,6 +154,11 @@ nav ul li a {
   display: block;
 }
 
+nav ul li a.active {
+  color: var(--secondary-color);
+  font-weight: bold;
+}
+
 main {
   flex-grow: 1;
   padding: 20px;

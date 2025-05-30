@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 const NavLinks = ({ toggleMenu }) => {
   const links = [
@@ -15,9 +15,13 @@ const NavLinks = ({ toggleMenu }) => {
     <ul>
       {links.map((link) => (
         <li key={link.path}>
-          <Link to={link.path} onClick={toggleMenu}>
+          <NavLink
+            to={link.path}
+            onClick={toggleMenu}
+            className={({ isActive }) => (isActive ? "active" : "")}
+          >
             {link.label}
-          </Link>
+          </NavLink>
         </li>
       ))}
     </ul>

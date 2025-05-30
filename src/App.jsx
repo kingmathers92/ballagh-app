@@ -5,7 +5,7 @@ import Search from "./pages/Search";
 import RandomHadith from "./pages/RandomHadith";
 import Quran from "./pages/Quran";
 import Qibla from "./pages/Qibla";
-import DarkModeToggle from "./components/ThemeToggle";
+import DarkModeToggle from "./components/DarkModeToggle";
 import NavLinks from "./components/NavLinks";
 import Journal from "./pages/Journal";
 import ErrorBoundary from "./components/ErrorBoundary";
@@ -45,7 +45,12 @@ function App() {
       <div className={`App ${theme === "dark" ? "dark-mode" : ""}`}>
         <header>
           <DarkModeToggle theme={theme} toggleTheme={toggleTheme} />
-          <button className="menu-toggle" onClick={toggleMenu}>
+          <button
+            className="menu-toggle"
+            onClick={toggleMenu}
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
+          >
             <span className="menu-icon"></span>
           </button>
           <h1 className="app-title">بلَّغ</h1>

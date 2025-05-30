@@ -1,21 +1,6 @@
-import { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 
-const DarkModeToggle = () => {
-  const [theme, setTheme] = useState("light");
-
-  useEffect(() => {
-    const savedTheme = localStorage.getItem("theme") || "light";
-    setTheme(savedTheme);
-    document.documentElement.setAttribute("data-theme", savedTheme);
-  }, []);
-
-  const toggleTheme = () => {
-    const newTheme = theme === "light" ? "dark" : "light";
-    setTheme(newTheme);
-    document.documentElement.setAttribute("data-theme", newTheme);
-    localStorage.setItem("theme", newTheme);
-  };
-
+const DarkModeToggle = ({ theme, toggleTheme }) => {
   return (
     <button onClick={toggleTheme} className="dark-mode-toggle">
       {theme === "light" ? (
@@ -29,6 +14,11 @@ const DarkModeToggle = () => {
       )}
     </button>
   );
+};
+
+DarkModeToggle.propTypes = {
+  theme: PropTypes.string.isRequired,
+  toggleTheme: PropTypes.func.isRequired,
 };
 
 export default DarkModeToggle;

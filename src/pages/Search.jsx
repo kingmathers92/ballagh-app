@@ -30,6 +30,12 @@ function Search() {
       number: hadith.number || "Unknown",
     }));
 
+  const highlightText = (text, searchTerm) => {
+    if (!searchTerm) return text;
+    const regex = new RegExp(`(${searchTerm})`, "gi");
+    return text.replace(regex, "<mark>$1</mark>");
+  };
+
   useEffect(() => {
     const fetchEditions = async () => {
       setLoadingEditions(true);
@@ -180,7 +186,12 @@ function Search() {
 
       {currentResults.map((result, index) => (
         <div key={index} className="hadith-container">
-          <p className="hadith-text">{result.text}</p>
+          <p
+            className="hadith-text"
+            dangerouslySetInnerHTML={{
+              __html: highlightText(result.text, query),
+            }}
+          />
           <p className="hadith-source">
             Collection: {result.collection}, Edition: {result.edition}, Hadith
             Number: {result.number || "Unknown"}

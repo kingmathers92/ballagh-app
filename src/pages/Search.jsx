@@ -13,6 +13,7 @@ function Search() {
   const [editions, setEditions] = useState([]);
   const [selectedEdition, setSelectedEdition] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
+  const [loadingEditions, setLoadingEditions] = useState(false);
   const resultsPerPage = 5;
 
   const fetchHadithData = async (editionLink) => {
@@ -31,6 +32,7 @@ function Search() {
 
   useEffect(() => {
     const fetchEditions = async () => {
+      setLoadingEditions(true);
       try {
         const response = await axios.get(
           `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions.json`
@@ -47,6 +49,8 @@ function Search() {
         setEditions(editionList);
       } catch (error) {
         console.error("Error fetching editions:", error);
+      } finally {
+        setLoadingEditions(false);
       }
     };
 
@@ -128,18 +132,24 @@ function Search() {
     <div className="container">
       <h2 className="title">Search Hadith</h2>
       <div className="filters">
-        <select
-          className="input"
-          value={selectedEdition}
-          onChange={(e) => setSelectedEdition(e.target.value)}
-        >
-          <option value="all">All Editions</option>
-          {editions.map((edition, index) => (
-            <option key={index} value={edition.name}>
-              {edition.name} ({edition.book})
-            </option>
-          ))}
-        </select>
+        {loadingEditions ? (
+          <div className="spinner-container">
+            <Spinner />
+          </div>
+        ) : (
+          <select
+            className="input"
+            value={selectedEdition}
+            onChange={(e) => setSelectedEdition(e.target.value)}
+          >
+            <option value="all">All Editions</option>
+            {editions.map((edition, index) => (
+              <option key={index} value={edition.name}>
+                {edition.name} ({edition.book})
+              </option>
+            ))}
+          </select>
+        )}
       </div>
       <input
         className="input"

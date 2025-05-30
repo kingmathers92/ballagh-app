@@ -45,6 +45,29 @@
   margin-bottom: 20px;
 }
 
+.filters {
+  margin-bottom: 15px;
+}
+
+.input {
+  padding: 8px;
+  font-size: 1rem;
+  width: 100%;
+}
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+}
+
+.no-results {
+  color: #ccc;
+  text-align: center;
+  margin: 20px 0;
+}
+
 .error-container {
   text-align: center;
   margin-bottom: 20px;
@@ -208,6 +231,16 @@
 
   .hadith-container {
     padding: 0.5rem;
+  }
+
+  .input {
+    padding: 6px;
+    font-size: 0.9rem;
+  }
+
+  .button {
+    padding: 8px;
+    font-size: 0.9rem;
   }
 
   .button-wrapper {

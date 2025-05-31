@@ -210,7 +210,7 @@
   text-align: right;
   direction: rtl;
   padding: 15px;
-  background: rgba(255, 255, 255, 0.3);
+  background: var(--background-color);
   border-radius: 8px;
   border: 1px solid var(--accent-color);
   width: 100%;

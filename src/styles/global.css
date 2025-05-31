@@ -68,11 +68,13 @@ header {
   top: 1rem;
   right: 1rem;
   z-index: 1000;
-  color: var(--text-color); /* Ensure toggle icon is visible */
+  color: var(--text-color);
 }
 
 .dark-mode-toggle:focus {
   outline: none;
+  box-shadow: none;
+  border: none;
 }
 
 .app-title {
@@ -91,6 +93,7 @@ header {
   width: 30px;
   height: 30px;
   position: relative;
+  text-decoration: none;
 }
 
 .menu-icon,

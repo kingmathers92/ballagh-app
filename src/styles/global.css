@@ -1,19 +1,19 @@
 @import url("https://fonts.googleapis.com/css2?family=Amiri&family=Lateef&display=swap");
 
 :root[data-theme="light"] {
-  --primary-color: #1f4e5f;
-  --secondary-color: #e0c9a6;
-  --text-color: #333;
-  --background-color: #f7f3e8;
-  --accent-color: #8a6700;
+  --primary-color: #ffffff;
+  --secondary-color: #6b7280;
+  --text-color: #1f2937;
+  --background-color: #f9fafb;
+  --accent-color: #c09c64;
 }
 
 :root[data-theme="dark"] {
-  --primary-color: #88b3b5;
-  --secondary-color: #3b3129;
-  --text-color: #cfcfcf;
-  --background-color: #1f1f1f;
-  --accent-color: #a68d83;
+  --primary-color: #1e293b;
+  --secondary-color: #475569;
+  --text-color: #e2e8f0;
+  --background-color: #111827;
+  --accent-color: #c09c64;
 }
 
 .App {
@@ -68,6 +68,7 @@ header {
   top: 1rem;
   right: 1rem;
   z-index: 1000;
+  color: var(--text-color); /* Ensure toggle icon is visible */
 }
 
 .dark-mode-toggle:focus {
@@ -119,7 +120,7 @@ header {
 .menu-toggle:hover .menu-icon,
 .menu-toggle:hover .menu-icon::before,
 .menu-toggle:hover .menu-icon::after {
-  background-color: #fff;
+  background-color: var(--accent-color);
 }
 
 nav {
@@ -229,7 +230,7 @@ main {
 }
 
 .subtitle {
-  color: var(--primary-color);
+  color: var(--text-color);
   text-align: center;
   font-size: 1.2em;
   margin-top: -10px;
@@ -252,7 +253,7 @@ main {
 }
 
 .input:focus {
-  border-color: var(--primary-color);
+  border-color: var(--accent-color);
   outline: none;
 }
 
@@ -267,7 +268,7 @@ main {
 .pagination-container button,
 .share-button {
   background-color: var(--primary-color);
-  color: #fff;
+  color: var(--text-color);
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -284,6 +285,7 @@ main {
 .pagination-container button:hover,
 .share-button:hover {
   background-color: var(--accent-color);
+  color: var(--background-color);
   transform: scale(1.05);
   text-decoration: none;
 }
@@ -305,7 +307,7 @@ button:focus,
   bottom: 20px;
   right: 20px;
   background-color: var(--primary-color);
-  color: #fff;
+  color: var(--text-color);
   border: none;
   border-radius: 50%;
   width: 50px;
@@ -318,15 +320,26 @@ button:focus,
 
 .back-to-top:hover {
   background-color: var(--accent-color);
+  color: var(--background-color);
 }
 
 .error {
-  color: #721c24;
-  background-color: #f8d7da;
-  border: 1px solid #f5c6cb;
+  color: #9f1239;
+  background-color: #fecdd3;
+  border: 1px solid #f43f5e;
   padding: 10px;
   border-radius: 5px;
   margin-top: 10px;
+}
+
+.success {
+  color: #166534;
+  background-color: #bbf7d0;
+  border: 1px solid #22c55e;
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 10px;
+  text-align: center;
 }
 
 @keyframes fadeIn {

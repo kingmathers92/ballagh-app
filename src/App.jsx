@@ -54,10 +54,11 @@ function App() {
             <span className="menu-icon"></span>
           </button>
           <h1 className="app-title">بلَّغ</h1>
+          <nav className={menuOpen ? "open" : ""}>
+            <NavLinks toggleMenu={toggleMenu} />
+          </nav>
         </header>
-        <nav className={menuOpen ? "open" : ""}>
-          <NavLinks toggleMenu={toggleMenu} />
-        </nav>
+
         <main>
           <Routes>
             <Route path="/" element={<Home />} />

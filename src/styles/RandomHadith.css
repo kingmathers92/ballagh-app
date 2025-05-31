@@ -28,19 +28,20 @@
 .title {
   text-align: center;
   margin-bottom: 10px;
+  color: var(--text-color);
 }
 
 .subtitle {
   text-align: center;
   font-size: 1.1rem;
-  color: var(--primary-color);
+  color: var(--text-color);
   margin-bottom: 20px;
 }
 
 .loading-placeholder {
   text-align: center;
   font-style: italic;
-  color: var(--text-color);
+  color: var(--secondary-color);
   opacity: 0.7;
   margin-bottom: 20px;
 }
@@ -53,6 +54,8 @@
   padding: 8px;
   font-size: 1rem;
   width: 100%;
+  border: 2px solid var(--secondary-color);
+  border-radius: 5px;
 }
 
 .spinner-container {
@@ -63,14 +66,14 @@
 }
 
 .no-results {
-  color: #ccc;
+  color: var(--secondary-color);
   text-align: center;
   margin: 20px 0;
 }
 
 mark {
-  background-color: #ffeb3b;
-  color: #000;
+  background-color: #fef08a;
+  color: var(--text-color);
   padding: 2px 4px;
   border-radius: 3px;
 }
@@ -81,9 +84,9 @@ mark {
 }
 
 .error {
-  color: #721c24;
-  background-color: #f8d7da;
-  border: 1px solid #f5c6cb;
+  color: #9f1239;
+  background-color: #fecdd3;
+  border: 1px solid #f43f5e;
   padding: 10px;
   border-radius: 5px;
   margin-bottom: 10px;
@@ -110,6 +113,7 @@ mark {
   font-size: 1.2rem;
   line-height: 1.6;
   margin-bottom: 20px;
+  color: var(--text-color);
 }
 
 .rtl {
@@ -120,7 +124,7 @@ mark {
 .hadith-source {
   font-family: "Amiri", serif;
   font-style: italic;
-  color: var(--primary-color);
+  color: var(--secondary-color);
   text-align: right;
 }
 
@@ -146,7 +150,12 @@ mark {
 .skeleton-text {
   width: 100%;
   height: 100px;
-  background: linear-gradient(90deg, #ddd 25%, #e8e8e8 50%, #ddd 75%);
+  background: linear-gradient(
+    90deg,
+    var(--primary-color) 25%,
+    var(--secondary-color) 50%,
+    var(--primary-color) 75%
+  );
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
   border-radius: 4px;
@@ -156,7 +165,12 @@ mark {
 .skeleton-source {
   width: 60%;
   height: 16px;
-  background: linear-gradient(90deg, #ddd 25%, #e8e8e8 50%, #ddd 75%);
+  background: linear-gradient(
+    90deg,
+    var(--primary-color) 25%,
+    var(--secondary-color) 50%,
+    var(--primary-color) 75%
+  );
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
   border-radius: 4px;
@@ -175,7 +189,12 @@ mark {
   content: "";
   width: 100px;
   height: 36px;
-  background: linear-gradient(90deg, #ddd 25%, #e8e8e8 50%, #ddd 75%);
+  background: linear-gradient(
+    90deg,
+    var(--primary-color) 25%,
+    var(--secondary-color) 50%,
+    var(--primary-color) 75%
+  );
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
   border-radius: 4px;
@@ -198,7 +217,7 @@ mark {
   width: 100%;
   padding: 10px;
   background-color: var(--primary-color);
-  color: white;
+  color: var(--text-color);
   border: none;
   border-radius: 5px;
   font-size: 16px;
@@ -208,11 +227,13 @@ mark {
 
 .button:hover {
   background-color: var(--accent-color);
+  color: var(--background-color);
   transform: scale(1.05);
 }
 
 .button:disabled {
-  background-color: color-mix(in srgb, var(--primary-color) 40%, #ccc);
+  background-color: var(--secondary-color);
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
@@ -225,6 +246,7 @@ mark {
   padding: 8px 16px;
   margin: 0 auto;
 }
+
 .button-wrapper {
   display: flex;
   justify-content: center;

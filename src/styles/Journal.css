@@ -9,7 +9,7 @@
 
 .reflection-journal h2 {
   font-size: 24px;
-  color: var(--primary-color);
+  color: var(--text-color);
   margin-bottom: 15px;
 }
 
@@ -18,7 +18,7 @@
   height: 100px;
   padding: 10px;
   border-radius: 5px;
-  border: 1px solid var(--primary-color);
+  border: 1px solid var(--secondary-color);
   margin-bottom: 10px;
   resize: vertical;
   max-height: 300px;
@@ -27,7 +27,7 @@
 
 .reflection-journal button {
   background-color: var(--primary-color);
-  color: white;
+  color: var(--text-color);
   padding: 10px 15px;
   border: none;
   border-radius: 5px;
@@ -36,10 +36,11 @@
 
 .reflection-journal button:hover {
   background-color: var(--accent-color);
+  color: var(--background-color);
 }
 
 .reflection-journal .delete-button {
-  background-color: var(--accent-color);
+  background-color: #e41313;
   color: white;
   border: none;
   padding: 5px 10px;
@@ -49,7 +50,7 @@
 }
 
 .reflection-journal .delete-button:hover {
-  background-color: #b04b4b;
+  background-color: #c81010;
 }
 
 .reflection-journal ul {
@@ -59,11 +60,12 @@
 }
 
 .reflection-journal li {
-  background-color: var(--secondary-color);
+  background-color: var(--primary-color);
   padding: 10px;
   border-radius: 5px;
   margin-bottom: 10px;
   color: var(--text-color);
+  border: 1px solid var(--secondary-color);
 }
 
 /* Search Input Styling */
@@ -71,7 +73,7 @@
   width: 100%;
   padding: 10px;
   margin-bottom: 15px;
-  border: 1px solid var(--primary-color);
+  border: 1px solid var(--secondary-color);
   border-radius: 5px;
   font-family: "Lateef", Arial, sans-serif;
   font-size: 1em;
@@ -102,7 +104,7 @@
   margin-bottom: 10px;
   padding: 8px;
   border-radius: 5px;
-  border: 1px solid var(--primary-color);
+  border: 1px solid var(--secondary-color);
   background-color: var(--background-color);
   color: var(--text-color);
 }
@@ -115,8 +117,8 @@
 
 .entry-category {
   display: inline-block;
-  background-color: var(--primary-color);
-  color: white;
+  background-color: var(--secondary-color);
+  color: var(--background-color);
   padding: 3px 8px;
   border-radius: 12px;
   font-size: 0.8em;

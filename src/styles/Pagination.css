@@ -8,9 +8,9 @@
 
 .pagination-container button {
   padding: 0.4rem 0.8rem;
-  border: 1px solid #ccc;
-  background-color: #fff;
-  color: #333;
+  border: 1px solid var(--secondary-color);
+  background-color: var(--primary-color);
+  color: var(--text-color);
   cursor: pointer;
   transition: background-color 0.2s ease;
   border-radius: 4px;
@@ -18,19 +18,21 @@
 }
 
 .pagination-container button:hover:not(.disabled):not(.active) {
-  background-color: #f0f0f0;
+  background-color: var(--background-color);
+  color: var(--text-color);
 }
 
 .pagination-container button.active {
-  background-color: #1f4e5f;
-  color: #fff;
+  background-color: var(--accent-color);
+  color: var(--background-color);
   font-weight: bold;
-  border-color: #1f4e5f;
+  border-color: var(--accent-color);
 }
 
 .pagination-container button.disabled {
-  background-color: #e0e0e0;
-  color: #999;
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+  opacity: 0.5;
   cursor: not-allowed;
-  border-color: #d0d0d0;
+  border-color: var(--secondary-color);
 }

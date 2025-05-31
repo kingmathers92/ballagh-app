@@ -11,7 +11,7 @@
   font-size: 18px;
   line-height: 1.8;
   padding: 0;
-  background-color: #f5e9c5;
+  background-color: var(--background-color);
   background-image: linear-gradient(
       to bottom,
       rgba(255, 255, 255, 0.1),
@@ -26,13 +26,13 @@
     );
   background-size: cover;
   background-repeat: repeat;
-  color: #2f2f2f;
+  color: var(--text-color);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
   border-radius: 10px;
   max-width: 100%;
   width: 100%;
   margin: 20px auto;
-  border: 3px solid #d4af37;
+  border: 3px solid var(--accent-color);
   position: relative;
   touch-action: pan-y;
   overflow-x: hidden;
@@ -44,8 +44,8 @@
   top: 15px;
   right: 15px;
   padding: 8px 16px;
-  background-color: #1f4e5f;
-  color: white;
+  background-color: var(--secondary-color);
+  color: var(--background-color);
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -56,18 +56,19 @@
 }
 
 .sidebar-toggle:hover {
-  background-color: #163d4a;
+  background-color: var(--accent-color);
+  color: var(--background-color);
 }
 
 /* Sidebar */
 .quran-sidebar {
   width: 200px;
-  background: #f7e6a6;
+  background: var(--primary-color);
   padding: 10px;
   height: 100%;
   overflow-y: auto;
   font-family: "Scheherazade New", serif;
-  border-left: 2px solid #d4af37;
+  border-left: 2px solid var(--accent-color);
   position: fixed;
   top: 0;
   right: 0;
@@ -93,14 +94,14 @@
 .quran-sidebar li {
   padding: 8px 10px;
   font-size: 1rem;
-  color: #2f2f2f;
+  color: var(--text-color);
   cursor: pointer;
   transition: background 0.3s ease;
-  border-bottom: 1px solid #d4af37;
+  border-bottom: 1px solid var(--accent-color);
 }
 
 .quran-sidebar li:hover {
-  background: rgba(212, 175, 55, 0.5);
+  background: rgba(217, 119, 6, 0.2);
 }
 
 /* Main Content */
@@ -123,10 +124,10 @@
 .search-surah-container select {
   padding: 8px;
   font-size: 1rem;
-  border: 2px solid #1f4e5f;
+  border: 2px solid var(--secondary-color);
   border-radius: 5px;
-  background: #fff;
-  color: #1f4e5f;
+  background: var(--primary-color);
+  color: var(--text-color);
   font-family: "Scheherazade New", serif;
   flex: 1;
   min-width: 150px;
@@ -147,7 +148,7 @@
   height: 0;
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
-  border-top: 5px solid #1f4e5f;
+  border-top: 5px solid var(--secondary-color);
   pointer-events: none;
 }
 
@@ -160,7 +161,7 @@
 .search-container input {
   width: 100%;
   padding: 8px;
-  border: 2px solid #1f4e5f;
+  border: 2px solid var(--secondary-color);
   border-radius: 5px;
   font-size: 1rem;
   font-family: "Scheherazade New", serif;
@@ -179,7 +180,7 @@
 .page-input-container input {
   width: 100px;
   padding: 8px;
-  border: 2px solid #1f4e5f;
+  border: 2px solid var(--secondary-color);
   border-radius: 5px;
   font-size: 1rem;
   font-family: "Scheherazade New", serif;
@@ -187,8 +188,8 @@
 
 .page-input-container button {
   padding: 8px 12px;
-  background-color: #1f4e5f;
-  color: white;
+  background-color: var(--secondary-color);
+  color: var(--background-color);
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -197,7 +198,8 @@
 }
 
 .page-input-container button:disabled {
-  background-color: #ccc;
+  background-color: var(--secondary-color);
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
@@ -210,26 +212,30 @@
   padding: 15px;
   background: rgba(255, 255, 255, 0.3);
   border-radius: 8px;
-  border: 1px solid #d4af37;
+  border: 1px solid var(--accent-color);
   width: 100%;
 }
 
 .quran-container h3.page-title {
   font-size: 1.5rem;
   margin: 15px 0;
-  color: #1f4e5f;
+  color: var(--secondary-color);
   font-family: "Scheherazade New", serif;
   text-align: center;
-  background: linear-gradient(180deg, #f5e9c5, #e0d5a0);
+  background: linear-gradient(
+    180deg,
+    var(--background-color),
+    var(--primary-color)
+  );
   padding: 8px;
   border-radius: 5px;
-  border: 1px solid #d4af37;
+  border: 1px solid var(--accent-color);
 }
 
 .quran-container .ayah-paragraph {
   font-size: 1.3rem;
   font-family: "Scheherazade New", serif;
-  color: #2f2f2f;
+  color: var(--text-color);
   line-height: 2;
   margin: 0;
   word-wrap: break-word;
@@ -242,32 +248,32 @@
 }
 
 .quran-container .ayah-text:hover {
-  color: #1f4e5f;
+  color: var(--secondary-color);
 }
 
 .quran-container .ayah-number {
   display: inline-block;
   font-size: 0.9rem;
-  color: #d4af37;
+  color: var(--accent-color);
   background: radial-gradient(
     circle,
-    rgba(212, 175, 55, 0.2) 20%,
+    rgba(217, 119, 6, 0.2) 20%,
     rgba(255, 255, 255, 0.5) 60%,
-    rgba(212, 175, 55, 0.2) 100%
+    rgba(217, 119, 6, 0.2) 100%
   );
   width: 25px;
   height: 25px;
   line-height: 25px;
   text-align: center;
   border-radius: 50%;
-  border: 2px solid #d4af37;
+  border: 2px solid var(--accent-color);
   margin: 0 5px;
 }
 
 /* Search Results */
 .search-results {
   margin-top: 15px;
-  background-color: #f8f8f8;
+  background-color: var(--primary-color);
   padding: 10px;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -277,17 +283,17 @@
 .search-result-item {
   padding: 8px;
   margin-bottom: 10px;
-  background-color: #f5e9c5;
-  border-left: 5px solid #d4af37;
+  background-color: var(--background-color);
+  border-left: 5px solid var(--accent-color);
   border-radius: 4px;
 }
 
 /* Audio Player */
 .rhap_container {
-  background-color: #e0d5a0;
+  background-color: var(--primary-color);
   border-radius: 8px;
   padding: 10px;
-  border: 1px solid #d4af37;
+  border: 1px solid var(--accent-color);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   margin: 15px 0;
   width: 100%;
@@ -295,15 +301,15 @@
 }
 
 .rhap_progress-filled {
-  background-color: #d4af37;
+  background-color: var(--accent-color);
 }
 
 .rhap_button-clear {
-  color: #1f4e5f;
+  color: var(--secondary-color);
 }
 
 .rhap_time {
-  color: #1f4e5f;
+  color: var(--text-color);
   font-family: "Scheherazade New", serif;
 }
 
@@ -311,9 +317,9 @@
 .pagination-container {
   position: sticky;
   bottom: 0;
-  background-color: white;
+  background-color: var(--primary-color);
   padding: 10px 0;
-  border-top: 1px solid #ccc;
+  border-top: 1px solid var(--secondary-color);
   z-index: 100;
   display: flex;
   justify-content: center;
@@ -326,7 +332,7 @@
 .bookmarked-pages {
   margin-top: 20px;
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--secondary-color);
   border-radius: 8px;
   width: 100%;
 }
@@ -334,6 +340,7 @@
 .bookmarked-pages h4 {
   font-size: 1.2rem;
   margin-bottom: 10px;
+  color: var(--text-color);
 }
 
 .bookmarked-item {
@@ -346,7 +353,7 @@
 
 .bookmarked-item span {
   cursor: pointer;
-  color: #1f4e5f;
+  color: var(--secondary-color);
 }
 
 .bookmarked-item button {
@@ -368,7 +375,7 @@
     padding: 5px;
     font-size: 14px;
     border-radius: 5px;
-    border: 2px solid #d4af37;
+    border: 2px solid var(--accent-color);
   }
 
   .quran-sidebar {

@@ -10,7 +10,7 @@
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background-color: var(--primary-color);
+  background-color: var(--accent-color); /* Updated for better visibility */
   opacity: 0.6;
   position: absolute;
   top: 0;

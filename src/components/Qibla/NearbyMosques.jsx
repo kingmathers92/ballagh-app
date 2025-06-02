@@ -12,10 +12,14 @@ function NearbyMosques({ mosques, fetchingMosques, fetchError }) {
       ) : mosques.length > 0 ? (
         <ul role="list" aria-label="List of nearby mosques">
           {mosques.slice(0, 5).map((mosque, index) => (
-            <li key={index} className="mosque-item">
+            <li
+              key={index}
+              className="mosque-item"
+              style={{ "--index": index }}
+            >
               <span className="mosque-name">{mosque.name}</span>
               <span className="mosque-distance">
-                {mosque.distance.toFixed(2)} km away
+                {mosque.distance.toFixed(2)} km
               </span>
               <a
                 href={`https://www.google.com/maps/dir/?api=1&destination=${mosque.lat},${mosque.lon}`}
@@ -24,13 +28,13 @@ function NearbyMosques({ mosques, fetchingMosques, fetchError }) {
                 className="mosque-directions"
                 aria-label={`Get directions to ${mosque.name}`}
               >
-                Get Directions
+                Directions
               </a>
             </li>
           ))}
         </ul>
       ) : (
-        <p className="no-mosques-text">No mosques found nearby.</p>
+        <p className="no-mosques-text">No mosques nearby.</p>
       )}
     </div>
   );

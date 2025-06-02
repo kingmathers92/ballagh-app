@@ -266,6 +266,118 @@ body {
   font-size: 0.8rem;
 }
 
+/* Nearby Mosques Section - Compact Design */
+.nearby-mosques {
+  margin: 10px 0;
+  padding: 10px;
+  background-color: var(--background-color);
+  border-radius: 8px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  text-align: left;
+}
+
+.nearby-mosques h3 {
+  font-size: 1.2rem;
+  color: var(--text-color);
+  margin: 0 0 8px;
+  text-align: center;
+  font-family: "Scheherazade New", serif;
+}
+
+.nearby-mosques ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nearby-mosques .mosque-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  margin-bottom: 6px;
+  background: var(--primary-color);
+  border: 1px solid var(--secondary-color);
+  border-radius: 6px;
+  transition: transform 0.2s ease, background-color 0.3s ease;
+  animation: fadeIn 0.5s ease forwards;
+  animation-delay: calc(var(--index) * 0.1s);
+}
+
+.nearby-mosques .mosque-item:hover {
+  transform: translateY(-1px);
+  background-color: var(--secondary-color);
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
+}
+
+.nearby-mosques .mosque-name {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-color);
+  flex: 1 1 40%;
+  font-family: "Scheherazade New", serif;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nearby-mosques .mosque-distance {
+  font-size: 0.8rem;
+  color: var(--secondary-color);
+  flex: 1 1 25%;
+  text-align: right;
+}
+
+.nearby-mosques .mosque-directions {
+  font-size: 0.75rem;
+  color: var(--accent-color);
+  text-decoration: none;
+  padding: 3px 6px;
+  border: 1px solid var(--accent-color);
+  border-radius: 4px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.nearby-mosques .mosque-directions:hover,
+.nearby-mosques .mosque-directions:focus {
+  background-color: var(--accent-color);
+  color: var(--background-color);
+}
+
+.nearby-mosques .mosque-directions:focus {
+  outline: 1px solid var(--text-color);
+  outline-offset: 1px;
+}
+
+.nearby-mosques .error-text {
+  font-size: 0.8rem;
+  color: var(--error-color, #e74c3c);
+  text-align: center;
+  margin: 5px 0;
+}
+
+.nearby-mosques .no-mosques-text {
+  font-size: 0.8rem;
+  color: var(--secondary-color);
+  text-align: center;
+  margin: 5px 0;
+}
+
+/* Fade-in animation for mosque items */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* Action Buttons */
 .action-buttons {
   display: flex;
@@ -495,6 +607,43 @@ body {
     font-size: 0.7rem;
   }
 
+  .nearby-mosques {
+    margin: 8px 0;
+    padding: 8px;
+    max-width: 100%;
+  }
+
+  .nearby-mosques h3 {
+    font-size: 1.1rem;
+    margin-bottom: 6px;
+  }
+
+  .nearby-mosques .mosque-item {
+    padding: 6px 8px;
+    margin-bottom: 5px;
+  }
+
+  .nearby-mosques .mosque-name {
+    font-size: 0.9rem;
+    flex: 1 1 35%;
+  }
+
+  .nearby-mosques .mosque-distance {
+    font-size: 0.75rem;
+    flex: 1 1 30%;
+  }
+
+  .nearby-mosques .mosque-directions {
+    font-size: 0.7rem;
+    padding: 2px 5px;
+  }
+
+  .nearby-mosques .error-text,
+  .nearby-mosques .no-mosques-text {
+    font-size: 0.75rem;
+    margin: 4px 0;
+  }
+
   .action-buttons {
     gap: 8px;
     margin-top: 10px;
@@ -630,6 +779,48 @@ body {
     font-size: 0.75rem;
   }
 
+  .nearby-mosques {
+    margin: 6px 0;
+    padding: 6px;
+  }
+
+  .nearby-mosques h3 {
+    font-size: 1rem;
+    margin-bottom: 5px;
+  }
+
+  .nearby-mosques .mosque-item {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 5px 6px;
+    margin-bottom: 4px;
+  }
+
+  .nearby-mosques .mosque-name {
+    font-size: 0.85rem;
+    flex: 1 1 100%;
+    margin-bottom: 3px;
+  }
+
+  .nearby-mosques .mosque-distance {
+    font-size: 0.7rem;
+    flex: 1 1 100%;
+    text-align: left;
+    margin-bottom: 3px;
+  }
+
+  .nearby-mosques .mosque-directions {
+    font-size: 0.65rem;
+    padding: 2px 4px;
+    align-self: flex-end;
+  }
+
+  .nearby-mosques .error-text,
+  .nearby-mosques .no-mosques-text {
+    font-size: 0.7rem;
+    margin: 3px 0;
+  }
+
   .action-buttons {
     gap: 6px;
     margin-top: 8px;
@@ -736,6 +927,40 @@ body {
   .qibla-info .retry-button.inline {
     padding: 2px 5px;
     font-size: 0.75rem;
+  }
+
+  .nearby-mosques {
+    margin: 5px 0;
+    padding: 5px;
+  }
+
+  .nearby-mosques h3 {
+    font-size: 0.9rem;
+    margin-bottom: 4px;
+  }
+
+  .nearby-mosques .mosque-item {
+    padding: 4px 5px;
+    margin-bottom: 3px;
+  }
+
+  .nearby-mosques .mosque-name {
+    font-size: 0.8rem;
+  }
+
+  .nearby-mosques .mosque-distance {
+    font-size: 0.65rem;
+  }
+
+  .nearby-mosques .mosque-directions {
+    font-size: 0.6rem;
+    padding: 1px 3px;
+  }
+
+  .nearby-mosques .error-text,
+  .nearby-mosques .no-mosques-text {
+    font-size: 0.65rem;
+    margin: 2px 0;
   }
 
   .action-buttons {

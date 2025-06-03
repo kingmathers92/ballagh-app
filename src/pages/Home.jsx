@@ -1,7 +1,4 @@
-import { Link } from "react-router-dom";
-import { FaSearch, FaRandom, FaKaaba } from "react-icons/fa";
-
-function Home() {
+const Home = () => {
   return (
     <div>
       <div className="hero-section">
@@ -14,32 +11,9 @@ function Home() {
           recitations, search for specific ayahs, or find the Qibla direction to
           enhance your spiritual journey.
         </p>
-        <div className="buttons-container">
-          <Link
-            to="/search"
-            className="button"
-            aria-label="Search for Quran verses"
-          >
-            <FaSearch className="button-icon" /> Search Verses
-          </Link>
-          <Link
-            to="/random"
-            className="button"
-            aria-label="Get a random Quran verse"
-          >
-            <FaRandom className="button-icon" /> Get Random Verse
-          </Link>
-          <Link
-            to="/qibla"
-            className="button"
-            aria-label="Find the Qibla direction"
-          >
-            <FaKaaba className="button-icon" /> Qibla Direction
-          </Link>
-        </div>
       </div>
     </div>
   );
-}
+};
 
 export default Home;

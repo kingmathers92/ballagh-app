@@ -11,12 +11,7 @@ import Journal from "./pages/Journal";
 import ErrorBoundary from "./components/ErrorBoundary";
 
 function App() {
-  const [menuOpen, setMenuOpen] = useState(false);
   const [theme, setTheme] = useState("light");
-
-  const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
-  };
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
@@ -45,17 +40,9 @@ function App() {
       <div className={`App ${theme === "dark" ? "dark-mode" : ""}`}>
         <header>
           <DarkModeToggle theme={theme} toggleTheme={toggleTheme} />
-          <button
-            className="menu-toggle"
-            onClick={toggleMenu}
-            aria-label={menuOpen ? "Close menu" : "Open menu"}
-            aria-expanded={menuOpen}
-          >
-            <span className="menu-icon"></span>
-          </button>
           <h1 className="app-title">بلَّغ</h1>
-          <nav className={menuOpen ? "open" : ""}>
-            <NavLinks toggleMenu={toggleMenu} />
+          <nav>
+            <NavLinks />
           </nav>
         </header>
 

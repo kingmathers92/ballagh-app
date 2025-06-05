@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@quranjs/api": "^1.7.1",
+    "adhan": "^4.4.3",
     "axios": "^1.7.3",
     "html-to-image": "^1.11.11",
     "html2canvas": "^1.4.1",

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { calculateQiblaDirection } from "../utils/qiblaUtils";
+import { Coordinates, Qibla } from "adhan";
 
 export const useQiblaDirection = () => {
   const [qiblaDirection, setQiblaDirection] = useState(null);
@@ -32,7 +32,8 @@ export const useQiblaDirection = () => {
         setLocation({ latitude, longitude });
         setAccuracy(accuracy);
         try {
-          const direction = calculateQiblaDirection(latitude, longitude);
+          const coords = new Coordinates(latitude, longitude);
+          const direction = Qibla(coords);
           setQiblaDirection(direction);
         } catch (err) {
           setError("Failed to calculate Qibla direction: " + err.message);

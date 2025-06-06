@@ -27,6 +27,14 @@
   border-bottom: none;
 }
 
+.current-prayer {
+  background-color: var(--accent-color);
+  color: var(--background-color);
+  border-radius: 4px;
+  padding: 5px 10px !important;
+  font-weight: bold;
+}
+
 @media (max-width: 767px) {
   .prayer-times {
     padding: 10px;

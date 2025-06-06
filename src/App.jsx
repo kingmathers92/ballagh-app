@@ -8,6 +8,7 @@ import Qibla from "./pages/Qibla";
 import DarkModeToggle from "./components/DarkModeToggle";
 import NavLinks from "./components/NavLinks";
 import Journal from "./pages/Journal";
+import PrayerTimes from "./components/PrayerTimes";
 import ErrorBoundary from "./components/ErrorBoundary";
 
 function App() {
@@ -61,6 +62,7 @@ function App() {
               }
             />
             <Route path="/journal" element={<Journal />} />
+            <Route path="/prayer-times" element={<PrayerTimes />} />
           </Routes>
         </main>
       </div>

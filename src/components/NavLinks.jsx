@@ -9,6 +9,7 @@ const NavLinks = ({ toggleMenu }) => {
     { path: "/quran", label: "Quran" },
     { path: "/qibla", label: "Qibla" },
     { path: "/journal", label: "Journal" },
+    { path: "/prayer-times", label: "Prayer Times" },
   ];
 
   return (

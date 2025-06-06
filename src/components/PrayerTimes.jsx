@@ -148,7 +148,7 @@ function PrayerTimesView() {
         </p>
       )}
       {nextPrayerCountdown && (
-        <p className="description">
+        <p className="countdown">
           Time until next prayer: {nextPrayerCountdown}
         </p>
       )}

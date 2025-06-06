@@ -35,6 +35,42 @@
   font-weight: bold;
 }
 
+.countdown {
+  background-color: var(--primary-color);
+  padding: 10px 15px;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 2px solid transparent;
+  border-image: linear-gradient(
+      to right,
+      var(--primary-color),
+      var(--accent-color)
+    )
+    1;
+  font-size: 1.1em;
+  font-weight: 600;
+  color: var(--text-color);
+  text-align: center;
+  margin-bottom: 15px;
+  display: inline-block;
+  animation: pulse 2s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.02);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
 @media (max-width: 767px) {
   .prayer-times {
     padding: 10px;
@@ -43,5 +79,10 @@
   .prayer-times p {
     font-size: 0.95em;
     padding: 4px 8px;
+  }
+  .countdown {
+    font-size: 1em;
+    padding: 8px 12px;
+    margin-bottom: 10px;
   }
 }

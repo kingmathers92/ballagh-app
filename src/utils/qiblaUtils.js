@@ -1,56 +1,4 @@
 /**
- * Calculates the Qibla direction from the detected user's location.
- * @param {number} latitude - The latitude of the user's location (-90 to 90).
- * @param {number} longitude - The longitude of the user's location (-180 to 180).
- * @returns {number} The Qibla direction in degrees (0-360).
- * @throws {Error} If the latitude or longitude is invalid.
- */
-export const calculateQiblaDirection = (latitude, longitude) => {
-  if (
-    typeof latitude !== "number" ||
-    typeof longitude !== "number" ||
-    isNaN(latitude) ||
-    isNaN(longitude) ||
-    latitude < -90 ||
-    latitude > 90 ||
-    longitude < -180 ||
-    longitude > 180
-  ) {
-    throw new Error("Invalid latitude or longitude");
-  }
-
-  // More precise Kaaba coordinates
-  const kaabaLat = 21.422487;
-  const kaabaLon = 39.826206;
-
-  // Check if the user is at the Kaaba (within 10 meters)
-  const distanceToKaaba = calculateDistance(
-    latitude,
-    longitude,
-    kaabaLat,
-    kaabaLon
-  );
-  if (distanceToKaaba < 0.01) {
-    return 0;
-  }
-
-  const lat1 = (latitude * Math.PI) / 180;
-  const lon1 = (longitude * Math.PI) / 180;
-  const lat2 = (kaabaLat * Math.PI) / 180;
-  const lon2 = (kaabaLon * Math.PI) / 180;
-
-  const dLon = lon2 - lon1;
-  const y = Math.sin(dLon) * Math.cos(lat2);
-  const x =
-    Math.cos(lat1) * Math.sin(lat2) -
-    Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon);
-  let direction = Math.atan2(y, x);
-  direction = (direction * 180) / Math.PI;
-  direction = (direction + 360) % 360;
-  return direction;
-};
-
-/**
  * Calculates the distance between two points on Earth using the Haversine formula.
  * @param {number} lat1 - Latitude of the first point.
  * @param {number} lon1 - Longitude of the first point.
@@ -132,26 +80,4 @@ export const getErrorMessage = (error) => {
         ? error
         : "Something went wrong. Please try again.";
   }
-};
-
-/**
- * Debounces a function to limit execution rate.
- * @param {Function} func - The function to debounce.
- * @param {number} wait - The wait time in milliseconds.
- * @param {boolean} [leading=false] - Whether to execute the function on the leading edge.
- * @returns {Function} The debounced function.
- */
-export const debounce = (func, wait, leading = false) => {
-  let timeout;
-  return (...args) => {
-    const context = this;
-    const later = () => {
-      timeout = null;
-      if (!leading) func.apply(context, args);
-    };
-    const callNow = leading && !timeout;
-    clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
-    if (callNow) func.apply(context, args);
-  };
 };

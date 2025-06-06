@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { Coordinates, CalculationMethod, PrayerTimes } from "adhan";
 
+import "../styles/PrayerTimes.css";
+
 function PrayerTimesView() {
   const [prayerTimes, setPrayerTimes] = useState(null);
   const [location, setLocation] = useState(null);

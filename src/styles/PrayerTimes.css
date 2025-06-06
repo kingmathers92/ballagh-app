@@ -1,0 +1,39 @@
+.prayer-times {
+  background-color: var(--primary-color);
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 2px solid transparent;
+  border-image: linear-gradient(
+      to right,
+      var(--primary-color),
+      var(--accent-color)
+    )
+    1;
+  text-align: left;
+}
+
+.prayer-times p {
+  margin: 8px 0;
+  font-size: 1em;
+  color: var(--text-color);
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 10px;
+  border-bottom: 1px solid var(--secondary-color);
+}
+
+.prayer-times p:last-child {
+  border-bottom: none;
+}
+
+@media (max-width: 767px) {
+  .prayer-times {
+    padding: 10px;
+  }
+
+  .prayer-times p {
+    font-size: 0.95em;
+    padding: 4px 8px;
+  }
+}

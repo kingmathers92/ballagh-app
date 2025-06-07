@@ -6,6 +6,8 @@ import {
   startCountdown,
 } from "../utils/prayerUtils";
 
+import "../styles/PrayerTimes.css";
+
 function PrayerTimesView() {
   const [prayerTimes, setPrayerTimes] = useState(null);
   const [location, setLocation] = useState(null);

@@ -16,6 +16,8 @@ function PrayerTimesView() {
   const [nextPrayerCountdown, setNextPrayerCountdown] = useState(null);
 
   useEffect(() => {
+    let cleanup;
+
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -24,7 +26,7 @@ function PrayerTimesView() {
             position.coords.longitude
           );
           setLocation(coords);
-          updatePrayerTimes(coords);
+          cleanup = updatePrayerTimes(coords);
         },
         (err) => {
           setError(
@@ -32,28 +34,31 @@ function PrayerTimesView() {
           );
           const defaultCoords = new Coordinates(21.4225, 39.8262); // Makkah
           setLocation(defaultCoords);
-          updatePrayerTimes(defaultCoords);
+          cleanup = updatePrayerTimes(defaultCoords);
         }
       );
     } else {
       setError("Geolocation is not supported by this browser.");
       const defaultCoords = new Coordinates(21.4225, 39.8262); // Makkah
       setLocation(defaultCoords);
-      updatePrayerTimes(defaultCoords);
+      cleanup = updatePrayerTimes(defaultCoords);
     }
+
+    return () => cleanup && cleanup();
   }, []);
 
   const updatePrayerTimes = (coords) => {
     const times = calculatePrayerTimes(coords);
     setPrayerTimes(times);
 
+    // Converting formatted times back to Date objects for rawTimes
     const rawTimes = {
-      fajr: new Date(times.fajr),
-      sunrise: new Date(times.sunrise),
-      dhuhr: new Date(times.dhuhr),
-      asr: new Date(times.asr),
-      maghrib: new Date(times.maghrib),
-      isha: new Date(times.isha),
+      fajr: new Date(`1970-01-01 ${times.fajr}`),
+      sunrise: new Date(`1970-01-01 ${times.sunrise}`),
+      dhuhr: new Date(`1970-01-01 ${times.dhuhr}`),
+      asr: new Date(`1970-01-01 ${times.asr}`),
+      maghrib: new Date(`1970-01-01 ${times.maghrib}`),
+      isha: new Date(`1970-01-01 ${times.isha}`),
       location: coords,
     };
 

@@ -40,7 +40,7 @@ export const calculatePrayerTimes = (coords) => {
 
 /**
  * Determines the current and next prayer based on the current time and prayer times.
- * @param {Object} rawTimes - Raw Date objects for each prayer time.
+ * @param {Object} rawTimes - Raw Date objects for each prayer time, including a location property.
  * @returns {Object} Object containing currentPrayer and nextPrayer.
  */
 export const determineCurrentNextPrayer = (rawTimes) => {
@@ -71,11 +71,7 @@ export const determineCurrentNextPrayer = (rawTimes) => {
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     const params = CalculationMethod.MuslimWorldLeague();
-    const tomorrowTimes = new PrayerTimes(
-      rawTimes.fajr.location,
-      tomorrow,
-      params
-    );
+    const tomorrowTimes = new PrayerTimes(rawTimes.location, tomorrow, params);
     nextPrayer = { name: "fajr", time: new Date(tomorrowTimes.fajr) };
   } else if (!current) {
     current = "isha"; // Before Fajr, consider Isha as current

@@ -1,9 +1,9 @@
 import { CalculationMethod, PrayerTimes } from "adhan";
 
 /**
- * Calculates prayer times for a given location and returns formatted times.
+ * Calculates prayer times for a given location and returns raw Date objects.
  * @param {Coordinates} coords - The geographic coordinates (latitude, longitude).
- * @returns {Object} Formatted prayer times (fajr, sunrise, dhuhr, asr, maghrib, isha).
+ * @returns {Object} Raw Date objects for each prayer time.
  */
 export const calculatePrayerTimes = (coords) => {
   const date = new Date();
@@ -11,30 +11,12 @@ export const calculatePrayerTimes = (coords) => {
   const times = new PrayerTimes(coords, date, params);
 
   return {
-    fajr: new Date(times.fajr).toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    }),
-    sunrise: new Date(times.sunrise).toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    }),
-    dhuhr: new Date(times.dhuhr).toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    }),
-    asr: new Date(times.asr).toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    }),
-    maghrib: new Date(times.maghrib).toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    }),
-    isha: new Date(times.isha).toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    }),
+    fajr: new Date(times.fajr),
+    sunrise: new Date(times.sunrise),
+    dhuhr: new Date(times.dhuhr),
+    asr: new Date(times.asr),
+    maghrib: new Date(times.maghrib),
+    isha: new Date(times.isha),
   };
 };
 
@@ -74,7 +56,7 @@ export const determineCurrentNextPrayer = (rawTimes) => {
     const tomorrowTimes = new PrayerTimes(rawTimes.location, tomorrow, params);
     nextPrayer = { name: "fajr", time: new Date(tomorrowTimes.fajr) };
   } else if (!current) {
-    current = "isha"; // Before Fajr, consider Isha as current
+    current = "isha";
   }
 
   return { currentPrayer: current, nextPrayer };
@@ -96,7 +78,7 @@ export const startCountdown = (
     const now = new Date();
     const diff = nextPrayer.time - now;
     if (diff <= 0) {
-      recalculateCallback(); // Recalculating if next prayer has passed
+      recalculateCallback(); // eecalculating if next prayer has passed
       return;
     }
     const hours = Math.floor(diff / (1000 * 60 * 60));

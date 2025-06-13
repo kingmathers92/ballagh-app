@@ -48,21 +48,52 @@ function PrayerTimesView() {
   }, []);
 
   const updatePrayerTimes = (coords) => {
+    console.log("Calculating prayer times for coords:", coords);
     const times = calculatePrayerTimes(coords);
-    setPrayerTimes(times);
+    console.log("Calculated prayer times:", times);
+    setPrayerTimes({
+      fajr: times.fajr.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+      sunrise: times.sunrise.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+      dhuhr: times.dhuhr.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+      asr: times.asr.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+      maghrib: times.maghrib.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+      isha: times.isha.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+    });
 
-    // Converting formatted times back to Date objects for rawTimes
     const rawTimes = {
-      fajr: new Date(`1970-01-01 ${times.fajr}`),
-      sunrise: new Date(`1970-01-01 ${times.sunrise}`),
-      dhuhr: new Date(`1970-01-01 ${times.dhuhr}`),
-      asr: new Date(`1970-01-01 ${times.asr}`),
-      maghrib: new Date(`1970-01-01 ${times.maghrib}`),
-      isha: new Date(`1970-01-01 ${times.isha}`),
+      fajr: times.fajr,
+      sunrise: times.sunrise,
+      dhuhr: times.dhuhr,
+      asr: times.asr,
+      maghrib: times.maghrib,
+      isha: times.isha,
       location: coords,
     };
+    console.log("Raw times with dates:", rawTimes);
+
+    const now = new Date();
+    console.log("Current time:", now.toLocaleString());
 
     const { currentPrayer, nextPrayer } = determineCurrentNextPrayer(rawTimes);
+    console.log("Current prayer:", currentPrayer, "Next prayer:", nextPrayer);
     setCurrentPrayer(currentPrayer);
 
     const cleanup = startCountdown(nextPrayer, setNextPrayerCountdown, () =>

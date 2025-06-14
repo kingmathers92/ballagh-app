@@ -25,17 +25,26 @@ function PrayerTimesView() {
             position.coords.latitude,
             position.coords.longitude
           );
+          console.log("Geolocation data:", {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            accuracy: position.coords.accuracy,
+            timestamp: new Date(position.timestamp).toLocaleString(),
+          });
           setLocation(coords);
           cleanup = updatePrayerTimes(coords);
         },
         (err) => {
+          console.error("Geolocation error:", err);
           setError(
-            "Unable to access location. Using default location (Makkah)."
+            "Unable to access location. Using default location (Makkah). Error: " +
+              err.message
           );
           const defaultCoords = new Coordinates(21.4225, 39.8262); // Makkah
           setLocation(defaultCoords);
           cleanup = updatePrayerTimes(defaultCoords);
-        }
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
       );
     } else {
       setError("Geolocation is not supported by this browser.");

@@ -2,10 +2,9 @@ import { useState, useEffect } from "react";
 import { Coordinates } from "adhan";
 import {
   calculatePrayerTimes,
-  determineCurrentNextPrayer,
-  startCountdown,
+  determineRamadanTimes,
+  startRamadanCountdown,
 } from "../utils/prayerUtils";
-
 import "../styles/PrayerTimes.css";
 
 function PrayerTimesView() {
@@ -14,50 +13,72 @@ function PrayerTimesView() {
   const [error, setError] = useState(null);
   const [currentPrayer, setCurrentPrayer] = useState(null);
   const [nextPrayerCountdown, setNextPrayerCountdown] = useState(null);
+  const [ramadanTimes, setRamadanTimes] = useState(null);
+  const [nextEventCountdown, setNextEventCountdown] = useState(null);
+  const [manualCoords, setManualCoords] = useState({
+    latitude: 52.52,
+    longitude: 13.405,
+  });
+  const ramadanStart = new Date("2025-03-01");
 
   useEffect(() => {
     let cleanup;
+    let attempt = 0;
+    const maxAttempts = 2;
 
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const coords = new Coordinates(
-            position.coords.latitude,
-            position.coords.longitude
-          );
-          console.log("Geolocation data:", {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-            accuracy: position.coords.accuracy,
-            timestamp: new Date(position.timestamp).toLocaleString(),
-          });
-          setLocation(coords);
-          cleanup = updatePrayerTimes(coords);
-        },
-        (err) => {
-          console.error("Geolocation error:", err);
-          setError(
-            "Unable to access location. Using default location (Makkah). Error: " +
-              err.message
-          );
-          const defaultCoords = new Coordinates(21.4225, 39.8262); // Makkah
-          setLocation(defaultCoords);
-          cleanup = updatePrayerTimes(defaultCoords);
-        },
-        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
-      );
-    } else {
-      setError("Geolocation is not supported by this browser.");
-      const defaultCoords = new Coordinates(21.4225, 39.8262); // Makkah
-      setLocation(defaultCoords);
-      cleanup = updatePrayerTimes(defaultCoords);
-    }
+    const getLocation = () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const coords = new Coordinates(
+              position.coords.latitude,
+              position.coords.longitude
+            );
+            console.log("Geolocation data:", {
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+              accuracy: position.coords.accuracy,
+              timestamp: new Date(position.timestamp).toLocaleString(),
+            });
+            setLocation(coords);
+            cleanup = updateTimes(coords);
+          },
+          (err) => {
+            console.error("Geolocation error (attempt " + attempt + "):", err);
+            attempt++;
+            if (attempt < maxAttempts) {
+              setTimeout(getLocation, 2000);
+            } else {
+              setError(
+                "Unable to access accurate location after " +
+                  maxAttempts +
+                  " attempts. Using manual location or Makkah. Error: " +
+                  err.message
+              );
+              const fallbackCoords = new Coordinates(
+                manualCoords.latitude,
+                manualCoords.longitude
+              );
+              setLocation(fallbackCoords);
+              cleanup = updateTimes(fallbackCoords);
+            }
+          },
+          { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+        );
+      } else {
+        setError("Geolocation is not supported by this browser.");
+        const defaultCoords = new Coordinates(21.4225, 39.8262); // Makkah
+        setLocation(defaultCoords);
+        cleanup = updateTimes(defaultCoords);
+      }
+    };
 
+    getLocation();
     return () => cleanup && cleanup();
-  }, []);
+  }, [manualCoords]);
 
-  const updatePrayerTimes = (coords) => {
-    console.log("Calculating prayer times for coords:", coords);
+  const updateTimes = (coords) => {
+    console.log("Calculating times for coords:", coords);
     const times = calculatePrayerTimes(coords);
     console.log("Calculated prayer times:", times);
     setPrayerTimes({
@@ -98,22 +119,62 @@ function PrayerTimesView() {
     };
     console.log("Raw times with dates:", rawTimes);
 
-    const now = new Date();
-    console.log("Current time:", now.toLocaleString());
-
     const { currentPrayer, nextPrayer } = determineCurrentNextPrayer(rawTimes);
-    console.log("Current prayer:", currentPrayer, "Next prayer:", nextPrayer);
     setCurrentPrayer(currentPrayer);
 
-    const cleanup = startCountdown(nextPrayer, setNextPrayerCountdown, () =>
-      updatePrayerTimes(coords)
+    const prayerCleanup = startCountdown(
+      nextPrayer,
+      setNextPrayerCountdown,
+      () => updateTimes(coords)
     );
-    return cleanup;
+
+    const ramadanData = determineRamadanTimes(rawTimes, ramadanStart);
+    setRamadanTimes(ramadanData);
+
+    const eventCleanup = startRamadanCountdown(
+      ramadanData.nextEvent,
+      setNextEventCountdown,
+      () => updateTimes(coords)
+    );
+
+    // Simple client-side reminder (will replaced with notifications API)
+    if (
+      ramadanData.nextEvent.name === "Suhoor" &&
+      ramadanData.nextEvent.time > new Date()
+    ) {
+      setTimeout(
+        () => alert("Time for Suhoor is approaching!"),
+        ramadanData.nextEvent.time - new Date() - 5 * 60 * 1000
+      ); // 5 mins before
+    } else if (
+      ramadanData.nextEvent.name === "Iftar" &&
+      ramadanData.nextEvent.time > new Date()
+    ) {
+      setTimeout(
+        () => alert("Time for Iftar is approaching!"),
+        ramadanData.nextEvent.time - new Date() - 5 * 60 * 1000
+      ); // 5 mins before
+    }
+
+    return () => {
+      prayerCleanup && prayerCleanup();
+      eventCleanup && eventCleanup();
+    };
+  };
+
+  const handleManualLocation = (e) => {
+    e.preventDefault();
+    const coords = new Coordinates(
+      manualCoords.latitude,
+      manualCoords.longitude
+    );
+    setLocation(coords);
+    updateTimes(coords);
   };
 
   return (
     <div className="container">
-      <h2 className="title">Prayer Times</h2>
+      <h2 className="title">Prayer & Ramadan Times</h2>
       {error && <div className="error">{error}</div>}
       {location && (
         <p className="description">
@@ -126,7 +187,7 @@ function PrayerTimesView() {
           Time until next prayer: {nextPrayerCountdown}
         </p>
       )}
-      {prayerTimes ? (
+      {prayerTimes && (
         <div className="prayer-times">
           <p className={currentPrayer === "fajr" ? "current-prayer" : ""}>
             <span>Fajr</span> <span>{prayerTimes.fajr}</span>
@@ -147,9 +208,64 @@ function PrayerTimesView() {
             <span>Isha</span> <span>{prayerTimes.isha}</span>
           </p>
         </div>
-      ) : (
-        <p>Loading prayer times...</p>
       )}
+      {ramadanTimes && (
+        <div className="ramadan-times">
+          <h3>Ramadan Companion</h3>
+          {ramadanTimes.ramadanDay ? (
+            <p>Day {ramadanTimes.ramadanDay} of Ramadan</p>
+          ) : (
+            <p>Ramadan not active (starts March 1, 2025)</p>
+          )}
+          <p>
+            Suhoor:{" "}
+            {ramadanTimes.suhoor.toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+          </p>
+          <p>
+            Iftar:{" "}
+            {ramadanTimes.iftar.toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+          </p>
+          <p className="countdown">
+            Time until next event: {nextEventCountdown || "Calculating..."}
+          </p>
+          <p>Current State: {ramadanTimes.currentEvent}</p>
+        </div>
+      )}
+      <form onSubmit={handleManualLocation} style={{ margin: "15px 0" }}>
+        <input
+          type="number"
+          value={manualCoords.latitude}
+          onChange={(e) =>
+            setManualCoords({
+              ...manualCoords,
+              latitude: Number(e.target.value),
+            })
+          }
+          placeholder="Latitude"
+          step="0.0001"
+          style={{ marginRight: "10px" }}
+        />
+        <input
+          type="number"
+          value={manualCoords.longitude}
+          onChange={(e) =>
+            setManualCoords({
+              ...manualCoords,
+              longitude: Number(e.target.value),
+            })
+          }
+          placeholder="Longitude"
+          step="0.0001"
+          style={{ marginRight: "10px" }}
+        />
+        <button type="submit">Set Manual Location</button>
+      </form>
     </div>
   );
 }

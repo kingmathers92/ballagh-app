@@ -71,6 +71,23 @@
   }
 }
 
+.ramadan-times {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #f0f8ff;
+  border-radius: 5px;
+}
+
+.ramadan-times h3 {
+  color: #006400;
+  margin-bottom: 10px;
+}
+
+.ramadan-times p {
+  margin: 5px 0;
+  color: #2f4f4f;
+}
+
 @media (max-width: 767px) {
   .prayer-times {
     padding: 10px;

@@ -22,7 +22,7 @@ function PrayerTimesView() {
     latitude: 52.52,
     longitude: 13.405,
   });
-  const ramadanStart = new Date("2025-03-01"); // Configurable Ramadan start date
+  const ramadanStart = new Date("2025-03-01");
 
   useEffect(() => {
     let cleanup;
@@ -55,24 +55,17 @@ function PrayerTimesView() {
               setError(
                 "Unable to access accurate location after " +
                   maxAttempts +
-                  " attempts. Using manual location or Makkah. Error: " +
+                  " attempts. Please set manual location. Error: " +
                   err.message
               );
-              const fallbackCoords = new Coordinates(
-                manualCoords.latitude,
-                manualCoords.longitude
-              );
-              setLocation(fallbackCoords);
-              cleanup = updateTimes(fallbackCoords);
+              setLocation(null);
             }
           },
           { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
         );
       } else {
         setError("Geolocation is not supported by this browser.");
-        const defaultCoords = new Coordinates(21.4225, 39.8262); // Makkah
-        setLocation(defaultCoords);
-        cleanup = updateTimes(defaultCoords);
+        setLocation(null);
       }
     };
 
@@ -81,6 +74,7 @@ function PrayerTimesView() {
   }, [manualCoords]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const updateTimes = (coords) => {
+    if (!coords) return () => {};
     console.log("Calculating times for coords:", coords);
     const times = calculatePrayerTimes(coords);
     console.log("Calculated prayer times:", times);
@@ -140,15 +134,19 @@ function PrayerTimesView() {
       () => updateTimes(coords)
     );
 
-    // Simple client-side reminder (will replaced with notifications API)
+    // Add 15-minute pre-Suhoor reminder
     if (
       ramadanData.nextEvent.name === "Suhoor" &&
       ramadanData.nextEvent.time > new Date()
     ) {
-      setTimeout(
-        () => alert("Time for Suhoor is approaching!"),
-        ramadanData.nextEvent.time - new Date() - 5 * 60 * 1000
-      ); // 5 mins before
+      const timeUntilSuhoor = ramadanData.nextEvent.time - new Date();
+      if (timeUntilSuhoor > 15 * 60 * 1000) {
+        // Only set if more than 15 mins away
+        setTimeout(
+          () => alert("Suhoor ends at Fajr in 15 minutes!"),
+          timeUntilSuhoor - 15 * 60 * 1000
+        );
+      }
     } else if (
       ramadanData.nextEvent.name === "Iftar" &&
       ramadanData.nextEvent.time > new Date()

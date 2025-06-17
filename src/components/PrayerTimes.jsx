@@ -78,7 +78,7 @@ function PrayerTimesView() {
 
     getLocation();
     return () => cleanup && cleanup();
-  }, [manualCoords]); // Dependency array includes manualCoords
+  }, [manualCoords]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const updateTimes = (coords) => {
     console.log("Calculating times for coords:", coords);

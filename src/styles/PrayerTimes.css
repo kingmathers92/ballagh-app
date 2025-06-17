@@ -138,26 +138,6 @@
   .ramadan-times p {
     min-height: 40px;
   }
-
-  form {
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  form input {
-    width: 100%;
-    margin-right: 0;
-    margin-bottom: 5px;
-    padding: 8px;
-    font-size: 0.9em;
-  }
-
-  form button {
-    padding: 8px;
-    font-size: 0.9em;
-  }
 }
 
 .container {

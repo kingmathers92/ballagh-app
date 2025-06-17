@@ -18,10 +18,6 @@ function PrayerTimesView() {
   const [nextPrayerCountdown, setNextPrayerCountdown] = useState(null);
   const [ramadanTimes, setRamadanTimes] = useState(null);
   const [nextEventCountdown, setNextEventCountdown] = useState(null);
-  const [manualCoords, setManualCoords] = useState({
-    latitude: 52.52,
-    longitude: 13.405,
-  });
   const ramadanStart = new Date("2025-03-01");
 
   useEffect(() => {
@@ -55,7 +51,7 @@ function PrayerTimesView() {
               setError(
                 "Unable to access accurate location after " +
                   maxAttempts +
-                  " attempts. Please set manual location. Error: " +
+                  " attempts. Please enable location services. Error: " +
                   err.message
               );
               setLocation(null);
@@ -71,7 +67,7 @@ function PrayerTimesView() {
 
     getLocation();
     return () => cleanup && cleanup();
-  }, [manualCoords]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   const updateTimes = (coords) => {
     if (!coords) return () => {};
@@ -163,16 +159,6 @@ function PrayerTimesView() {
     };
   };
 
-  const handleManualLocation = (e) => {
-    e.preventDefault();
-    const coords = new Coordinates(
-      manualCoords.latitude,
-      manualCoords.longitude
-    );
-    setLocation(coords);
-    updateTimes(coords);
-  };
-
   return (
     <div className="container">
       <h2 className="title">Prayer & Ramadan Times</h2>
@@ -238,35 +224,6 @@ function PrayerTimesView() {
           <p>Current State: {ramadanTimes.currentEvent}</p>
         </div>
       )}
-      <form onSubmit={handleManualLocation} style={{ margin: "15px 0" }}>
-        <input
-          type="number"
-          value={manualCoords.latitude}
-          onChange={(e) =>
-            setManualCoords({
-              ...manualCoords,
-              latitude: Number(e.target.value),
-            })
-          }
-          placeholder="Latitude"
-          step="0.0001"
-          style={{ marginRight: "10px" }}
-        />
-        <input
-          type="number"
-          value={manualCoords.longitude}
-          onChange={(e) =>
-            setManualCoords({
-              ...manualCoords,
-              longitude: Number(e.target.value),
-            })
-          }
-          placeholder="Longitude"
-          step="0.0001"
-          style={{ marginRight: "10px" }}
-        />
-        <button type="submit">Set Manual Location</button>
-      </form>
     </div>
   );
 }

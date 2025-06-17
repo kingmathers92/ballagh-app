@@ -78,7 +78,7 @@ export const startCountdown = (
     const now = new Date();
     const diff = nextPrayer.time - now;
     if (diff <= 0) {
-      recalculateCallback(); // Recalculate if next prayer has passed
+      recalculateCallback(); // recalculating if next prayer has passed
       return;
     }
     const hours = Math.floor(diff / (1000 * 60 * 60));
@@ -101,7 +101,6 @@ export const startCountdown = (
 export const determineRamadanTimes = (rawTimes, ramadanStart) => {
   const now = new Date();
   const suhoor = new Date(rawTimes.fajr);
-  suhoor.setMinutes(suhoor.getMinutes() - 30); // Suhoor ends 30 mins before Fajr
   const iftar = new Date(rawTimes.maghrib);
 
   let currentEvent = null;
@@ -152,7 +151,7 @@ export const startRamadanCountdown = (
     const now = new Date();
     const diff = nextEvent.time - now;
     if (diff <= 0) {
-      recalculateCallback(); // Recalculating if event has passed
+      recalculateCallback(); // Recalculate if event has passed
       return;
     }
     const hours = Math.floor(diff / (1000 * 60 * 60));

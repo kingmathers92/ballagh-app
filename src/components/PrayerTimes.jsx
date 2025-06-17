@@ -2,9 +2,12 @@ import { useState, useEffect } from "react";
 import { Coordinates } from "adhan";
 import {
   calculatePrayerTimes,
+  determineCurrentNextPrayer,
+  startCountdown,
   determineRamadanTimes,
   startRamadanCountdown,
 } from "../utils/prayerUtils";
+
 import "../styles/PrayerTimes.css";
 
 function PrayerTimesView() {
@@ -19,7 +22,7 @@ function PrayerTimesView() {
     latitude: 52.52,
     longitude: 13.405,
   });
-  const ramadanStart = new Date("2025-03-01");
+  const ramadanStart = new Date("2025-03-01"); // Configurable Ramadan start date
 
   useEffect(() => {
     let cleanup;
@@ -75,7 +78,7 @@ function PrayerTimesView() {
 
     getLocation();
     return () => cleanup && cleanup();
-  }, [manualCoords]);
+  }, [manualCoords]); // Dependency array includes manualCoords
 
   const updateTimes = (coords) => {
     console.log("Calculating times for coords:", coords);

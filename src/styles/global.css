@@ -233,7 +233,7 @@ main {
 .hero-section {
   position: relative;
   height: 200px;
-  background-image: url("../public/images/okba.jpg");
+  background-image: url("/images/okba.jpg");
   background-size: cover;
   background-position: center;
   display: flex;

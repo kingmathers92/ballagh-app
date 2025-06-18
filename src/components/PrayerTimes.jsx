@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { Coordinates } from "adhan";
 import {
   calculatePrayerTimes,
   determineCurrentNextPrayer,
@@ -7,67 +6,27 @@ import {
   determineRamadanTimes,
   startRamadanCountdown,
 } from "../utils/prayerUtils";
+import { useGeolocation } from "../hooks/useGeolocation";
 
 import "../styles/PrayerTimes.css";
 
 function PrayerTimesView() {
   const [prayerTimes, setPrayerTimes] = useState(null);
-  const [location, setLocation] = useState(null);
-  const [error, setError] = useState(null);
   const [currentPrayer, setCurrentPrayer] = useState(null);
   const [nextPrayerCountdown, setNextPrayerCountdown] = useState(null);
   const [ramadanTimes, setRamadanTimes] = useState(null);
   const [nextEventCountdown, setNextEventCountdown] = useState(null);
   const ramadanStart = new Date("2025-03-01");
 
+  const { location, error } = useGeolocation();
+
   useEffect(() => {
     let cleanup;
-    let attempt = 0;
-    const maxAttempts = 2;
-
-    const getLocation = () => {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const coords = new Coordinates(
-              position.coords.latitude,
-              position.coords.longitude
-            );
-            console.log("Geolocation data:", {
-              latitude: position.coords.latitude,
-              longitude: position.coords.longitude,
-              accuracy: position.coords.accuracy,
-              timestamp: new Date(position.timestamp).toLocaleString(),
-            });
-            setLocation(coords);
-            cleanup = updateTimes(coords);
-          },
-          (err) => {
-            console.error("Geolocation error (attempt " + attempt + "):", err);
-            attempt++;
-            if (attempt < maxAttempts) {
-              setTimeout(getLocation, 2000);
-            } else {
-              setError(
-                "Unable to access accurate location after " +
-                  maxAttempts +
-                  " attempts. Please enable location services. Error: " +
-                  err.message
-              );
-              setLocation(null);
-            }
-          },
-          { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
-        );
-      } else {
-        setError("Geolocation is not supported by this browser.");
-        setLocation(null);
-      }
-    };
-
-    getLocation();
+    if (location) {
+      cleanup = updateTimes(location);
+    }
     return () => cleanup && cleanup();
-  }, []);
+  }, [location]);
 
   const updateTimes = (coords) => {
     if (!coords) return () => {};
@@ -137,7 +96,6 @@ function PrayerTimesView() {
     ) {
       const timeUntilSuhoor = ramadanData.nextEvent.time - new Date();
       if (timeUntilSuhoor > 15 * 60 * 1000) {
-        // Only set if more than 15 mins away
         setTimeout(
           () => alert("Suhoor ends at Fajr in 15 minutes!"),
           timeUntilSuhoor - 15 * 60 * 1000
@@ -150,7 +108,7 @@ function PrayerTimesView() {
       setTimeout(
         () => alert("Time for Iftar is approaching!"),
         ramadanData.nextEvent.time - new Date() - 5 * 60 * 1000
-      ); // 5 mins before
+      );
     }
 
     return () => {

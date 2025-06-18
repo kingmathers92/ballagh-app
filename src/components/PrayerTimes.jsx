@@ -1,97 +1,86 @@
-import { useEffect, useState } from "react";
-import {
-  calculatePrayerTimes,
-  determineCurrentNextPrayer,
-  startCountdown,
-  determineRamadanTimes,
-  startRamadanCountdown,
-} from "../utils/prayerUtils";
-import { scheduleReminders } from "../utils/reminderUtils";
+import { useGeolocation } from "../hooks/useGeolocation";
+import { usePrayerTimes } from "../hooks/usePrayerTimes";
 
-export const usePrayerTimes = (coords, ramadanStart) => {
-  const [prayerTimes, setPrayerTimes] = useState(null);
-  const [currentPrayer, setCurrentPrayer] = useState(null);
-  const [nextPrayerCountdown, setNextPrayerCountdown] = useState(null);
-  const [ramadanTimes, setRamadanTimes] = useState(null);
-  const [nextEventCountdown, setNextEventCountdown] = useState(null);
+import "../styles/PrayerTimes.css";
 
-  useEffect(() => {
-    if (!coords) return;
-
-    const updateTimes = () => {
-      const times = calculatePrayerTimes(coords);
-      setPrayerTimes({
-        fajr: times.fajr.toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-        sunrise: times.sunrise.toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-        dhuhr: times.dhuhr.toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-        asr: times.asr.toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-        maghrib: times.maghrib.toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-        isha: times.isha.toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-      });
-
-      const rawTimes = {
-        fajr: times.fajr,
-        sunrise: times.sunrise,
-        dhuhr: times.dhuhr,
-        asr: times.asr,
-        maghrib: times.maghrib,
-        isha: times.isha,
-        location: coords,
-      };
-      console.log("Raw times with dates:", rawTimes);
-
-      const { currentPrayer, nextPrayer } =
-        determineCurrentNextPrayer(rawTimes);
-      setCurrentPrayer(currentPrayer);
-      const prayerCleanup = startCountdown(
-        nextPrayer,
-        setNextPrayerCountdown,
-        updateTimes
-      );
-
-      const ramadanData = determineRamadanTimes(rawTimes, ramadanStart);
-      setRamadanTimes(ramadanData);
-      const eventCleanup = startRamadanCountdown(
-        ramadanData.nextEvent,
-        setNextEventCountdown,
-        updateTimes
-      );
-
-      scheduleReminders(ramadanData.nextEvent, updateTimes);
-
-      return () => {
-        prayerCleanup && prayerCleanup();
-        eventCleanup && eventCleanup();
-      };
-    };
-
-    const cleanup = updateTimes();
-    return () => cleanup && cleanup();
-  }, [coords, ramadanStart]);
-
-  return {
+function PrayerTimesView() {
+  const { location, error } = useGeolocation();
+  const ramadanStart = new Date("2025-03-01");
+  const {
     prayerTimes,
     currentPrayer,
     nextPrayerCountdown,
     ramadanTimes,
     nextEventCountdown,
-  };
-};
+  } = usePrayerTimes(location, ramadanStart);
+
+  return (
+    <div className="container">
+      <h2 className="title">Prayer & Ramadan Times</h2>
+      {error && <div className="error">{error}</div>}
+      {location && (
+        <p className="description">
+          Location: Lat {location.latitude.toFixed(4)}, Lon{" "}
+          {location.longitude.toFixed(4)}
+        </p>
+      )}
+      {nextPrayerCountdown && (
+        <p className="countdown">
+          Time until next prayer: {nextPrayerCountdown}
+        </p>
+      )}
+      {prayerTimes && (
+        <div className="prayer-times">
+          <p className={currentPrayer === "fajr" ? "current-prayer" : ""}>
+            <span>Fajr</span> <span>{prayerTimes.fajr}</span>
+          </p>
+          <p className={currentPrayer === "sunrise" ? "current-prayer" : ""}>
+            <span>Sunrise</span> <span>{prayerTimes.sunrise}</span>
+          </p>
+          <p className={currentPrayer === "dhuhr" ? "current-prayer" : ""}>
+            <span>Dhuhr</span> <span>{prayerTimes.dhuhr}</span>
+          </p>
+          <p className={currentPrayer === "asr" ? "current-prayer" : ""}>
+            <span>Asr</span> <span>{prayerTimes.asr}</span>
+          </p>
+          <p className={currentPrayer === "maghrib" ? "current-prayer" : ""}>
+            <span>Maghrib</span> <span>{prayerTimes.maghrib}</span>
+          </p>
+          <p className={currentPrayer === "isha" ? "current-prayer" : ""}>
+            <span>Isha</span> <span>{prayerTimes.isha}</span>
+          </p>
+        </div>
+      )}
+      {ramadanTimes && (
+        <div className="ramadan-times">
+          <h3>Ramadan Companion</h3>
+          {ramadanTimes.ramadanDay ? (
+            <p>Day {ramadanTimes.ramadanDay} of Ramadan</p>
+          ) : (
+            <p>Ramadan not active (starts March 1, 2025)</p>
+          )}
+          <p>
+            Suhoor:{" "}
+            {ramadanTimes.suhoor.toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+          </p>
+          <p>
+            Iftar:{" "}
+            {ramadanTimes.iftar.toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+          </p>
+          <p className="countdown">
+            Time until next event: {nextEventCountdown || "Calculating..."}
+          </p>
+          <p>Current State: {ramadanTimes.currentEvent}</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default PrayerTimesView;

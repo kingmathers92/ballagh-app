@@ -1,4 +1,4 @@
-export const scheduleReminders = (nextEvent, updateTimes) => {
+export const scheduleReminders = (nextEvent) => {
   if (nextEvent.name === "Suhoor" && nextEvent.time > new Date()) {
     const timeUntilSuhoor = nextEvent.time - new Date();
     if (timeUntilSuhoor > 15 * 60 * 1000) {

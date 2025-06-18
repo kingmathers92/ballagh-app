@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   calculatePrayerTimes,
   determineCurrentNextPrayer,
@@ -6,6 +6,7 @@ import {
   determineRamadanTimes,
   startRamadanCountdown,
 } from "../utils/prayerUtils";
+import { scheduleReminders } from "../utils/reminderUtils";
 
 export const usePrayerTimes = (coords, ramadanStart) => {
   const [prayerTimes, setPrayerTimes] = useState(null);
@@ -74,27 +75,7 @@ export const usePrayerTimes = (coords, ramadanStart) => {
         updateTimes
       );
 
-      // Add 15-minute pre-Suhoor reminder
-      if (
-        ramadanData.nextEvent.name === "Suhoor" &&
-        ramadanData.nextEvent.time > new Date()
-      ) {
-        const timeUntilSuhoor = ramadanData.nextEvent.time - new Date();
-        if (timeUntilSuhoor > 15 * 60 * 1000) {
-          setTimeout(
-            () => alert("Suhoor ends at Fajr in 15 minutes!"),
-            timeUntilSuhoor - 15 * 60 * 1000
-          );
-        }
-      } else if (
-        ramadanData.nextEvent.name === "Iftar" &&
-        ramadanData.nextEvent.time > new Date()
-      ) {
-        setTimeout(
-          () => alert("Time for Iftar is approaching!"),
-          ramadanData.nextEvent.time - new Date() - 5 * 60 * 1000
-        );
-      }
+      scheduleReminders(ramadanData.nextEvent, updateTimes);
 
       return () => {
         prayerCleanup && prayerCleanup();

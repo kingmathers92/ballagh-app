@@ -61,21 +61,16 @@ export const usePrayerTimes = (coords, ramadanStart) => {
       const { currentPrayer, nextPrayer } =
         determineCurrentNextPrayer(rawTimes);
       setCurrentPrayer(currentPrayer);
-      const prayerCleanup = startCountdown(
-        nextPrayer,
-        setNextPrayerCountdown,
-        updateTimes
-      );
+      const prayerCleanup = startCountdown(nextPrayer, setNextPrayerCountdown);
 
       const ramadanData = determineRamadanTimes(rawTimes, ramadanStart);
       setRamadanTimes(ramadanData);
       const eventCleanup = startRamadanCountdown(
         ramadanData.nextEvent,
-        setNextEventCountdown,
-        updateTimes
+        setNextEventCountdown
       );
 
-      scheduleReminders(ramadanData.nextEvent, updateTimes);
+      scheduleReminders(ramadanData.nextEvent);
 
       return () => {
         prayerCleanup && prayerCleanup();

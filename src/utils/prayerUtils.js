@@ -66,19 +66,14 @@ export const determineCurrentNextPrayer = (rawTimes) => {
  * Updates and returns the countdown to the next prayer.
  * @param {Object} nextPrayer - The next prayer object with name and time.
  * @param {Function} setNextPrayerCountdown - State setter for the countdown.
- * @param {Function} recalculateCallback - Callback to recalculate prayer times.
  * @returns {Function} Cleanup function to clear the interval.
  */
-export const startCountdown = (
-  nextPrayer,
-  setNextPrayerCountdown,
-  recalculateCallback
-) => {
+export const startCountdown = (nextPrayer, setNextPrayerCountdown) => {
   const updateCountdown = () => {
     const now = new Date();
     const diff = nextPrayer.time - now;
     if (diff <= 0) {
-      recalculateCallback(); // recalculating if next prayer has passed
+      setNextPrayerCountdown("0h 0m 0s"); // Reset countdown when time is up
       return;
     }
     const hours = Math.floor(diff / (1000 * 60 * 60));
@@ -100,7 +95,7 @@ export const startCountdown = (
  */
 export const determineRamadanTimes = (rawTimes, ramadanStart) => {
   const now = new Date();
-  const suhoor = new Date(rawTimes.fajr);
+  const suhoor = new Date(rawTimes.fajr); // Suhoor ends at Fajr
   const iftar = new Date(rawTimes.maghrib);
 
   let currentEvent = null;
@@ -139,19 +134,14 @@ export const determineRamadanTimes = (rawTimes, ramadanStart) => {
  * Updates and returns the countdown to the next Ramadan event.
  * @param {Object} nextEvent - The next event object with name and time.
  * @param {Function} setNextEventCountdown - State setter for the countdown.
- * @param {Function} recalculateCallback - Callback to recalculate times.
  * @returns {Function} Cleanup function to clear the interval.
  */
-export const startRamadanCountdown = (
-  nextEvent,
-  setNextEventCountdown,
-  recalculateCallback
-) => {
+export const startRamadanCountdown = (nextEvent, setNextEventCountdown) => {
   const updateCountdown = () => {
     const now = new Date();
     const diff = nextEvent.time - now;
     if (diff <= 0) {
-      recalculateCallback(); // Recalculate if event has passed
+      setNextEventCountdown("0h 0m 0s"); // Reset countdown when time is up
       return;
     }
     const hours = Math.floor(diff / (1000 * 60 * 60));

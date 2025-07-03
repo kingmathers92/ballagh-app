@@ -44,7 +44,7 @@ function App() {
 
   return (
     <Router>
-      <div className={`App ${theme === "dark" ? "dark-mode" : ""}`}>
+      <div className="App">
         <header>
           <DarkModeToggle theme={theme} toggleTheme={toggleTheme} />
           <h1 className="app-title">بلَّغ</h1>

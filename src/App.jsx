@@ -11,7 +11,7 @@ import Journal from "./pages/Journal";
 import PrayerTimes from "./components/PrayerTimes";
 import ErrorBoundary from "./components/ErrorBoundary";
 
-function App() {
+const useTheme = () => {
   const [theme, setTheme] = useState("light");
 
   useEffect(() => {
@@ -35,6 +35,12 @@ function App() {
     document.documentElement.setAttribute("data-theme", newTheme);
     localStorage.setItem("theme", newTheme);
   };
+
+  return { theme, toggleTheme };
+};
+
+function App() {
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <Router>

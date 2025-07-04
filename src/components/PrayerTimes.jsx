@@ -74,7 +74,7 @@ function PrayerTimesView() {
             })}
           </p>
           <p className="countdown">
-            Time until next event: {nextEventCountdown || "Calculating..."}
+            Time until next prayer: {nextEventCountdown || "Calculating..."}
           </p>
           <p>Current State: {ramadanTimes.currentEvent}</p>
         </div>

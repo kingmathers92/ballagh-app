@@ -39,6 +39,23 @@ const useTheme = () => {
   return { theme, toggleTheme };
 };
 
+const routes = [
+  { path: "/", element: <Home /> },
+  { path: "/search", element: <Search /> },
+  { path: "/random", element: <RandomHadith /> },
+  { path: "/quran", element: <Quran /> },
+  {
+    path: "/qibla",
+    element: (
+      <ErrorBoundary>
+        <Qibla />
+      </ErrorBoundary>
+    ),
+  },
+  { path: "/journal", element: <Journal /> },
+  { path: "/prayer-times", element: <PrayerTimes /> },
+];
+
 function App() {
   const { theme, toggleTheme } = useTheme();
 
@@ -55,20 +72,9 @@ function App() {
 
         <main>
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/search" element={<Search />} />
-            <Route path="/random" element={<RandomHadith />} />
-            <Route path="/quran" element={<Quran />} />
-            <Route
-              path="/qibla"
-              element={
-                <ErrorBoundary>
-                  <Qibla />
-                </ErrorBoundary>
-              }
-            />
-            <Route path="/journal" element={<Journal />} />
-            <Route path="/prayer-times" element={<PrayerTimes />} />
+            {routes.map(({ path, element }) => (
+              <Route key={path} path={path} element={element} />
+            ))}
           </Routes>
         </main>
       </div>

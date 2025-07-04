@@ -6,6 +6,8 @@
   --text-color: #1f2937;
   --background-color: #f9fafb;
   --accent-color: #c09c64;
+  --background-overlay-opacity: 0.1;
+  --background-overlay-color: rgba(0, 0, 0, 0.5);
 }
 
 :root[data-theme="dark"] {
@@ -14,6 +16,17 @@
   --text-color: #e2e8f0;
   --background-color: #111827;
   --accent-color: #c09c64;
+  --background-overlay-opacity: 0.2;
+  --background-overlay-color: rgba(0, 0, 0, 0.7);
+}
+
+body,
+header,
+nav,
+.container,
+.dark-mode-toggle,
+.app-title {
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .App {
@@ -42,7 +55,8 @@ body::before {
   width: 100%;
   height: 100%;
   background: inherit;
-  opacity: 0.1;
+  opacity: var(--background-overlay-opacity);
+  background-color: var(--background-overlay-color);
   z-index: -1;
 }
 

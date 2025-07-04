@@ -39,14 +39,7 @@ const routes = [
   { path: "/search", element: <Search /> },
   { path: "/random", element: <RandomHadith /> },
   { path: "/quran", element: <Quran /> },
-  {
-    path: "/qibla",
-    element: (
-      <ErrorBoundary>
-        <Qibla />
-      </ErrorBoundary>
-    ),
-  },
+  { path: "/qibla", element: <Qibla /> },
   { path: "/journal", element: <Journal /> },
   { path: "/prayer-times", element: <PrayerTimes /> },
 ];
@@ -66,11 +59,13 @@ function App() {
         </header>
 
         <main>
-          <Routes>
-            {routes.map(({ path, element }) => (
-              <Route key={path} path={path} element={element} />
-            ))}
-          </Routes>
+          <ErrorBoundary>
+            <Routes>
+              {routes.map(({ path, element }) => (
+                <Route key={path} path={path} element={element} />
+              ))}
+            </Routes>
+          </ErrorBoundary>
         </main>
       </div>
     </Router>

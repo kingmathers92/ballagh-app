@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { NavLink } from "react-router-dom";
 
-const NavLinks = ({ toggleMenu }) => {
+const NavLinks = ({ toggleMenu = () => {} }) => {
   const links = [
     { path: "/", label: "Home" },
     { path: "/search", label: "Search Hadith" },
@@ -30,7 +30,11 @@ const NavLinks = ({ toggleMenu }) => {
 };
 
 NavLinks.propTypes = {
-  toggleMenu: PropTypes.func.isRequired,
+  toggleMenu: PropTypes.func,
+};
+
+NavLinks.defaultProps = {
+  toggleMenu: () => {},
 };
 
 export default NavLinks;

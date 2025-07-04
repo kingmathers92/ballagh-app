@@ -51,7 +51,7 @@ function App() {
     <Router>
       <div className="App">
         <header>
-          <DarkModeToggle theme={theme} toggleテーマ={toggleTheme} />
+          <DarkModeToggle theme={theme} toggleTheme={toggleTheme} />
           <h1 className="app-title">بلَّغ</h1>
           <nav>
             <NavLinks />

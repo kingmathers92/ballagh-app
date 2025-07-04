@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import DarkModeToggle from "./components/DarkModeToggle";
+import NavLinks from "./components/NavLinks";
+import ErrorBoundary from "./components/ErrorBoundary";
+import PrayerTimes from "./components/PrayerTimes";
 import Home from "./pages/Home";
 import Search from "./pages/Search";
 import RandomHadith from "./pages/RandomHadith";
 import Quran from "./pages/Quran";
 import Qibla from "./pages/Qibla";
-import DarkModeToggle from "./components/DarkModeToggle";
-import NavLinks from "./components/NavLinks";
 import Journal from "./pages/Journal";
-import PrayerTimes from "./components/PrayerTimes";
-import ErrorBoundary from "./components/ErrorBoundary";
 
 const useTheme = () => {
   const [theme, setTheme] = useState("light");
@@ -51,7 +51,7 @@ function App() {
     <Router>
       <div className="App">
         <header>
-          <DarkModeToggle theme={theme} toggleTheme={toggleTheme} />
+          <DarkModeToggle theme={theme} toggleテーマ={toggleTheme} />
           <h1 className="app-title">بلَّغ</h1>
           <nav>
             <NavLinks />

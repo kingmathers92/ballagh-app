@@ -33,8 +33,4 @@ NavLinks.propTypes = {
   toggleMenu: PropTypes.func,
 };
 
-NavLinks.defaultProps = {
-  toggleMenu: () => {},
-};
-
 export default NavLinks;

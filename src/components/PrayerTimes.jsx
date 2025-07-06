@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useGeolocation } from "../hooks/useGeolocation";
 import { usePrayerTimes } from "../hooks/usePrayerTimes";
 import Notification from "../components/Notification";
+
 import "../styles/PrayerTimes.css";
 
 function PrayerTimesView() {

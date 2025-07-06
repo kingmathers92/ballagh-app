@@ -1,8 +1,6 @@
 import PropTypes from "prop-types";
 import { useEffect } from "react";
 
-import "./Notification.css";
-
 const Notification = ({ message, onClose }) => {
   useEffect(() => {
     const timer = setTimeout(() => {

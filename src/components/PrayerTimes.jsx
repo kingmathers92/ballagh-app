@@ -1,18 +1,29 @@
+import { useState } from "react";
 import { useGeolocation } from "../hooks/useGeolocation";
 import { usePrayerTimes } from "../hooks/usePrayerTimes";
-
+import Notification from "../components/Notification";
 import "../styles/PrayerTimes.css";
 
 function PrayerTimesView() {
   const { location, error } = useGeolocation();
   const ramadanStart = new Date("2025-03-01");
+  const [notifications, setNotifications] = useState([]);
+
+  const addNotification = (message) => {
+    setNotifications((prev) => [...prev, { id: Date.now(), message }]);
+  };
+
+  const removeNotification = (id) => {
+    setNotifications((prev) => prev.filter((notif) => notif.id !== id));
+  };
+
   const {
     prayerTimes,
     currentPrayer,
     nextPrayerCountdown,
     ramadanTimes,
     nextEventCountdown,
-  } = usePrayerTimes(location, ramadanStart);
+  } = usePrayerTimes(location, ramadanStart, addNotification);
 
   return (
     <div className="container">
@@ -79,6 +90,13 @@ function PrayerTimesView() {
           <p>Current State: {ramadanTimes.currentEvent}</p>
         </div>
       )}
+      {notifications.map((notif) => (
+        <Notification
+          key={notif.id}
+          message={notif.message}
+          onClose={() => removeNotification(notif.id)}
+        />
+      ))}
     </div>
   );
 }

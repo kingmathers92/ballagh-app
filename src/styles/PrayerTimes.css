@@ -86,6 +86,11 @@
     border-color 0.3s ease;
 }
 
+/* Stack notifications vertically */
+.notification + .notification {
+  top: calc(20px + 60px);
+}
+
 .notification p {
   margin: 0;
   font-size: 1em;
@@ -110,6 +115,15 @@
 .notification-close:focus {
   outline: 1px solid var(--accent-color);
   outline-offset: 2px;
+}
+
+/* Permission Denied Notification */
+.notification-permission {
+  background-color: #f8d7da;
+  color: #721c24;
+  border-image: none;
+  border: 2px solid #dc3545;
+  animation: slideIn 0.3s ease-out;
 }
 
 /* Ramadan Times Section */
@@ -201,6 +215,14 @@
     padding: 10px 15px;
     max-width: 90%;
     font-size: 0.9em;
+  }
+
+  .notification + .notification {
+    top: calc(10px + 50px);
+  }
+
+  .notification-permission {
+    font-size: 0.85em;
   }
 
   .ramadan-times h3 {

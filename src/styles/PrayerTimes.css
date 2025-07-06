@@ -62,7 +62,6 @@
 /* Notification Styling */
 .notification {
   position: fixed;
-  top: 20px;
   right: 20px;
   background-color: var(--primary-color);
   color: var(--text-color);
@@ -84,11 +83,6 @@
   max-width: 300px;
   transition: background-color 0.3s ease, color 0.3s ease,
     border-color 0.3s ease;
-}
-
-/* Stack notifications vertically */
-.notification + .notification {
-  top: calc(20px + 60px);
 }
 
 .notification p {
@@ -210,15 +204,10 @@
   }
 
   .notification {
-    top: 10px;
     right: 10px;
     padding: 10px 15px;
     max-width: 90%;
     font-size: 0.9em;
-  }
-
-  .notification + .notification {
-    top: calc(10px + 50px);
   }
 
   .notification-permission {

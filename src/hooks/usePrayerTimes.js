@@ -8,7 +8,7 @@ import {
 } from "../utils/prayerUtils";
 import { scheduleReminders } from "../utils/reminderUtils";
 
-export const usePrayerTimes = (coords, ramadanStart) => {
+export const usePrayerTimes = (coords, ramadanStart, addNotification) => {
   const [prayerTimes, setPrayerTimes] = useState(null);
   const [currentPrayer, setCurrentPrayer] = useState(null);
   const [nextPrayerCountdown, setNextPrayerCountdown] = useState(null);
@@ -16,7 +16,7 @@ export const usePrayerTimes = (coords, ramadanStart) => {
   const [nextEventCountdown, setNextEventCountdown] = useState(null);
 
   useEffect(() => {
-    if (!coords) return;
+    if (!coords || !addNotification) return;
 
     const updateTimes = () => {
       const times = calculatePrayerTimes(coords);
@@ -56,7 +56,6 @@ export const usePrayerTimes = (coords, ramadanStart) => {
         isha: times.isha,
         location: coords,
       };
-      console.log("Raw times with dates:", rawTimes);
 
       const { currentPrayer, nextPrayer } =
         determineCurrentNextPrayer(rawTimes);
@@ -70,7 +69,7 @@ export const usePrayerTimes = (coords, ramadanStart) => {
         setNextEventCountdown
       );
 
-      scheduleReminders(ramadanData.nextEvent);
+      scheduleReminders(ramadanData.nextEvent, addNotification);
 
       return () => {
         prayerCleanup && prayerCleanup();
@@ -80,7 +79,7 @@ export const usePrayerTimes = (coords, ramadanStart) => {
 
     const cleanup = updateTimes();
     return () => cleanup && cleanup();
-  }, [coords, ramadanStart]);
+  }, [coords, ramadanStart, addNotification]);
 
   return {
     prayerTimes,

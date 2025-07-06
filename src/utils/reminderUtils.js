@@ -2,7 +2,10 @@ export const scheduleReminders = (nextEvent, addNotification) => {
   const showBrowserNotification = (message) => {
     if (!("Notification" in window)) {
       console.warn("Browser does not support notifications");
-      addNotification("Your browser does not support system notifications");
+      addNotification(
+        "Your browser does not support system notifications",
+        true
+      );
       return;
     }
 
@@ -20,13 +23,15 @@ export const scheduleReminders = (nextEvent, addNotification) => {
           });
         } else {
           addNotification(
-            "System notifications are disabled. Using in-app notifications."
+            "System notifications are disabled. Using in-app notifications.",
+            true
           );
         }
       });
     } else {
       addNotification(
-        "System notifications are disabled. Using in-app notifications."
+        "System notifications are disabled. Using in-app notifications.",
+        true
       );
     }
   };

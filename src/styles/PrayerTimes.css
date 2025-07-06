@@ -120,6 +120,35 @@
   animation: slideIn 0.3s ease-out;
 }
 
+.button {
+  background-color: var(--primary-color);
+  color: var(--text-color);
+  padding: 8px 16px;
+  border: 2px solid transparent;
+  border-image: linear-gradient(
+      to right,
+      var(--primary-color),
+      var(--accent-color)
+    )
+    1;
+  border-radius: 4px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.button:hover,
+.button:focus {
+  background-color: var(--accent-color);
+  color: var(--background-color);
+}
+
+.button:focus {
+  outline: 1px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
 /* Ramadan Times Section */
 .ramadan-times {
   margin-top: 20px;

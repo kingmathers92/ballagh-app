@@ -24,6 +24,10 @@ function PrayerTimesView() {
     setNotifications((prev) => prev.filter((notif) => notif.id !== id));
   };
 
+  const dismissAllNotifications = () => {
+    setNotifications([]);
+  };
+
   const requestNotificationPermission = () => {
     if ("Notification" in window && Notification.permission !== "granted") {
       Notification.requestPermission().then((permission) => {
@@ -55,7 +59,7 @@ function PrayerTimesView() {
 
   return (
     <div className="container">
-      грив <h2 className="title">Prayer & Ramadan Times</h2>
+      <h2 className="title">Prayer & Ramadan Times</h2>
       {error && <div className="error">{error}</div>}
       {notificationPermission === "default" && (
         <button
@@ -64,6 +68,15 @@ function PrayerTimesView() {
           style={{ marginBottom: "15px" }}
         >
           Enable Notifications
+        </button>
+      )}
+      {notifications.length > 1 && (
+        <button
+          className="button"
+          onClick={dismissAllNotifications}
+          style={{ marginBottom: "15px" }}
+        >
+          Dismiss All Notifications
         </button>
       )}
       {location && (

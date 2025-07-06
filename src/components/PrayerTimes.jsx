@@ -9,13 +9,35 @@ function PrayerTimesView() {
   const { location, error } = useGeolocation();
   const ramadanStart = new Date("2025-03-01");
   const [notifications, setNotifications] = useState([]);
+  const [notificationPermission, setNotificationPermission] = useState(
+    "Notification" in window ? Notification.permission : "denied"
+  );
 
-  const addNotification = (message) => {
-    setNotifications((prev) => [...prev, { id: Date.now(), message }]);
+  const addNotification = (message, isPermissionMessage = false) => {
+    setNotifications((prev) => [
+      ...prev,
+      { id: Date.now(), message, isPermissionMessage },
+    ]);
   };
 
   const removeNotification = (id) => {
     setNotifications((prev) => prev.filter((notif) => notif.id !== id));
+  };
+
+  const requestNotificationPermission = () => {
+    if ("Notification" in window && Notification.permission !== "granted") {
+      Notification.requestPermission().then((permission) => {
+        setNotificationPermission(permission);
+        if (permission === "granted") {
+          addNotification("System notifications enabled!", true);
+        } else {
+          addNotification(
+            "System notifications are disabled. Using in-app notifications.",
+            true
+          );
+        }
+      });
+    }
   };
 
   const {
@@ -24,12 +46,26 @@ function PrayerTimesView() {
     nextPrayerCountdown,
     ramadanTimes,
     nextEventCountdown,
-  } = usePrayerTimes(location, ramadanStart, addNotification);
+  } = usePrayerTimes(
+    location,
+    ramadanStart,
+    addNotification,
+    notificationPermission
+  );
 
   return (
     <div className="container">
-      <h2 className="title">Prayer & Ramadan Times</h2>
+      грив <h2 className="title">Prayer & Ramadan Times</h2>
       {error && <div className="error">{error}</div>}
+      {notificationPermission === "default" && (
+        <button
+          className="button"
+          onClick={requestNotificationPermission}
+          style={{ marginBottom: "15px" }}
+        >
+          Enable Notifications
+        </button>
+      )}
       {location && (
         <p className="description">
           Location: Lat {location.latitude.toFixed(4)}, Lon{" "}
@@ -91,11 +127,13 @@ function PrayerTimesView() {
           <p>Current State: {ramadanTimes.currentEvent}</p>
         </div>
       )}
-      {notifications.map((notif) => (
+      {notifications.map((notif, index) => (
         <Notification
           key={notif.id}
           message={notif.message}
           onClose={() => removeNotification(notif.id)}
+          isPermissionMessage={notif.isPermissionMessage}
+          style={{ top: `${20 + index * 60}px` }}
         />
       ))}
     </div>

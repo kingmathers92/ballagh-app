@@ -1,4 +1,9 @@
 export const scheduleReminders = (nextEvent, addNotification) => {
+  const playSound = () => {
+    const audio = new Audio("/sounds/notification.mp3");
+    audio.play().catch((err) => console.warn("Audio playback failed:", err));
+  };
+
   const showBrowserNotification = (message) => {
     if (!("Notification" in window)) {
       console.warn("Browser does not support notifications");
@@ -6,6 +11,7 @@ export const scheduleReminders = (nextEvent, addNotification) => {
         "Your browser does not support system notifications",
         true
       );
+      playSound();
       return;
     }
 
@@ -21,8 +27,9 @@ export const scheduleReminders = (nextEvent, addNotification) => {
             minute: "2-digit",
           }
         )}`,
-        icon: "/images/okba.jpg",
+        icon: "/images/notification-icon.png",
       });
+      playSound();
     } else if (Notification.permission !== "denied") {
       Notification.requestPermission().then((permission) => {
         if (
@@ -36,13 +43,15 @@ export const scheduleReminders = (nextEvent, addNotification) => {
               hour: "2-digit",
               minute: "2-digit",
             })}`,
-            icon: "/images/okba.jpg",
+            icon: "/images/notification-icon.png",
           });
+          playSound();
         } else {
           addNotification(
             "System notifications are disabled. Using in-app notifications.",
             true
           );
+          playSound();
         }
       });
     } else {
@@ -50,6 +59,7 @@ export const scheduleReminders = (nextEvent, addNotification) => {
         "System notifications are disabled. Using in-app notifications.",
         true
       );
+      playSound();
     }
   };
 
@@ -59,12 +69,14 @@ export const scheduleReminders = (nextEvent, addNotification) => {
       setTimeout(() => {
         addNotification("Suhoor ends at Fajr in 15 minutes!");
         showBrowserNotification("Suhoor ends at Fajr in 15 minutes!");
+        playSound();
       }, timeUntilSuhoor - 15 * 60 * 1000);
     }
   } else if (nextEvent.name === "Iftar" && nextEvent.time > new Date()) {
     setTimeout(() => {
       addNotification("Time for Iftar is approaching!");
       showBrowserNotification("Time for Iftar is approaching!");
+      playSound();
     }, nextEvent.time - new Date() - 5 * 60 * 1000);
   }
 };

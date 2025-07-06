@@ -8,7 +8,12 @@ import {
 } from "../utils/prayerUtils";
 import { scheduleReminders } from "../utils/reminderUtils";
 
-export const usePrayerTimes = (coords, ramadanStart, addNotification) => {
+export const usePrayerTimes = (
+  coords,
+  ramadanStart,
+  addNotification,
+  notificationPermission
+) => {
   const [prayerTimes, setPrayerTimes] = useState(null);
   const [currentPrayer, setCurrentPrayer] = useState(null);
   const [nextPrayerCountdown, setNextPrayerCountdown] = useState(null);
@@ -69,7 +74,9 @@ export const usePrayerTimes = (coords, ramadanStart, addNotification) => {
         setNextEventCountdown
       );
 
-      scheduleReminders(ramadanData.nextEvent, addNotification);
+      if (notificationPermission !== "denied") {
+        scheduleReminders(ramadanData.nextEvent, addNotification);
+      }
 
       return () => {
         prayerCleanup && prayerCleanup();
@@ -79,7 +86,7 @@ export const usePrayerTimes = (coords, ramadanStart, addNotification) => {
 
     const cleanup = updateTimes();
     return () => cleanup && cleanup();
-  }, [coords, ramadanStart, addNotification]);
+  }, [coords, ramadanStart, addNotification, notificationPermission]);
 
   return {
     prayerTimes,

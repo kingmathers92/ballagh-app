@@ -9,16 +9,33 @@ export const scheduleReminders = (nextEvent, addNotification) => {
       return;
     }
 
-    if (Notification.permission === "granted") {
+    if (
+      Notification.permission === "granted" &&
+      document.visibilityState !== "visible"
+    ) {
       new Notification(message, {
-        body: "Stay prepared for your Ramadan schedule!",
+        body: `Event: ${nextEvent.name} at ${nextEvent.time.toLocaleTimeString(
+          [],
+          {
+            hour: "2-digit",
+            minute: "2-digit",
+          }
+        )}`,
         icon: "/images/okba.jpg",
       });
     } else if (Notification.permission !== "denied") {
       Notification.requestPermission().then((permission) => {
-        if (permission === "granted") {
+        if (
+          permission === "granted" &&
+          document.visibilityState !== "visible"
+        ) {
           new Notification(message, {
-            body: "Stay prepared for your Ramadan schedule!",
+            body: `Event: ${
+              nextEvent.name
+            } at ${nextEvent.time.toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}`,
             icon: "/images/okba.jpg",
           });
         } else {

@@ -50,6 +50,8 @@ function PrayerTimesView() {
     nextPrayerCountdown,
     ramadanTimes,
     nextEventCountdown,
+    loading,
+    prayerError,
   } = usePrayerTimes(
     location,
     ramadanStart,
@@ -60,7 +62,9 @@ function PrayerTimesView() {
   return (
     <div className="container">
       <h2 className="title">Prayer & Ramadan Times</h2>
+      {loading && <div className="loading">Loading prayer times...</div>}
       {error && <div className="error">{error}</div>}
+      {prayerError && <div className="error">{prayerError}</div>}
       {notificationPermission === "default" && (
         <button
           className="button"
@@ -135,7 +139,7 @@ function PrayerTimesView() {
             })}
           </p>
           <p className="countdown">
-            Time until next prayer: {nextEventCountdown || "Calculating..."}
+            Time until next event: {nextEventCountdown || "Calculating..."}
           </p>
           <p>Current State: {ramadanTimes.currentEvent}</p>
         </div>

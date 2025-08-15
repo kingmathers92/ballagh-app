@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useGeolocation } from "../hooks/useGeolocation";
 import { usePrayerTimes } from "../hooks/usePrayerTimes";
 import Notification from "../components/Notification";
@@ -9,9 +9,16 @@ function PrayerTimesView() {
   const { location, error } = useGeolocation();
   const ramadanStart = new Date("2025-03-01");
   const [notifications, setNotifications] = useState([]);
-  const [notificationPermission, setNotificationPermission] = useState(
-    "Notification" in window ? Notification.permission : "denied"
-  );
+  const [notificationPermission, setNotificationPermission] = useState(() => {
+    return "Notification" in window
+      ? localStorage.getItem("notificationPermission") ||
+          Notification.permission
+      : "denied";
+  });
+
+  useEffect(() => {
+    localStorage.setItem("notificationPermission", notificationPermission);
+  }, [notificationPermission]);
 
   const addNotification = (message, isPermissionMessage = false) => {
     setNotifications((prev) => [
@@ -29,7 +36,7 @@ function PrayerTimesView() {
   };
 
   const requestNotificationPermission = () => {
-    if ("Notification" in window && Notification.permission !== "granted") {
+    if ("Notification" in window && notificationPermission !== "granted") {
       Notification.requestPermission().then((permission) => {
         setNotificationPermission(permission);
         if (permission === "granted") {

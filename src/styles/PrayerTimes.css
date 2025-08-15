@@ -117,6 +117,12 @@
   margin-bottom: 15px;
 }
 
+.calculation-method {
+  padding: 8px;
+  font-size: 16px;
+  border-radius: 4px;
+}
+
 /* Permission Denied Notification */
 .notification-permission {
   background-color: #f8d7da;

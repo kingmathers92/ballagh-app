@@ -17,6 +17,7 @@ function PrayerTimesView() {
           Notification.permission
       : "denied";
   });
+  const [calculationMethod, setCalculationMethod] = useState("UmmAlQura");
 
   useEffect(() => {
     localStorage.setItem("notificationPermission", notificationPermission);
@@ -65,7 +66,8 @@ function PrayerTimesView() {
     location,
     ramadanStart,
     addNotification,
-    notificationPermission
+    notificationPermission,
+    calculationMethod
   );
 
   const renderPrayerTimes = useMemo(() => {
@@ -101,6 +103,17 @@ function PrayerTimesView() {
   return (
     <div className="container">
       <h2 className="title">Prayer & Ramadan Times</h2>
+      <select
+        value={calculationMethod}
+        onChange={(e) => setCalculationMethod(e.target.value)}
+        className="calculation-method"
+        aria-label="Select prayer time calculation method"
+        style={{ marginBottom: "15px" }}
+      >
+        <option value="UmmAlQura">Umm Al-Qura</option>
+        <option value="MuslimWorldLeague">Muslim World League</option>
+        <option value="Egyptian">Egyptian</option>
+      </select>
       {loading && <div className="loading">Loading prayer times...</div>}
       {error && <div className="error">{error}</div>}
       {prayerError && <div className="error">{prayerError}</div>}

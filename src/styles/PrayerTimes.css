@@ -123,6 +123,12 @@
   border-radius: 4px;
 }
 
+.warning {
+  color: #ff9800;
+  font-style: italic;
+  margin-bottom: 15px;
+}
+
 /* Permission Denied Notification */
 .notification-permission {
   background-color: #f8d7da;

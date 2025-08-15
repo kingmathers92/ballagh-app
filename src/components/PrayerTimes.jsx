@@ -23,6 +23,22 @@ function PrayerTimesView() {
     localStorage.setItem("notificationPermission", notificationPermission);
   }, [notificationPermission]);
 
+  useEffect(() => {
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/serviceWorker.js").then(
+        (registration) => {
+          console.log(
+            "Service Worker registered with scope:",
+            registration.scope
+          );
+        },
+        (err) => {
+          console.log("Service Worker registration failed:", err);
+        }
+      );
+    }
+  }, []);
+
   const addNotification = (message, isPermissionMessage = false) => {
     setNotifications((prev) => [
       ...prev,
@@ -62,6 +78,7 @@ function PrayerTimesView() {
     nextEventCountdown,
     loading,
     prayerError,
+    isOffline,
   } = usePrayerTimes(
     location,
     ramadanStart,
@@ -115,6 +132,9 @@ function PrayerTimesView() {
         <option value="Egyptian">Egyptian</option>
       </select>
       {loading && <div className="loading">Loading prayer times...</div>}
+      {isOffline && (
+        <div className="warning">Offline: Showing cached prayer times</div>
+      )}
       {error && <div className="error">{error}</div>}
       {prayerError && <div className="error">{prayerError}</div>}
       {notificationPermission === "default" && (

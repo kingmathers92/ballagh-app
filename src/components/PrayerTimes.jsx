@@ -70,6 +70,7 @@ function PrayerTimesView() {
           className="button"
           onClick={requestNotificationPermission}
           style={{ marginBottom: "15px" }}
+          aria-label="Enable system notifications"
         >
           Enable Notifications
         </button>
@@ -79,6 +80,7 @@ function PrayerTimesView() {
           className="button"
           onClick={dismissAllNotifications}
           style={{ marginBottom: "15px" }}
+          aria-label="Dismiss all notifications"
         >
           Dismiss All Notifications
         </button>
@@ -95,7 +97,11 @@ function PrayerTimesView() {
         </p>
       )}
       {prayerTimes && (
-        <div className="prayer-times">
+        <div
+          className="prayer-times"
+          role="region"
+          aria-label="Daily prayer times"
+        >
           <p className={currentPrayer === "fajr" ? "current-prayer" : ""}>
             <span>Fajr</span> <span>{prayerTimes.fajr}</span>
           </p>
@@ -117,7 +123,7 @@ function PrayerTimesView() {
         </div>
       )}
       {ramadanTimes && (
-        <div className="ramadan-times">
+        <div className="ramadan-times" role="region" aria-label="Ramadan times">
           <h3>Ramadan Companion</h3>
           {ramadanTimes.ramadanDay ? (
             <p>Day {ramadanTimes.ramadanDay} of Ramadan</p>
@@ -151,6 +157,7 @@ function PrayerTimesView() {
           onClose={() => removeNotification(notif.id)}
           isPermissionMessage={notif.isPermissionMessage}
           style={{ top: `${20 + index * 60}px` }}
+          aria-live={notif.isPermissionMessage ? "polite" : "assertive"}
         />
       ))}
     </div>

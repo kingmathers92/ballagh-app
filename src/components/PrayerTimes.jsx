@@ -1,9 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import { useGeolocation } from "../hooks/useGeolocation";
 import { usePrayerTimes } from "../hooks/usePrayerTimes";
 import Notification from "../components/Notification";
 
 import "../styles/PrayerTimes.css";
+
+const MemoizedNotification = memo(Notification);
 
 function PrayerTimesView() {
   const { location, error } = useGeolocation();
@@ -66,6 +68,36 @@ function PrayerTimesView() {
     notificationPermission
   );
 
+  const renderPrayerTimes = useMemo(() => {
+    if (!prayerTimes) return null;
+    return (
+      <div
+        className="prayer-times"
+        role="region"
+        aria-label="Daily prayer times"
+      >
+        <p className={currentPrayer === "fajr" ? "current-prayer" : ""}>
+          <span>Fajr</span> <span>{prayerTimes.fajr}</span>
+        </p>
+        <p className={currentPrayer === "sunrise" ? "current-prayer" : ""}>
+          <span>Sunrise</span> <span>{prayerTimes.sunrise}</span>
+        </p>
+        <p className={currentPrayer === "dhuhr" ? "current-prayer" : ""}>
+          <span>Dhuhr</span> <span>{prayerTimes.dhuhr}</span>
+        </p>
+        <p className={currentPrayer === "asr" ? "current-prayer" : ""}>
+          <span>Asr</span> <span>{prayerTimes.asr}</span>
+        </p>
+        <p className={currentPrayer === "maghrib" ? "current-prayer" : ""}>
+          <span>Maghrib</span> <span>{prayerTimes.maghrib}</span>
+        </p>
+        <p className={currentPrayer === "isha" ? "current-prayer" : ""}>
+          <span>Isha</span> <span>{prayerTimes.isha}</span>
+        </p>
+      </div>
+    );
+  }, [prayerTimes, currentPrayer]);
+
   return (
     <div className="container">
       <h2 className="title">Prayer & Ramadan Times</h2>
@@ -103,32 +135,7 @@ function PrayerTimesView() {
           Time until next prayer: {nextPrayerCountdown}
         </p>
       )}
-      {prayerTimes && (
-        <div
-          className="prayer-times"
-          role="region"
-          aria-label="Daily prayer times"
-        >
-          <p className={currentPrayer === "fajr" ? "current-prayer" : ""}>
-            <span>Fajr</span> <span>{prayerTimes.fajr}</span>
-          </p>
-          <p className={currentPrayer === "sunrise" ? "current-prayer" : ""}>
-            <span>Sunrise</span> <span>{prayerTimes.sunrise}</span>
-          </p>
-          <p className={currentPrayer === "dhuhr" ? "current-prayer" : ""}>
-            <span>Dhuhr</span> <span>{prayerTimes.dhuhr}</span>
-          </p>
-          <p className={currentPrayer === "asr" ? "current-prayer" : ""}>
-            <span>Asr</span> <span>{prayerTimes.asr}</span>
-          </p>
-          <p className={currentPrayer === "maghrib" ? "current-prayer" : ""}>
-            <span>Maghrib</span> <span>{prayerTimes.maghrib}</span>
-          </p>
-          <p className={currentPrayer === "isha" ? "current-prayer" : ""}>
-            <span>Isha</span> <span>{prayerTimes.isha}</span>
-          </p>
-        </div>
-      )}
+      {renderPrayerTimes}
       {ramadanTimes && (
         <div className="ramadan-times" role="region" aria-label="Ramadan times">
           <h3>Ramadan Companion</h3>
@@ -158,7 +165,7 @@ function PrayerTimesView() {
         </div>
       )}
       {notifications.map((notif, index) => (
-        <Notification
+        <MemoizedNotification
           key={notif.id}
           message={notif.message}
           onClose={() => removeNotification(notif.id)}

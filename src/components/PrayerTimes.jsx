@@ -18,10 +18,44 @@ function PrayerTimesView() {
       : "denied";
   });
   const [calculationMethod, setCalculationMethod] = useState("UmmAlQura");
+  const [theme, setTheme] = useState(
+    () => localStorage.getItem("theme") || "light"
+  );
+  const [timeZone, setTimeZone] = useState(
+    () =>
+      localStorage.getItem("timeZone") ||
+      Intl.DateTimeFormat().resolvedOptions().timeZone
+  );
+  const [prayerReminders, setPrayerReminders] = useState(() => {
+    const saved = localStorage.getItem("prayerReminders");
+    return saved
+      ? JSON.parse(saved)
+      : {
+          fajr: true,
+          sunrise: false,
+          dhuhr: true,
+          asr: true,
+          maghrib: true,
+          isha: true,
+        };
+  });
 
   useEffect(() => {
     localStorage.setItem("notificationPermission", notificationPermission);
   }, [notificationPermission]);
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
+  useEffect(() => {
+    localStorage.setItem("timeZone", timeZone);
+  }, [timeZone]);
+
+  useEffect(() => {
+    localStorage.setItem("prayerReminders", JSON.stringify(prayerReminders));
+  }, [prayerReminders]);
 
   useEffect(() => {
     if ("serviceWorker" in navigator) {
@@ -70,6 +104,17 @@ function PrayerTimesView() {
     }
   };
 
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === "light" ? "dark" : "light"));
+  };
+
+  const togglePrayerReminder = (prayer) => {
+    setPrayerReminders((prev) => ({
+      ...prev,
+      [prayer]: !prev[prayer],
+    }));
+  };
+
   const {
     prayerTimes,
     currentPrayer,
@@ -84,7 +129,9 @@ function PrayerTimesView() {
     ramadanStart,
     addNotification,
     notificationPermission,
-    calculationMethod
+    calculationMethod,
+    timeZone,
+    prayerReminders
   );
 
   const renderPrayerTimes = useMemo(() => {
@@ -97,29 +144,55 @@ function PrayerTimesView() {
       >
         <p className={currentPrayer === "fajr" ? "current-prayer" : ""}>
           <span>Fajr</span> <span>{prayerTimes.fajr}</span>
+          <span className="reminder-status">
+            (Reminder: {prayerReminders.fajr ? "On" : "Off"})
+          </span>
         </p>
         <p className={currentPrayer === "sunrise" ? "current-prayer" : ""}>
           <span>Sunrise</span> <span>{prayerTimes.sunrise}</span>
+          <span className="reminder-status">
+            (Reminder: {prayerReminders.sunrise ? "On" : "Off"})
+          </span>
         </p>
         <p className={currentPrayer === "dhuhr" ? "current-prayer" : ""}>
           <span>Dhuhr</span> <span>{prayerTimes.dhuhr}</span>
+          <span className="reminder-status">
+            (Reminder: {prayerReminders.dhuhr ? "On" : "Off"})
+          </span>
         </p>
         <p className={currentPrayer === "asr" ? "current-prayer" : ""}>
           <span>Asr</span> <span>{prayerTimes.asr}</span>
+          <span className="reminder-status">
+            (Reminder: {prayerReminders.asr ? "On" : "Off"})
+          </span>
         </p>
         <p className={currentPrayer === "maghrib" ? "current-prayer" : ""}>
           <span>Maghrib</span> <span>{prayerTimes.maghrib}</span>
+          <span className="reminder-status">
+            (Reminder: {prayerReminders.maghrib ? "On" : "Off"})
+          </span>
         </p>
         <p className={currentPrayer === "isha" ? "current-prayer" : ""}>
           <span>Isha</span> <span>{prayerTimes.isha}</span>
+          <span className="reminder-status">
+            (Reminder: {prayerReminders.isha ? "On" : "Off"})
+          </span>
         </p>
       </div>
     );
-  }, [prayerTimes, currentPrayer]);
+  }, [prayerTimes, currentPrayer, prayerReminders]);
 
   return (
     <div className="container">
       <h2 className="title">Prayer & Ramadan Times</h2>
+      <button
+        className="button"
+        onClick={toggleTheme}
+        aria-label={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
+        style={{ marginBottom: "15px" }}
+      >
+        Toggle {theme === "light" ? "Dark" : "Light"} Mode
+      </button>
       <select
         value={calculationMethod}
         onChange={(e) => setCalculationMethod(e.target.value)}
@@ -131,6 +204,35 @@ function PrayerTimesView() {
         <option value="MuslimWorldLeague">Muslim World League</option>
         <option value="Egyptian">Egyptian</option>
       </select>
+      <select
+        value={timeZone}
+        onChange={(e) => setTimeZone(e.target.value)}
+        className="time-zone"
+        aria-label="Select time zone"
+        style={{ marginBottom: "15px" }}
+      >
+        <option value="America/New_York">America/New York</option>
+        <option value="Europe/London">Europe/London</option>
+        <option value="Asia/Dubai">Asia/Dubai</option>
+        <option value="Asia/Riyadh">Asia/Riyadh</option>
+        <option value="Asia/Karachi">Asia/Karachi</option>
+      </select>
+      <div className="reminders" role="region" aria-label="Prayer reminders">
+        <h3>Prayer Reminders</h3>
+        {["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"].map(
+          (prayer) => (
+            <label key={prayer} className="reminder-label">
+              <input
+                type="checkbox"
+                checked={prayerReminders[prayer]}
+                onChange={() => togglePrayerReminder(prayer)}
+                aria-label={`Toggle reminder for ${prayer}`}
+              />
+              {prayer.charAt(0).toUpperCase() + prayer.slice(1)} Reminder
+            </label>
+          )
+        )}
+      </div>
       {loading && <div className="loading">Loading prayer times...</div>}
       {isOffline && (
         <div className="warning">Offline: Showing cached prayer times</div>
@@ -160,7 +262,7 @@ function PrayerTimesView() {
       {location && (
         <p className="description">
           Location: Lat {location.latitude.toFixed(4)}, Lon{" "}
-          {location.longitude.toFixed(4)}
+          {location.longitude.toFixed(4)} (Time Zone: {timeZone})
         </p>
       )}
       {nextPrayerCountdown && (
@@ -182,6 +284,7 @@ function PrayerTimesView() {
             {ramadanTimes.suhoor.toLocaleTimeString([], {
               hour: "2-digit",
               minute: "2-digit",
+              timeZone,
             })}
           </p>
           <p>
@@ -189,6 +292,7 @@ function PrayerTimesView() {
             {ramadanTimes.iftar.toLocaleTimeString([], {
               hour: "2-digit",
               minute: "2-digit",
+              timeZone,
             })}
           </p>
           <p className="countdown">

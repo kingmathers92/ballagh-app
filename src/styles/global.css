@@ -6,6 +6,13 @@
   --text-color: #1f2937;
   --background-color: #f9fafb;
   --accent-color: #c09c64;
+  --background: #fff;
+  --text: #000;
+  --button-bg: #007bff;
+  --button-text: #fff;
+  --error: #d32f2f;
+  --warning: #ff9800;
+  --loading: #555;
   --background-overlay-opacity: 0.1;
   --background-overlay-color: rgba(0, 0, 0, 0.5);
 }
@@ -16,6 +23,13 @@
   --text-color: #e2e8f0;
   --background-color: #111827;
   --accent-color: #c09c64;
+  --background: #222;
+  --text: #fff;
+  --button-bg: #555;
+  --button-text: #fff;
+  --error: #ef5350;
+  --warning: #ffb300;
+  --loading: #bbb;
   --background-overlay-opacity: 0.2;
   --background-overlay-color: rgba(0, 0, 0, 0.7);
 }

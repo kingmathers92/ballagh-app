@@ -39,6 +39,71 @@ function PrayerTimesView() {
           isha: true,
         };
   });
+  const [language, setLanguage] = useState(
+    () => localStorage.getItem("language") || "en"
+  );
+
+  const translations = {
+    en: {
+      title: "Prayer & Ramadan Times",
+      enableNotifications: "Enable Notifications",
+      dismissAllNotifications: "Dismiss All Notifications",
+      prayerReminders: "Prayer Reminders",
+      ramadanCompanion: "Ramadan Companion",
+      location: "Location: Lat {lat}, Lon {lon} (Time Zone: {tz})",
+      timeUntilNextPrayer: "Time until next prayer: {countdown}",
+      dayOfRamadan: "Day {day} of Ramadan",
+      ramadanNotActive: "Ramadan not active (starts March 1, 2025)",
+      suhoor: "Suhoor: {time}",
+      iftar: "Iftar: {time}",
+      timeUntilNextEvent: "Time until next event: {countdown}",
+      currentState: "Current State: {state}",
+      loading: "Loading prayer times...",
+      offline: "Offline: Showing cached prayer times",
+      calculationMethodLabel: "Select prayer time calculation method",
+      timeZoneLabel: "Select time zone",
+      languageLabel: "Select language",
+      prayers: {
+        fajr: "Fajr",
+        sunrise: "Sunrise",
+        dhuhr: "Dhuhr",
+        asr: "Asr",
+        maghrib: "Maghrib",
+        isha: "Isha",
+      },
+      reminder: "Reminder: {status}",
+    },
+    ar: {
+      title: "أوقات الصلاة ورمضان",
+      enableNotifications: "تفعيل الإشعارات",
+      dismissAllNotifications: "إلغاء جميع الإشعارات",
+      prayerReminders: "تذكيرالصلاة",
+      ramadanCompanion: "رفيق رمضان",
+      location:
+        "الموقع: خط العرض {lat}، خط الطول {lon} (المنطقة الزمنية: {tz})",
+      timeUntilNextPrayer: "الوقت حتى الصلاة التالية: {countdown}",
+      dayOfRamadan: "اليوم {day} من رمضان",
+      ramadanNotActive: "رمضان غير نشط (يبدأ في 1 مارس 2025)",
+      suhoor: "السحور: {time}",
+      iftar: "الإفطار: {time}",
+      timeUntilNextEvent: "الوقت حتى الحدث التالي: {countdown}",
+      currentState: "الحالة الحالية: {state}",
+      loading: "جارٍ تحميل أوقات الصلاة...",
+      offline: "غير متصل: عرض أوقات الصلاة المخزنة",
+      calculationMethodLabel: "اختر طريقة حساب أوقات الصلاة",
+      timeZoneLabel: "اختر المنطقة الزمنية",
+      languageLabel: "اختر اللغة",
+      prayers: {
+        fajr: "الفجر",
+        sunrise: "الشروق",
+        dhuhr: "الظهر",
+        asr: "العصر",
+        maghrib: "المغرب",
+        isha: "العشاء",
+      },
+      reminder: "تذكير: {status}",
+    },
+  };
 
   useEffect(() => {
     localStorage.setItem("notificationPermission", notificationPermission);
@@ -56,6 +121,10 @@ function PrayerTimesView() {
   useEffect(() => {
     localStorage.setItem("prayerReminders", JSON.stringify(prayerReminders));
   }, [prayerReminders]);
+
+  useEffect(() => {
+    localStorage.setItem("language", language);
+  }, [language]);
 
   useEffect(() => {
     if ("serviceWorker" in navigator) {
@@ -93,10 +162,14 @@ function PrayerTimesView() {
       Notification.requestPermission().then((permission) => {
         setNotificationPermission(permission);
         if (permission === "granted") {
-          addNotification("System notifications enabled!", true);
+          addNotification(
+            translations[language].enableNotifications + "!",
+            true
+          );
         } else {
           addNotification(
-            "System notifications are disabled. Using in-app notifications.",
+            translations[language].enableNotifications +
+              " disabled. Using in-app notifications.",
             true
           );
         }
@@ -131,7 +204,8 @@ function PrayerTimesView() {
     notificationPermission,
     calculationMethod,
     timeZone,
-    prayerReminders
+    prayerReminders,
+    language
   );
 
   const renderPrayerTimes = useMemo(() => {
@@ -140,64 +214,59 @@ function PrayerTimesView() {
       <div
         className="prayer-times"
         role="region"
-        aria-label="Daily prayer times"
+        aria-label={translations[language].prayers}
       >
-        <p className={currentPrayer === "fajr" ? "current-prayer" : ""}>
-          <span>Fajr</span> <span>{prayerTimes.fajr}</span>
-          <span className="reminder-status">
-            (Reminder: {prayerReminders.fajr ? "On" : "Off"})
-          </span>
-        </p>
-        <p className={currentPrayer === "sunrise" ? "current-prayer" : ""}>
-          <span>Sunrise</span> <span>{prayerTimes.sunrise}</span>
-          <span className="reminder-status">
-            (Reminder: {prayerReminders.sunrise ? "On" : "Off"})
-          </span>
-        </p>
-        <p className={currentPrayer === "dhuhr" ? "current-prayer" : ""}>
-          <span>Dhuhr</span> <span>{prayerTimes.dhuhr}</span>
-          <span className="reminder-status">
-            (Reminder: {prayerReminders.dhuhr ? "On" : "Off"})
-          </span>
-        </p>
-        <p className={currentPrayer === "asr" ? "current-prayer" : ""}>
-          <span>Asr</span> <span>{prayerTimes.asr}</span>
-          <span className="reminder-status">
-            (Reminder: {prayerReminders.asr ? "On" : "Off"})
-          </span>
-        </p>
-        <p className={currentPrayer === "maghrib" ? "current-prayer" : ""}>
-          <span>Maghrib</span> <span>{prayerTimes.maghrib}</span>
-          <span className="reminder-status">
-            (Reminder: {prayerReminders.maghrib ? "On" : "Off"})
-          </span>
-        </p>
-        <p className={currentPrayer === "isha" ? "current-prayer" : ""}>
-          <span>Isha</span> <span>{prayerTimes.isha}</span>
-          <span className="reminder-status">
-            (Reminder: {prayerReminders.isha ? "On" : "Off"})
-          </span>
-        </p>
+        {["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"].map(
+          (prayer) => (
+            <p
+              key={prayer}
+              className={currentPrayer === prayer ? "current-prayer" : ""}
+            >
+              <span>{translations[language].prayers[prayer]}</span>
+              <span>{prayerTimes[prayer]}</span>
+              <span className="reminder-status">
+                {translations[language].reminder.replace(
+                  "{status}",
+                  prayerReminders[prayer]
+                    ? language === "en"
+                      ? "On"
+                      : "مفعل"
+                    : language === "en"
+                    ? "Off"
+                    : "معطل"
+                )}
+              </span>
+            </p>
+          )
+        )}
       </div>
     );
-  }, [prayerTimes, currentPrayer, prayerReminders]);
+  }, [prayerTimes, currentPrayer, prayerReminders, language]);
 
   return (
     <div className="container">
-      <h2 className="title">Prayer & Ramadan Times</h2>
+      <h2 className="title">{translations[language].title}</h2>
       <button
         className="button"
         onClick={toggleTheme}
-        aria-label={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
+        aria-label={`Switch to ${
+          theme === "light"
+            ? translations[language].prayers.dark
+            : translations[language].prayers.light
+        } mode`}
         style={{ marginBottom: "15px" }}
       >
-        Toggle {theme === "light" ? "Dark" : "Light"} Mode
+        {translations[language].prayers.toggle}{" "}
+        {theme === "light"
+          ? translations[language].prayers.dark
+          : translations[language].prayers.light}{" "}
+        Mode
       </button>
       <select
         value={calculationMethod}
         onChange={(e) => setCalculationMethod(e.target.value)}
         className="calculation-method"
-        aria-label="Select prayer time calculation method"
+        aria-label={translations[language].calculationMethodLabel}
         style={{ marginBottom: "15px" }}
       >
         <option value="UmmAlQura">Umm Al-Qura</option>
@@ -208,7 +277,7 @@ function PrayerTimesView() {
         value={timeZone}
         onChange={(e) => setTimeZone(e.target.value)}
         className="time-zone"
-        aria-label="Select time zone"
+        aria-label={translations[language].timeZoneLabel}
         style={{ marginBottom: "15px" }}
       >
         <option value="America/New_York">America/New York</option>
@@ -217,8 +286,22 @@ function PrayerTimesView() {
         <option value="Asia/Riyadh">Asia/Riyadh</option>
         <option value="Asia/Karachi">Asia/Karachi</option>
       </select>
-      <div className="reminders" role="region" aria-label="Prayer reminders">
-        <h3>Prayer Reminders</h3>
+      <select
+        value={language}
+        onChange={(e) => setLanguage(e.target.value)}
+        className="language"
+        aria-label={translations[language].languageLabel}
+        style={{ marginBottom: "15px" }}
+      >
+        <option value="en">English</option>
+        <option value="ar">العربية</option>
+      </select>
+      <div
+        className="reminders"
+        role="region"
+        aria-label={translations[language].prayerReminders}
+      >
+        <h3>{translations[language].prayerReminders}</h3>
         {["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"].map(
           (prayer) => (
             <label key={prayer} className="reminder-label">
@@ -226,16 +309,19 @@ function PrayerTimesView() {
                 type="checkbox"
                 checked={prayerReminders[prayer]}
                 onChange={() => togglePrayerReminder(prayer)}
-                aria-label={`Toggle reminder for ${prayer}`}
+                aria-label={`Toggle reminder for ${translations[language].prayers[prayer]}`}
               />
-              {prayer.charAt(0).toUpperCase() + prayer.slice(1)} Reminder
+              {translations[language].prayers[prayer]}{" "}
+              {translations[language].prayerReminders}
             </label>
           )
         )}
       </div>
-      {loading && <div className="loading">Loading prayer times...</div>}
+      {loading && (
+        <div className="loading">{translations[language].loading}</div>
+      )}
       {isOffline && (
-        <div className="warning">Offline: Showing cached prayer times</div>
+        <div className="warning">{translations[language].offline}</div>
       )}
       {error && <div className="error">{error}</div>}
       {prayerError && <div className="error">{prayerError}</div>}
@@ -244,9 +330,9 @@ function PrayerTimesView() {
           className="button"
           onClick={requestNotificationPermission}
           style={{ marginBottom: "15px" }}
-          aria-label="Enable system notifications"
+          aria-label={translations[language].enableNotifications}
         >
-          Enable Notifications
+          {translations[language].enableNotifications}
         </button>
       )}
       {notifications.length > 1 && (
@@ -254,51 +340,77 @@ function PrayerTimesView() {
           className="button"
           onClick={dismissAllNotifications}
           style={{ marginBottom: "15px" }}
-          aria-label="Dismiss all notifications"
+          aria-label={translations[language].dismissAllNotifications}
         >
-          Dismiss All Notifications
+          {translations[language].dismissAllNotifications}
         </button>
       )}
       {location && (
         <p className="description">
-          Location: Lat {location.latitude.toFixed(4)}, Lon{" "}
-          {location.longitude.toFixed(4)} (Time Zone: {timeZone})
+          {translations[language].location
+            .replace("{lat}", location.latitude.toFixed(4))
+            .replace("{lon}", location.longitude.toFixed(4))
+            .replace("{tz}", timeZone)}
         </p>
       )}
       {nextPrayerCountdown && (
         <p className="countdown">
-          Time until next prayer: {nextPrayerCountdown}
+          {translations[language].timeUntilNextPrayer.replace(
+            "{countdown}",
+            nextPrayerCountdown
+          )}
         </p>
       )}
       {renderPrayerTimes}
       {ramadanTimes && (
-        <div className="ramadan-times" role="region" aria-label="Ramadan times">
-          <h3>Ramadan Companion</h3>
+        <div
+          className="ramadan-times"
+          role="region"
+          aria-label={translations[language].ramadanCompanion}
+        >
+          <h3>{translations[language].ramadanCompanion}</h3>
           {ramadanTimes.ramadanDay ? (
-            <p>Day {ramadanTimes.ramadanDay} of Ramadan</p>
+            <p>
+              {translations[language].dayOfRamadan.replace(
+                "{day}",
+                ramadanTimes.ramadanDay
+              )}
+            </p>
           ) : (
-            <p>Ramadan not active (starts March 1, 2025)</p>
+            <p>{translations[language].ramadanNotActive}</p>
           )}
           <p>
-            Suhoor:{" "}
-            {ramadanTimes.suhoor.toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-              timeZone,
-            })}
+            {translations[language].suhoor.replace(
+              "{time}",
+              ramadanTimes.suhoor.toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+                timeZone,
+              })
+            )}
           </p>
           <p>
-            Iftar:{" "}
-            {ramadanTimes.iftar.toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-              timeZone,
-            })}
+            {translations[language].iftar.replace(
+              "{time}",
+              ramadanTimes.iftar.toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+                timeZone,
+              })
+            )}
           </p>
           <p className="countdown">
-            Time until next event: {nextEventCountdown || "Calculating..."}
+            {translations[language].timeUntilNextEvent.replace(
+              "{countdown}",
+              nextEventCountdown || translations[language].prayers.calculating
+            )}
           </p>
-          <p>Current State: {ramadanTimes.currentEvent}</p>
+          <p>
+            {translations[language].currentState.replace(
+              "{state}",
+              ramadanTimes.currentEvent
+            )}
+          </p>
         </div>
       )}
       {notifications.map((notif, index) => (

@@ -37,16 +37,6 @@
   border-bottom: none;
 }
 
-.language {
-  background: var(--background);
-  color: var(--text);
-  border: 1px solid var(--text);
-  padding: 8px;
-  font-size: 16px;
-  border-radius: 4px;
-  margin-bottom: 15px;
-}
-
 .current-prayer {
   background-color: var(--accent-color);
   color: var(--background-color);
@@ -157,7 +147,8 @@
 }
 
 .calculation-method,
-.time-zone {
+.time-zone,
+.language {
   background: var(--background);
   color: var(--text);
   border: 1px solid var(--text);
@@ -285,10 +276,6 @@
     margin: 6px 0;
   }
 
-  .language {
-    font-size: 14px;
-  }
-
   .countdown {
     font-size: 1em;
     padding: 8px 12px;
@@ -319,7 +306,8 @@
   }
 
   .calculation-method,
-  .time-zone {
+  .time-zone,
+  .language {
     font-size: 14px;
   }
 

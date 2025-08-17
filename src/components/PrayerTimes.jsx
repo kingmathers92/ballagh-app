@@ -18,9 +18,6 @@ function PrayerTimesView() {
       : "denied";
   });
   const [calculationMethod, setCalculationMethod] = useState("UmmAlQura");
-  const [theme, setTheme] = useState(
-    () => localStorage.getItem("theme") || "light"
-  );
   const [timeZone, setTimeZone] = useState(
     () =>
       localStorage.getItem("timeZone") ||
@@ -63,6 +60,8 @@ function PrayerTimesView() {
       calculationMethodLabel: "Select prayer time calculation method",
       timeZoneLabel: "Select time zone",
       languageLabel: "Select language",
+      exportPrayerTimes: "Export Prayer Times",
+      exportSuccess: "Prayer times exported successfully!",
       prayers: {
         fajr: "Fajr",
         sunrise: "Sunrise",
@@ -77,7 +76,7 @@ function PrayerTimesView() {
       title: "أوقات الصلاة ورمضان",
       enableNotifications: "تفعيل الإشعارات",
       dismissAllNotifications: "إلغاء جميع الإشعارات",
-      prayerReminders: "تذكيرالصلاة",
+      prayerReminders: "تذكيرات الصلاة",
       ramadanCompanion: "رفيق رمضان",
       location:
         "الموقع: خط العرض {lat}، خط الطول {lon} (المنطقة الزمنية: {tz})",
@@ -93,6 +92,8 @@ function PrayerTimesView() {
       calculationMethodLabel: "اختر طريقة حساب أوقات الصلاة",
       timeZoneLabel: "اختر المنطقة الزمنية",
       languageLabel: "اختر اللغة",
+      exportPrayerTimes: "تصدير أوقات الصلاة",
+      exportSuccess: "تم تصدير أوقات الصلاة بنجاح!",
       prayers: {
         fajr: "الفجر",
         sunrise: "الشروق",
@@ -108,11 +109,6 @@ function PrayerTimesView() {
   useEffect(() => {
     localStorage.setItem("notificationPermission", notificationPermission);
   }, [notificationPermission]);
-
-  useEffect(() => {
-    document.documentElement.setAttribute("data-theme", theme);
-    localStorage.setItem("theme", theme);
-  }, [theme]);
 
   useEffect(() => {
     localStorage.setItem("timeZone", timeZone);
@@ -177,15 +173,55 @@ function PrayerTimesView() {
     }
   };
 
-  const toggleTheme = () => {
-    setTheme((prev) => (prev === "light" ? "dark" : "light"));
-  };
-
   const togglePrayerReminder = (prayer) => {
     setPrayerReminders((prev) => ({
       ...prev,
       [prayer]: !prev[prayer],
     }));
+  };
+
+  const exportPrayerTimes = () => {
+    if (!prayerTimes) return;
+    const data = {
+      prayerTimes: {
+        fajr: prayerTimes.fajr,
+        sunrise: prayerTimes.sunrise,
+        dhuhr: prayerTimes.dhuhr,
+        asr: prayerTimes.asr,
+        maghrib: prayerTimes.maghrib,
+        isha: prayerTimes.isha,
+      },
+      ramadanTimes: ramadanTimes
+        ? {
+            ramadanDay: ramadanTimes.ramadanDay,
+            suhoor: ramadanTimes.suhoor.toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+              timeZone,
+            }),
+            iftar: ramadanTimes.iftar.toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+              timeZone,
+            }),
+            currentEvent: ramadanTimes.currentEvent,
+          }
+        : null,
+      calculationMethod,
+      timeZone,
+      language,
+      date: new Date().toISOString(),
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], {
+      type: "application/json",
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `prayer-times-${new Date().toISOString().split("T")[0]}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    addNotification(translations[language].exportSuccess, false);
   };
 
   const {
@@ -246,22 +282,6 @@ function PrayerTimesView() {
   return (
     <div className="container">
       <h2 className="title">{translations[language].title}</h2>
-      <button
-        className="button"
-        onClick={toggleTheme}
-        aria-label={`Switch to ${
-          theme === "light"
-            ? translations[language].prayers.dark
-            : translations[language].prayers.light
-        } mode`}
-        style={{ marginBottom: "15px" }}
-      >
-        {translations[language].prayers.toggle}{" "}
-        {theme === "light"
-          ? translations[language].prayers.dark
-          : translations[language].prayers.light}{" "}
-        Mode
-      </button>
       <select
         value={calculationMethod}
         onChange={(e) => setCalculationMethod(e.target.value)}
@@ -296,6 +316,14 @@ function PrayerTimesView() {
         <option value="en">English</option>
         <option value="ar">العربية</option>
       </select>
+      <button
+        className="button"
+        onClick={exportPrayerTimes}
+        style={{ marginBottom: "15px" }}
+        aria-label={translations[language].exportPrayerTimes}
+      >
+        {translations[language].exportPrayerTimes}
+      </button>
       <div
         className="reminders"
         role="region"
@@ -402,7 +430,7 @@ function PrayerTimesView() {
           <p className="countdown">
             {translations[language].timeUntilNextEvent.replace(
               "{countdown}",
-              nextEventCountdown || translations[language].prayers.calculating
+              nextEventCountdown || "Calculating..."
             )}
           </p>
           <p>

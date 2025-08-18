@@ -154,3 +154,103 @@ export const startRamadanCountdown = (nextEvent, setNextEventCountdown) => {
   const interval = setInterval(updateCountdown, 1000);
   return () => clearInterval(interval);
 };
+
+export const addNotification = (
+  setNotifications,
+  message,
+  isPermissionMessage = false
+) => {
+  setNotifications((prev) => [
+    ...prev,
+    { id: Date.now(), message, isPermissionMessage },
+  ]);
+};
+
+export const removeNotification = (setNotifications, id) => {
+  setNotifications((prev) => prev.filter((notif) => notif.id !== id));
+};
+
+export const dismissAllNotifications = (setNotifications) => {
+  setNotifications([]);
+};
+
+export const requestNotificationPermission = (
+  setNotificationPermission,
+  addNotification,
+  translations,
+  language
+) => {
+  if ("Notification" in window && Notification.permission !== "granted") {
+    Notification.requestPermission().then((permission) => {
+      setNotificationPermission(permission);
+      if (permission === "granted") {
+        addNotification(translations[language].enableNotifications + "!", true);
+      } else {
+        addNotification(
+          translations[language].enableNotifications +
+            " disabled. Using in-app notifications.",
+          true
+        );
+      }
+    });
+  }
+};
+
+export const togglePrayerReminder = (setPrayerReminders, prayer) => {
+  setPrayerReminders((prev) => ({
+    ...prev,
+    [prayer]: !prev[prayer],
+  }));
+};
+
+export const exportPrayerTimes = (
+  prayerTimes,
+  ramadanTimes,
+  calculationMethod,
+  timeZone,
+  language,
+  addNotification,
+  translations
+) => {
+  if (!prayerTimes) return;
+  const data = {
+    prayerTimes: {
+      fajr: prayerTimes.fajr,
+      sunrise: prayerTimes.sunrise,
+      dhuhr: prayerTimes.dhuhr,
+      asr: prayerTimes.asr,
+      maghrib: prayerTimes.maghrib,
+      isha: prayerTimes.isha,
+    },
+    ramadanTimes: ramadanTimes
+      ? {
+          ramadanDay: ramadanTimes.ramadanDay,
+          suhoor: ramadanTimes.suhoor.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+            timeZone,
+          }),
+          iftar: ramadanTimes.iftar.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+            timeZone,
+          }),
+          currentEvent: ramadanTimes.currentEvent,
+        }
+      : null,
+    calculationMethod,
+    timeZone,
+    language,
+    date: new Date().toISOString(),
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], {
+    type: "application/json",
+  });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `prayer-times-${new Date().toISOString().split("T")[0]}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  addNotification(translations[language].exportSuccess, false);
+};

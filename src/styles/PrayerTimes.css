@@ -148,7 +148,9 @@
 
 .calculation-method,
 .time-zone,
-.language {
+.language,
+.custom-time-input,
+.trigger-prayer {
   background: var(--background);
   color: var(--text);
   border: 1px solid var(--text);
@@ -156,6 +158,17 @@
   font-size: 16px;
   border-radius: 4px;
   margin-bottom: 15px;
+}
+
+.time-modification {
+  margin-top: 20px;
+  margin-bottom: 15px;
+}
+
+.time-modification-label {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--text-color);
 }
 
 .reminders {
@@ -236,6 +249,12 @@
   outline-offset: 2px;
 }
 
+.button:disabled {
+  background-color: var(--secondary-color);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
 @keyframes pulse {
   0% {
     transform: scale(1);
@@ -307,7 +326,9 @@
 
   .calculation-method,
   .time-zone,
-  .language {
+  .language,
+  .custom-time-input,
+  .trigger-prayer {
     font-size: 14px;
   }
 

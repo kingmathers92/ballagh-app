@@ -1,32 +1,54 @@
-import { CalculationMethod, PrayerTimes } from "adhan";
+import { CalculationMethod, PrayerTimes, Coordinates } from "adhan";
 
 /**
  * Calculates prayer times for a given location and returns raw Date objects.
  * @param {Coordinates} coords - The geographic coordinates (latitude, longitude).
+ * @param {string} calculationMethod - The calculation method (e.g., "UmmAlQura", "MuslimWorldLeague", "Egyptian").
+ * @param {string} timeZone - The time zone (e.g., "Asia/Riyadh").
+ * @param {Date} customTime - Optional custom time for testing.
  * @returns {Object} Raw Date objects for each prayer time.
  */
-export const calculatePrayerTimes = (coords) => {
-  const date = new Date();
-  const params = CalculationMethod.MuslimWorldLeague();
+export const calculatePrayerTimes = (
+  coords,
+  calculationMethod,
+  timeZone,
+  customTime = new Date()
+) => {
+  const date = new Date(customTime);
+  date.setTime(date.getTime() + date.getTimezoneOffset() * 60 * 1000); // Adjust to UTC
+  const params = (() => {
+    switch (calculationMethod) {
+      case "UmmAlQura":
+        return CalculationMethod.UmmAlQura();
+      case "Egyptian":
+        return CalculationMethod.Egyptian();
+      default:
+        return CalculationMethod.MuslimWorldLeague();
+    }
+  })();
   const times = new PrayerTimes(coords, date, params);
 
   return {
-    fajr: new Date(times.fajr),
-    sunrise: new Date(times.sunrise),
-    dhuhr: new Date(times.dhuhr),
-    asr: new Date(times.asr),
-    maghrib: new Date(times.maghrib),
-    isha: new Date(times.isha),
+    fajr: new Date(times.fajr.toLocaleString("en-US", { timeZone })),
+    sunrise: new Date(times.sunrise.toLocaleString("en-US", { timeZone })),
+    dhuhr: new Date(times.dhuhr.toLocaleString("en-US", { timeZone })),
+    asr: new Date(times.asr.toLocaleString("en-US", { timeZone })),
+    maghrib: new Date(times.maghrib.toLocaleString("en-US", { timeZone })),
+    isha: new Date(times.isha.toLocaleString("en-US", { timeZone })),
   };
 };
 
 /**
  * Determines the current and next prayer based on the current time and prayer times.
  * @param {Object} rawTimes - Raw Date objects for each prayer time, including a location property.
+ * @param {Date} currentTime - Current time or custom time for testing.
  * @returns {Object} Object containing currentPrayer and nextPrayer.
  */
-export const determineCurrentNextPrayer = (rawTimes) => {
-  const now = new Date();
+export const determineCurrentNextPrayer = (
+  rawTimes,
+  currentTime = new Date()
+) => {
+  const now = new Date(currentTime);
   let current = null;
   let nextPrayer = null;
   const prayerOrder = [
@@ -50,7 +72,7 @@ export const determineCurrentNextPrayer = (rawTimes) => {
 
   if (!nextPrayer) {
     current = "isha";
-    const tomorrow = new Date();
+    const tomorrow = new Date(currentTime);
     tomorrow.setDate(tomorrow.getDate() + 1);
     const params = CalculationMethod.MuslimWorldLeague();
     const tomorrowTimes = new PrayerTimes(rawTimes.location, tomorrow, params);
@@ -66,14 +88,19 @@ export const determineCurrentNextPrayer = (rawTimes) => {
  * Updates and returns the countdown to the next prayer.
  * @param {Object} nextPrayer - The next prayer object with name and time.
  * @param {Function} setNextPrayerCountdown - State setter for the countdown.
+ * @param {string} timeZone - The time zone.
  * @returns {Function} Cleanup function to clear the interval.
  */
-export const startCountdown = (nextPrayer, setNextPrayerCountdown) => {
+export const startCountdown = (
+  nextPrayer,
+  setNextPrayerCountdown,
+  timeZone
+) => {
   const updateCountdown = () => {
-    const now = new Date();
-    const diff = nextPrayer.time - now;
+    const now = new Date().toLocaleString("en-US", { timeZone });
+    const diff = nextPrayer.time - new Date(now);
     if (diff <= 0) {
-      setNextPrayerCountdown("0h 0m 0s"); // Reset countdown when time is up
+      setNextPrayerCountdown("0h 0m 0s");
       return;
     }
     const hours = Math.floor(diff / (1000 * 60 * 60));
@@ -91,40 +118,51 @@ export const startCountdown = (nextPrayer, setNextPrayerCountdown) => {
  * Determines Ramadan-specific times (Suhoor and Iftar) and current/next event.
  * @param {Object} rawTimes - Raw Date objects for each prayer time.
  * @param {Date} ramadanStart - Start date of Ramadan.
+ * @param {Date} currentTime - Current time or custom time for testing.
  * @returns {Object} Object containing current event, next event, and Ramadan day.
  */
-export const determineRamadanTimes = (rawTimes, ramadanStart) => {
-  const now = new Date();
+export const determineRamadanTimes = (
+  rawTimes,
+  ramadanStart,
+  currentTime = new Date()
+) => {
+  const now = new Date(currentTime);
   const suhoor = new Date(rawTimes.fajr); // Suhoor ends at Fajr
   const iftar = new Date(rawTimes.maghrib);
+
+  const oneDay = 24 * 60 * 60 * 1000;
+  const ramadanEnd = new Date(ramadanStart);
+  ramadanEnd.setDate(ramadanStart.getDate() + 29);
+  let ramadanDay = null;
+  if (now >= ramadanStart && now <= ramadanEnd) {
+    ramadanDay = Math.floor((now - ramadanStart) / oneDay) + 1;
+  } else {
+    return {
+      ramadanDay: null,
+      suhoor: null,
+      iftar: null,
+      currentEvent: "Not Ramadan",
+      nextEvent: null,
+    };
+  }
 
   let currentEvent = null;
   let nextEvent = null;
   const diffToSuhoor = suhoor - now;
   const diffToIftar = iftar - now;
 
-  if (diffToSuhoor > 0 && diffToSuhoor < 24 * 60 * 60 * 1000) {
+  if (diffToSuhoor > 0 && diffToSuhoor < oneDay) {
     currentEvent = "Fasting";
     nextEvent = { name: "Suhoor", time: suhoor };
-  } else if (diffToIftar > 0 && diffToIftar < 24 * 60 * 60 * 1000) {
+  } else if (diffToIftar > 0 && diffToIftar < oneDay) {
     currentEvent = "Fasting";
     nextEvent = { name: "Iftar", time: iftar };
-  } else if (now > iftar && now < suhoor) {
+  } else if (now >= iftar && now < suhoor) {
     currentEvent = "Post-Iftar";
     nextEvent = { name: "Suhoor", time: suhoor };
   } else {
     currentEvent = "Pre-Suhoor";
     nextEvent = { name: "Suhoor", time: suhoor };
-  }
-
-  // Calculate Ramadan day (simplified, assumes 30 days)
-  const oneDay = 24 * 60 * 60 * 1000;
-  const ramadanEnd = new Date(ramadanStart);
-  ramadanEnd.setDate(ramadanStart.getDate() + 29); // 30 days total
-  let ramadanDay = null;
-  if (now >= ramadanStart && now <= ramadanEnd) {
-    const daysSinceStart = Math.floor((now - ramadanStart) / oneDay) + 1;
-    ramadanDay = daysSinceStart;
   }
 
   return { currentEvent, nextEvent, ramadanDay, suhoor, iftar };
@@ -134,14 +172,23 @@ export const determineRamadanTimes = (rawTimes, ramadanStart) => {
  * Updates and returns the countdown to the next Ramadan event.
  * @param {Object} nextEvent - The next event object with name and time.
  * @param {Function} setNextEventCountdown - State setter for the countdown.
+ * @param {string} timeZone - The time zone.
  * @returns {Function} Cleanup function to clear the interval.
  */
-export const startRamadanCountdown = (nextEvent, setNextEventCountdown) => {
+export const startRamadanCountdown = (
+  nextEvent,
+  setNextEventCountdown,
+  timeZone
+) => {
+  if (!nextEvent) {
+    setNextEventCountdown("0h 0m 0s");
+    return null;
+  }
   const updateCountdown = () => {
-    const now = new Date();
-    const diff = nextEvent.time - now;
+    const now = new Date().toLocaleString("en-US", { timeZone });
+    const diff = nextEvent.time - new Date(now);
     if (diff <= 0) {
-      setNextEventCountdown("0h 0m 0s"); // Reset countdown when time is up
+      setNextEventCountdown("0h 0m 0s");
       return;
     }
     const hours = Math.floor(diff / (1000 * 60 * 60));
@@ -155,6 +202,7 @@ export const startRamadanCountdown = (nextEvent, setNextEventCountdown) => {
   return () => clearInterval(interval);
 };
 
+// Existing utility functions (unchanged)
 export const addNotification = (
   setNotifications,
   message,

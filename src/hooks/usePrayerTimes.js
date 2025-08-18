@@ -44,6 +44,7 @@ export const usePrayerTimes = (
   useEffect(() => {
     if (!coords || !addNotification) {
       setLoading(false);
+      setPrayerError("Location or notification function missing");
       return;
     }
 
@@ -142,10 +143,11 @@ export const usePrayerTimes = (
           );
         } else if (notificationPermission !== "denied" && !triggerPrayer) {
           scheduleReminders(
+            rawTimes,
             ramadanData.nextEvent,
             addNotification,
             prayerReminders,
-            rawTimes,
+            notificationPermission,
             currentTime,
             language,
             translations
@@ -160,13 +162,13 @@ export const usePrayerTimes = (
           eventCleanup && eventCleanup();
         };
       } catch (error) {
-        setPrayerError("Failed to calculate prayer times");
+        setPrayerError("Failed to calculate prayer times: " + error.message);
         setLoading(false);
       }
     };
 
-    const cleanup = updateTimes();
-    return () => cleanup && cleanup();
+    updateTimes();
+    return () => {};
   }, [
     coords,
     ramadanStart,

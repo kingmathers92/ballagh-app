@@ -1,4 +1,15 @@
-export const scheduleReminders = (nextEvent, addNotification) => {
+import translations from "./translations";
+
+export const scheduleReminders = (
+  prayerTimes,
+  nextEvent,
+  addNotification,
+  prayerReminders,
+  notificationPermission,
+  currentTime = new Date(),
+  language,
+  translations
+) => {
   const playSound = () => {
     const audio = new Audio("/sounds/notification.mp3");
     audio.play().catch((err) => console.warn("Audio playback failed:", err));
@@ -10,11 +21,11 @@ export const scheduleReminders = (nextEvent, addNotification) => {
     }
   };
 
-  const showBrowserNotification = (message) => {
+  const showBrowserNotification = (message, eventName, eventTime, timeZone) => {
     if (!("Notification" in window)) {
       console.warn("Browser does not support notifications");
       addNotification(
-        "Your browser does not support system notifications",
+        translations[language].enableNotifications + " not supported",
         true
       );
       playSound();
@@ -23,33 +34,30 @@ export const scheduleReminders = (nextEvent, addNotification) => {
     }
 
     if (
-      Notification.permission === "granted" &&
+      notificationPermission === "granted" &&
       document.visibilityState !== "visible"
     ) {
       new Notification(message, {
-        body: `Event: ${nextEvent.name} at ${nextEvent.time.toLocaleTimeString(
-          [],
-          {
-            hour: "2-digit",
-            minute: "2-digit",
-          }
-        )}`,
+        body: `Event: ${eventName} at ${eventTime.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+          timeZone,
+        })}`,
         icon: "/images/notification-icon.png",
       });
       playSound();
       vibrate();
-    } else if (Notification.permission !== "denied") {
+    } else if (notificationPermission !== "denied") {
       Notification.requestPermission().then((permission) => {
         if (
           permission === "granted" &&
           document.visibilityState !== "visible"
         ) {
           new Notification(message, {
-            body: `Event: ${
-              nextEvent.name
-            } at ${nextEvent.time.toLocaleTimeString([], {
+            body: `Event: ${eventName} at ${eventTime.toLocaleTimeString([], {
               hour: "2-digit",
               minute: "2-digit",
+              timeZone,
             })}`,
             icon: "/images/notification-icon.png",
           });
@@ -57,7 +65,8 @@ export const scheduleReminders = (nextEvent, addNotification) => {
           vibrate();
         } else {
           addNotification(
-            "System notifications are disabled. Using in-app notifications.",
+            translations[language].enableNotifications +
+              " disabled. Using in-app notifications.",
             true
           );
           playSound();
@@ -66,7 +75,8 @@ export const scheduleReminders = (nextEvent, addNotification) => {
       });
     } else {
       addNotification(
-        "System notifications are disabled. Using in-app notifications.",
+        translations[language].enableNotifications +
+          " disabled. Using in-app notifications.",
         true
       );
       playSound();
@@ -74,22 +84,55 @@ export const scheduleReminders = (nextEvent, addNotification) => {
     }
   };
 
-  if (nextEvent.name === "Suhoor" && nextEvent.time > new Date()) {
-    const timeUntilSuhoor = nextEvent.time - new Date();
-    if (timeUntilSuhoor > 15 * 60 * 1000) {
-      setTimeout(() => {
-        addNotification("Suhoor ends at Fajr in 15 minutes!");
-        showBrowserNotification("Suhoor ends at Fajr in 15 minutes!");
-        playSound();
-        vibrate();
-      }, timeUntilSuhoor - 15 * 60 * 1000);
+  const now = new Date(currentTime);
+  const notificationWindow = 15 * 60 * 1000; // 15 minutes
+
+  // prayer notifications
+  Object.keys(prayerReminders).forEach((prayer) => {
+    if (prayerReminders[prayer]) {
+      const prayerTime = prayerTimes[prayer];
+      const timeDiff = prayerTime - now;
+      if (timeDiff > 0 && timeDiff <= notificationWindow) {
+        const message = translations[language].testNotification.replace(
+          "{prayer}",
+          translations[language].prayers[prayer]
+        );
+        addNotification(message, false);
+        showBrowserNotification(
+          message,
+          translations[language].prayers[prayer],
+          prayerTime
+        );
+      }
     }
-  } else if (nextEvent.name === "Iftar" && nextEvent.time > new Date()) {
-    setTimeout(() => {
-      addNotification("Time for Iftar is approaching!");
-      showBrowserNotification("Time for Iftar is approaching!");
-      playSound();
-      vibrate();
-    }, nextEvent.time - new Date() - 5 * 60 * 1000);
+  });
+
+  // Ramadan notifications
+  if (nextEvent && nextEvent.time > now) {
+    const timeDiff = nextEvent.time - now;
+    const message =
+      nextEvent.name === "Suhoor"
+        ? translations[language].suhoor.replace(
+            "{time}",
+            nextEvent.time.toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            })
+          ) + " in 15 minutes!"
+        : translations[language].iftar.replace(
+            "{time}",
+            nextEvent.time.toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            })
+          ) + " in 5 minutes!";
+
+    if (
+      (nextEvent.name === "Suhoor" && timeDiff <= notificationWindow) ||
+      (nextEvent.name === "Iftar" && timeDiff <= 5 * 60 * 1000)
+    ) {
+      addNotification(message, false);
+      showBrowserNotification(message, nextEvent.name, nextEvent.time);
+    }
   }
 };

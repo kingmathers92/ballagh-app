@@ -101,9 +101,15 @@ function PrayerTimesView() {
         })
         .catch((err) => {
           console.error("Service Worker registration failed:", err);
+          // Optionally notify user of failure
+          addNotification(
+            translations[language].serviceWorkerError ||
+              "Failed to register service worker",
+            true
+          );
         });
     }
-  }, []);
+  }, [language]);
 
   const {
     prayerTimes,

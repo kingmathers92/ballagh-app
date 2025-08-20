@@ -18,26 +18,30 @@ const RamadanTimes = ({ ramadanTimes, timeZone, language, translations }) => {
       ) : (
         <p>{translations[language].ramadanNotActive}</p>
       )}
-      <p>
-        {translations[language].suhoor.replace(
-          "{time}",
-          ramadanTimes.suhoor.toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-            timeZone,
-          })
-        )}
-      </p>
-      <p>
-        {translations[language].iftar.replace(
-          "{time}",
-          ramadanTimes.iftar.toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-            timeZone,
-          })
-        )}
-      </p>
+      {ramadanTimes.suhoor && (
+        <p>
+          {translations[language].suhoor.replace(
+            "{time}",
+            ramadanTimes.suhoor.toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+              timeZone,
+            })
+          )}
+        </p>
+      )}
+      {ramadanTimes.iftar && (
+        <p>
+          {translations[language].iftar.replace(
+            "{time}",
+            ramadanTimes.iftar.toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+              timeZone,
+            })
+          )}
+        </p>
+      )}
       <p>
         {translations[language].currentState.replace(
           "{state}",

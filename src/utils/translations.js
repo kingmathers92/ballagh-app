@@ -13,6 +13,7 @@ const translations = {
     dismissAllNotifications: "Dismiss All Notifications",
     noLocation: "Unable to retrieve location",
     errorCalculatingPrayerTimes: "Failed to calculate prayer times",
+    serviceWorkerError: "Failed to register service worker", // Added
     prayerReminders: "Prayer Reminders",
     ramadanCompanion: "Ramadan Companion",
     dayOfRamadan: "Day {day} of Ramadan",
@@ -59,6 +60,7 @@ const translations = {
     dismissAllNotifications: "إزالة جميع الإشعارات",
     noLocation: "غير قادر على استرجاع الموقع",
     errorCalculatingPrayerTimes: "فشل في حساب أوقات الصلاة",
+    serviceWorkerError: "فشل في تسجيل عامل الخدمة", // Added
     prayerReminders: "تذكيرات الصلاة",
     ramadanCompanion: "رفيق رمضان",
     dayOfRamadan: "اليوم {day} من رمضان",

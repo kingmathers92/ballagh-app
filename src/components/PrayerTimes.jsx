@@ -1,12 +1,12 @@
 import { useState, useEffect, memo } from "react";
 import { useGeolocation } from "../hooks/useGeolocation";
 import { usePrayerTimes } from "../hooks/usePrayerTimes";
-import Notification from "../components/Notification";
-import Settings from "../components/Settings";
-import PrayerReminders from "../components/PrayerReminders";
-import PrayerTimesDisplay from "../components/PrayerTimesDisplay";
-import RamadanTimes from "../components/RamadanTimes";
-import TimeModification from "../components/TimeModification";
+import Notification from "../components/Notification.jsx";
+import Settings from "../components/Settings.jsx";
+import PrayerReminders from "../components/PrayerReminders.jsx";
+import PrayerTimesDisplay from "../components/PrayerTimesDisplay.jsx";
+import RamadanTimes from "../components/RamadanTimes.jsx";
+import TimeModification from "../components/TimeModification.jsx";
 import translations from "../utils/translations";
 import {
   addNotification,
@@ -30,12 +30,15 @@ function PrayerTimesView() {
           Notification.permission
       : "denied";
   });
-  const [calculationMethod, setCalculationMethod] = useState("UmmAlQura");
-  const [timeZone, setTimeZone] = useState(
-    () =>
+  const [calculationMethod, setCalculationMethod] = useState(() => {
+    return localStorage.getItem("calculationMethod") || "UmmAlQura";
+  });
+  const [timeZone, setTimeZone] = useState(() => {
+    return (
       localStorage.getItem("timeZone") ||
       Intl.DateTimeFormat().resolvedOptions().timeZone
-  );
+    );
+  });
   const [prayerReminders, setPrayerReminders] = useState(() => {
     const saved = localStorage.getItem("prayerReminders");
     return saved
@@ -49,12 +52,12 @@ function PrayerTimesView() {
           isha: true,
         };
   });
-  const [language, setLanguage] = useState(
-    () => localStorage.getItem("language") || "en"
-  );
-  const [useCustomTime, setUseCustomTime] = useState(
-    () => localStorage.getItem("useCustomTime") === "true"
-  );
+  const [language, setLanguage] = useState(() => {
+    return localStorage.getItem("language") || "en";
+  });
+  const [useCustomTime, setUseCustomTime] = useState(() => {
+    return localStorage.getItem("useCustomTime") === "true";
+  });
   const [customTime, setCustomTime] = useState(() => {
     const saved = localStorage.getItem("customTime");
     return saved ? new Date(saved) : new Date();
@@ -64,6 +67,10 @@ function PrayerTimesView() {
   useEffect(() => {
     localStorage.setItem("notificationPermission", notificationPermission);
   }, [notificationPermission]);
+
+  useEffect(() => {
+    localStorage.setItem("calculationMethod", calculationMethod);
+  }, [calculationMethod]);
 
   useEffect(() => {
     localStorage.setItem("timeZone", timeZone);
@@ -84,17 +91,17 @@ function PrayerTimesView() {
 
   useEffect(() => {
     if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("/serviceWorker.js").then(
-        (registration) => {
+      navigator.serviceWorker
+        .register("/serviceWorker.js")
+        .then((registration) => {
           console.log(
             "Service Worker registered with scope:",
             registration.scope
           );
-        },
-        (err) => {
-          console.log("Service Worker registration failed:", err);
-        }
-      );
+        })
+        .catch((err) => {
+          console.error("Service Worker registration failed:", err);
+        });
     }
   }, []);
 
@@ -219,6 +226,16 @@ function PrayerTimesView() {
             "{countdown}",
             nextPrayerCountdown
           )}
+        </p>
+      )}
+      {nextEventCountdown && ramadanTimes && ramadanTimes.nextEvent && (
+        <p className="countdown">
+          {translations[language].timeUntilNextEvent
+            .replace(
+              "{event}",
+              translations[language][ramadanTimes.nextEvent.name.toLowerCase()]
+            )
+            .replace("{countdown}", nextEventCountdown)}
         </p>
       )}
       <PrayerTimesDisplay

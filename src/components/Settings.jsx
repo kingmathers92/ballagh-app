@@ -1,4 +1,4 @@
-import React from "react";
+import PropTypes from "prop-types";
 
 const Settings = ({
   calculationMethod,
@@ -10,7 +10,11 @@ const Settings = ({
   translations,
 }) => {
   return (
-    <>
+    <div
+      className="settings"
+      role="region"
+      aria-label={translations[language].settingsLabel}
+    >
       <select
         value={calculationMethod}
         onChange={(e) => setCalculationMethod(e.target.value)}
@@ -45,8 +49,35 @@ const Settings = ({
         <option value="en">English</option>
         <option value="ar">العربية</option>
       </select>
-    </>
+    </div>
   );
+};
+
+Settings.propTypes = {
+  calculationMethod: PropTypes.oneOf([
+    "UmmAlQura",
+    "MuslimWorldLeague",
+    "Egyptian",
+  ]).isRequired,
+  setCalculationMethod: PropTypes.func.isRequired,
+  timeZone: PropTypes.string.isRequired,
+  setTimeZone: PropTypes.func.isRequired,
+  language: PropTypes.oneOf(["en", "ar"]).isRequired,
+  setLanguage: PropTypes.func.isRequired,
+  translations: PropTypes.shape({
+    en: PropTypes.shape({
+      settingsLabel: PropTypes.string.isRequired,
+      calculationMethodLabel: PropTypes.string.isRequired,
+      timeZoneLabel: PropTypes.string.isRequired,
+      languageLabel: PropTypes.string.isRequired,
+    }).isRequired,
+    ar: PropTypes.shape({
+      settingsLabel: PropTypes.string.isRequired,
+      calculationMethodLabel: PropTypes.string.isRequired,
+      timeZoneLabel: PropTypes.string.isRequired,
+      languageLabel: PropTypes.string.isRequired,
+    }).isRequired,
+  }).isRequired,
 };
 
 export default Settings;

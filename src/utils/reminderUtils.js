@@ -137,7 +137,7 @@ export const scheduleReminders = (
       addNotification(message, false);
       showBrowserNotification(
         message,
-        nextEvent.name,
+        translations[language][nextEvent.name.toLowerCase()],
         nextEvent.time,
         timeZone
       );

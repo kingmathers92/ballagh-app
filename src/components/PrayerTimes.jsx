@@ -244,6 +244,7 @@ function PrayerTimesView() {
         prayerReminders={prayerReminders}
         language={language}
         translations={translations}
+        timeZone={timeZone}
       />
       <RamadanTimes
         ramadanTimes={ramadanTimes}

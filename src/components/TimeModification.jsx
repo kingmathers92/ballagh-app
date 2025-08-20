@@ -1,4 +1,4 @@
-import React from "react";
+import PropTypes from "prop-types";
 import { addNotification } from "../utils/prayerUtils";
 
 const TimeModification = ({
@@ -66,7 +66,7 @@ const TimeModification = ({
             aria-label={translations[language].triggerPrayerLabel}
             style={{ marginBottom: "15px" }}
           >
-            <option value="">Select Prayer</option>
+            <option value="">{translations[language].prayers.select}</option>
             {["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"].map(
               (prayer) => (
                 <option key={prayer} value={prayer}>
@@ -88,6 +88,61 @@ const TimeModification = ({
       )}
     </div>
   );
+};
+
+// PropTypes validations
+TimeModification.propTypes = {
+  useCustomTime: PropTypes.bool.isRequired,
+  setUseCustomTime: PropTypes.func.isRequired,
+  customTime: PropTypes.instanceOf(Date).isRequired,
+  setCustomTime: PropTypes.func.isRequired,
+  triggerPrayer: PropTypes.string.isRequired,
+  setTriggerPrayer: PropTypes.func.isRequired,
+  prayerReminders: PropTypes.shape({
+    fajr: PropTypes.bool.isRequired,
+    sunrise: PropTypes.bool.isRequired,
+    dhuhr: PropTypes.bool.isRequired,
+    asr: PropTypes.bool.isRequired,
+    maghrib: PropTypes.bool.isRequired,
+    isha: PropTypes.bool.isRequired,
+  }).isRequired,
+  language: PropTypes.oneOf(["en", "ar"]).isRequired,
+  translations: PropTypes.shape({
+    en: PropTypes.shape({
+      timeModificationLabel: PropTypes.string.isRequired,
+      enableTimeModification: PropTypes.string.isRequired,
+      customTimeLabel: PropTypes.string.isRequired,
+      triggerPrayerLabel: PropTypes.string.isRequired,
+      triggerPrayerButton: PropTypes.string.isRequired,
+      testNotification: PropTypes.string.isRequired,
+      prayers: PropTypes.shape({
+        select: PropTypes.string.isRequired,
+        fajr: PropTypes.string.isRequired,
+        sunrise: PropTypes.string.isRequired,
+        dhuhr: PropTypes.string.isRequired,
+        asr: PropTypes.string.isRequired,
+        maghrib: PropTypes.string.isRequired,
+        isha: PropTypes.string.isRequired,
+      }).isRequired,
+    }).isRequired,
+    ar: PropTypes.shape({
+      timeModificationLabel: PropTypes.string.isRequired,
+      enableTimeModification: PropTypes.string.isRequired,
+      customTimeLabel: PropTypes.string.isRequired,
+      triggerPrayerLabel: PropTypes.string.isRequired,
+      triggerPrayerButton: PropTypes.string.isRequired,
+      testNotification: PropTypes.string.isRequired,
+      prayers: PropTypes.shape({
+        select: PropTypes.string.isRequired,
+        fajr: PropTypes.string.isRequired,
+        sunrise: PropTypes.string.isRequired,
+        dhuhr: PropTypes.string.isRequired,
+        asr: PropTypes.string.isRequired,
+        maghrib: PropTypes.string.isRequired,
+        isha: PropTypes.string.isRequired,
+      }).isRequired,
+    }).isRequired,
+  }).isRequired,
 };
 
 export default TimeModification;

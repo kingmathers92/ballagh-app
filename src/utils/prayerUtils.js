@@ -1,41 +1,53 @@
-import { CalculationMethod, PrayerTimes, Coordinates } from "adhan";
+import { CalculationMethod, PrayerTimes } from "adhan";
 
 /**
  * Calculates prayer times for a given location and returns raw Date objects.
  * @param {Coordinates} coords - The geographic coordinates (latitude, longitude).
  * @param {string} calculationMethod - The calculation method (e.g., "UmmAlQura", "MuslimWorldLeague", "Egyptian").
- * @param {string} timeZone - The time zone (e.g., "Asia/Riyadh").
  * @param {Date} customTime - Optional custom time for testing.
  * @returns {Object} Raw Date objects for each prayer time.
  */
 export const calculatePrayerTimes = (
   coords,
   calculationMethod,
-  timeZone,
   customTime = new Date()
 ) => {
-  const date = new Date(customTime);
-  date.setTime(date.getTime() + date.getTimezoneOffset() * 60 * 1000); // Adjust to UTC
-  const params = (() => {
-    switch (calculationMethod) {
-      case "UmmAlQura":
-        return CalculationMethod.UmmAlQura();
-      case "Egyptian":
-        return CalculationMethod.Egyptian();
-      default:
-        return CalculationMethod.MuslimWorldLeague();
+  try {
+    if (
+      !coords ||
+      typeof coords.latitude !== "number" ||
+      typeof coords.longitude !== "number"
+    ) {
+      throw new Error(
+        "Invalid coordinates: must be an adhan Coordinates object"
+      );
     }
-  })();
-  const times = new PrayerTimes(coords, date, params);
+    const date = new Date(customTime);
+    const params = (() => {
+      switch (calculationMethod) {
+        case "UmmAlQura":
+          return CalculationMethod.UmmAlQura();
+        case "Egyptian":
+          return CalculationMethod.Egyptian();
+        default:
+          return CalculationMethod.MuslimWorldLeague();
+      }
+    })();
+    const times = new PrayerTimes(coords, date, params);
 
-  return {
-    fajr: new Date(times.fajr.toLocaleString("en-US", { timeZone })),
-    sunrise: new Date(times.sunrise.toLocaleString("en-US", { timeZone })),
-    dhuhr: new Date(times.dhuhr.toLocaleString("en-US", { timeZone })),
-    asr: new Date(times.asr.toLocaleString("en-US", { timeZone })),
-    maghrib: new Date(times.maghrib.toLocaleString("en-US", { timeZone })),
-    isha: new Date(times.isha.toLocaleString("en-US", { timeZone })),
-  };
+    return {
+      fajr: new Date(times.fajr),
+      sunrise: new Date(times.sunrise),
+      dhuhr: new Date(times.dhuhr),
+      asr: new Date(times.asr),
+      maghrib: new Date(times.maghrib),
+      isha: new Date(times.isha),
+      location: coords, // Include location for tomorrow's calculations
+    };
+  } catch (error) {
+    console.error("Error calculating prayer times:", error);
+    throw error;
+  }
 };
 
 /**
@@ -48,40 +60,49 @@ export const determineCurrentNextPrayer = (
   rawTimes,
   currentTime = new Date()
 ) => {
-  const now = new Date(currentTime);
-  let current = null;
-  let nextPrayer = null;
-  const prayerOrder = [
-    { name: "fajr", time: rawTimes.fajr },
-    { name: "sunrise", time: rawTimes.sunrise },
-    { name: "dhuhr", time: rawTimes.dhuhr },
-    { name: "asr", time: rawTimes.asr },
-    { name: "maghrib", time: rawTimes.maghrib },
-    { name: "isha", time: rawTimes.isha },
-  ];
+  try {
+    const now = new Date(currentTime);
+    let current = null;
+    let nextPrayer = null;
+    const prayerOrder = [
+      { name: "fajr", time: rawTimes.fajr },
+      { name: "sunrise", time: rawTimes.sunrise },
+      { name: "dhuhr", time: rawTimes.dhuhr },
+      { name: "asr", time: rawTimes.asr },
+      { name: "maghrib", time: rawTimes.maghrib },
+      { name: "isha", time: rawTimes.isha },
+    ];
 
-  for (let i = 0; i < prayerOrder.length; i++) {
-    if (now < prayerOrder[i].time) {
-      nextPrayer = prayerOrder[i];
-      if (i > 0) {
-        current = prayerOrder[i - 1].name;
+    for (let i = 0; i < prayerOrder.length; i++) {
+      if (now < prayerOrder[i].time) {
+        nextPrayer = prayerOrder[i];
+        if (i > 0) {
+          current = prayerOrder[i - 1].name;
+        }
+        break;
       }
-      break;
     }
-  }
 
-  if (!nextPrayer) {
-    current = "isha";
-    const tomorrow = new Date(currentTime);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    const params = CalculationMethod.MuslimWorldLeague();
-    const tomorrowTimes = new PrayerTimes(rawTimes.location, tomorrow, params);
-    nextPrayer = { name: "fajr", time: new Date(tomorrowTimes.fajr) };
-  } else if (!current) {
-    current = "isha"; // Before Fajr, consider Isha as current
-  }
+    if (!nextPrayer) {
+      current = "isha";
+      const tomorrow = new Date(currentTime);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      const params = CalculationMethod.MuslimWorldLeague();
+      const tomorrowTimes = new PrayerTimes(
+        rawTimes.location,
+        tomorrow,
+        params
+      );
+      nextPrayer = { name: "fajr", time: new Date(tomorrowTimes.fajr) };
+    } else if (!current) {
+      current = "isha";
+    }
 
-  return { currentPrayer: current, nextPrayer };
+    return { currentPrayer: current, nextPrayer };
+  } catch (error) {
+    console.error("Error determining current/next prayer:", error);
+    throw error;
+  }
 };
 
 /**
@@ -96,9 +117,14 @@ export const startCountdown = (
   setNextPrayerCountdown,
   timeZone
 ) => {
+  if (!nextPrayer || !nextPrayer.time) {
+    setNextPrayerCountdown("0h 0m 0s");
+    return () => {};
+  }
+
   const updateCountdown = () => {
-    const now = new Date().toLocaleString("en-US", { timeZone });
-    const diff = nextPrayer.time - new Date(now);
+    const now = new Date();
+    const diff = nextPrayer.time - now;
     if (diff <= 0) {
       setNextPrayerCountdown("0h 0m 0s");
       return;
@@ -126,46 +152,51 @@ export const determineRamadanTimes = (
   ramadanStart,
   currentTime = new Date()
 ) => {
-  const now = new Date(currentTime);
-  const suhoor = new Date(rawTimes.fajr); // Suhoor ends at Fajr
-  const iftar = new Date(rawTimes.maghrib);
+  try {
+    const now = new Date(currentTime);
+    const suhoor = new Date(rawTimes.fajr);
+    const iftar = new Date(rawTimes.maghrib);
 
-  const oneDay = 24 * 60 * 60 * 1000;
-  const ramadanEnd = new Date(ramadanStart);
-  ramadanEnd.setDate(ramadanStart.getDate() + 29);
-  let ramadanDay = null;
-  if (now >= ramadanStart && now <= ramadanEnd) {
-    ramadanDay = Math.floor((now - ramadanStart) / oneDay) + 1;
-  } else {
-    return {
-      ramadanDay: null,
-      suhoor: null,
-      iftar: null,
-      currentEvent: "Not Ramadan",
-      nextEvent: null,
-    };
+    const oneDay = 24 * 60 * 60 * 1000;
+    const ramadanEnd = new Date(ramadanStart);
+    ramadanEnd.setDate(ramadanStart.getDate() + 29);
+    let ramadanDay = null;
+    if (now >= ramadanStart && now <= ramadanEnd) {
+      ramadanDay = Math.floor((now - ramadanStart) / oneDay) + 1;
+    } else {
+      return {
+        ramadanDay: null,
+        suhoor: null,
+        iftar: null,
+        currentEvent: "Not Ramadan",
+        nextEvent: null,
+      };
+    }
+
+    let currentEvent = null;
+    let nextEvent = null;
+    const diffToSuhoor = suhoor - now;
+    const diffToIftar = iftar - now;
+
+    if (diffToSuhoor > 0 && diffToSuhoor < oneDay) {
+      currentEvent = "Fasting";
+      nextEvent = { name: "Suhoor", time: suhoor };
+    } else if (diffToIftar > 0 && diffToIftar < oneDay) {
+      currentEvent = "Fasting";
+      nextEvent = { name: "Iftar", time: iftar };
+    } else if (now >= iftar && now < suhoor) {
+      currentEvent = "Post-Iftar";
+      nextEvent = { name: "Suhoor", time: suhoor };
+    } else {
+      currentEvent = "Pre-Suhoor";
+      nextEvent = { name: "Suhoor", time: suhoor };
+    }
+
+    return { currentEvent, nextEvent, ramadanDay, suhoor, iftar };
+  } catch (error) {
+    console.error("Error determining Ramadan times:", error);
+    throw error;
   }
-
-  let currentEvent = null;
-  let nextEvent = null;
-  const diffToSuhoor = suhoor - now;
-  const diffToIftar = iftar - now;
-
-  if (diffToSuhoor > 0 && diffToSuhoor < oneDay) {
-    currentEvent = "Fasting";
-    nextEvent = { name: "Suhoor", time: suhoor };
-  } else if (diffToIftar > 0 && diffToIftar < oneDay) {
-    currentEvent = "Fasting";
-    nextEvent = { name: "Iftar", time: iftar };
-  } else if (now >= iftar && now < suhoor) {
-    currentEvent = "Post-Iftar";
-    nextEvent = { name: "Suhoor", time: suhoor };
-  } else {
-    currentEvent = "Pre-Suhoor";
-    nextEvent = { name: "Suhoor", time: suhoor };
-  }
-
-  return { currentEvent, nextEvent, ramadanDay, suhoor, iftar };
 };
 
 /**
@@ -180,13 +211,14 @@ export const startRamadanCountdown = (
   setNextEventCountdown,
   timeZone
 ) => {
-  if (!nextEvent) {
+  if (!nextEvent || !nextEvent.time) {
     setNextEventCountdown("0h 0m 0s");
-    return null;
+    return () => {};
   }
+
   const updateCountdown = () => {
-    const now = new Date().toLocaleString("en-US", { timeZone });
-    const diff = nextEvent.time - new Date(now);
+    const now = new Date();
+    const diff = nextEvent.time - now;
     if (diff <= 0) {
       setNextEventCountdown("0h 0m 0s");
       return;
@@ -202,7 +234,12 @@ export const startRamadanCountdown = (
   return () => clearInterval(interval);
 };
 
-// Existing utility functions (unchanged)
+/**
+ * Adds a notification to the state.
+ * @param {Function} setNotifications - State setter for notifications.
+ * @param {string} message - Notification message.
+ * @param {boolean} isPermissionMessage - Whether it's a permission-related notification.
+ */
 export const addNotification = (
   setNotifications,
   message,
@@ -214,14 +251,30 @@ export const addNotification = (
   ]);
 };
 
+/**
+ * Removes a notification by ID.
+ * @param {Function} setNotifications - State setter for notifications.
+ * @param {number} id - Notification ID.
+ */
 export const removeNotification = (setNotifications, id) => {
   setNotifications((prev) => prev.filter((notif) => notif.id !== id));
 };
 
+/**
+ * Dismisses all notifications.
+ * @param {Function} setNotifications - State setter for notifications.
+ */
 export const dismissAllNotifications = (setNotifications) => {
   setNotifications([]);
 };
 
+/**
+ * Requests notification permission.
+ * @param {Function} setNotificationPermission - State setter for permission.
+ * @param {Function} addNotification - Function to add notifications.
+ * @param {Object} translations - Translation object.
+ * @param {string} language - Current language.
+ */
 export const requestNotificationPermission = (
   setNotificationPermission,
   addNotification,
@@ -244,6 +297,11 @@ export const requestNotificationPermission = (
   }
 };
 
+/**
+ * Toggles a prayer reminder.
+ * @param {Function} setPrayerReminders - State setter for prayer reminders.
+ * @param {string} prayer - Prayer name (e.g., "fajr").
+ */
 export const togglePrayerReminder = (setPrayerReminders, prayer) => {
   setPrayerReminders((prev) => ({
     ...prev,
@@ -251,6 +309,16 @@ export const togglePrayerReminder = (setPrayerReminders, prayer) => {
   }));
 };
 
+/**
+ * Exports prayer times to a JSON file.
+ * @param {Object} prayerTimes - Formatted prayer times.
+ * @param {Object} ramadanTimes - Ramadan times data.
+ * @param {string} calculationMethod - Calculation method.
+ * @param {string} timeZone - Time zone.
+ * @param {string} language - Language.
+ * @param {Function} addNotification - Function to add notifications.
+ * @param {Object} translations - Translation object.
+ */
 export const exportPrayerTimes = (
   prayerTimes,
   ramadanTimes,
@@ -260,15 +328,42 @@ export const exportPrayerTimes = (
   addNotification,
   translations
 ) => {
-  if (!prayerTimes) return;
+  if (!prayerTimes) {
+    addNotification(translations[language].noPrayerTimes, true);
+    return;
+  }
   const data = {
     prayerTimes: {
-      fajr: prayerTimes.fajr,
-      sunrise: prayerTimes.sunrise,
-      dhuhr: prayerTimes.dhuhr,
-      asr: prayerTimes.asr,
-      maghrib: prayerTimes.maghrib,
-      isha: prayerTimes.isha,
+      fajr: prayerTimes.fajr.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZone,
+      }),
+      sunrise: prayerTimes.sunrise.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZone,
+      }),
+      dhuhr: prayerTimes.dhuhr.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZone,
+      }),
+      asr: prayerTimes.asr.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZone,
+      }),
+      maghrib: prayerTimes.maghrib.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZone,
+      }),
+      isha: prayerTimes.isha.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZone,
+      }),
     },
     ramadanTimes: ramadanTimes
       ? {

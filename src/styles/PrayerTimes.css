@@ -1,9 +1,33 @@
+:root {
+  --background: #ffffff;
+  --text: #333333;
+  --primary-color: #f0f4f8;
+  --secondary-color: #e0e0e0;
+  --accent-color: #28a745;
+  --button-bg: #007bff;
+  --button-text: #ffffff;
+  --error: #dc3545;
+  --warning: #ffc107;
+  --loading: #17a2b8;
+  --background-overlay-color: rgba(200, 200, 200, 0.9);
+  --background-overlay-opacity: 0.2;
+}
+
 .container {
   padding: 15px;
-  max-width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
   box-sizing: border-box;
   background: var(--background);
   color: var(--text);
+  font-family: Arial, sans-serif;
+}
+
+.title {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: var(--accent-color);
 }
 
 .prayer-times {
@@ -25,7 +49,7 @@
 .prayer-times p {
   margin: 8px 0;
   font-size: 1em;
-  color: var(--text-color);
+  color: var(--text);
   display: flex;
   justify-content: space-between;
   padding: 5px 10px;
@@ -39,7 +63,7 @@
 
 .current-prayer {
   background-color: var(--accent-color);
-  color: var(--background-color);
+  color: var(--background);
   border-radius: 4px;
   padding: 5px 10px !important;
   font-weight: bold;
@@ -59,10 +83,10 @@
     1;
   font-size: 1.1em;
   font-weight: 600;
-  color: var(--text-color);
+  color: var(--text);
   text-align: center;
   margin-bottom: 15px;
-  display: inline-block;
+  display: block;
   animation: pulse 2s infinite ease-in-out;
 }
 
@@ -70,7 +94,7 @@
   position: fixed;
   right: 20px;
   background-color: var(--background-overlay-color);
-  color: var(--text-color);
+  color: var(--text);
   padding: 15px 20px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, var(--background-overlay-opacity));
@@ -85,7 +109,7 @@
   align-items: center;
   gap: 10px;
   z-index: 1000;
-  animation: slideIn 0.3s ease-out, pulse 2s infinite ease-in-out;
+  animation: slideIn 0.3s ease-out;
   max-width: 300px;
   transition: background-color 0.3s ease, color 0.3s ease,
     border-color 0.3s ease;
@@ -100,7 +124,7 @@
 .notification-close {
   background: transparent;
   border: none;
-  color: var(--text-color);
+  color: var(--text);
   font-size: 1.2em;
   cursor: pointer;
   padding: 0;
@@ -119,29 +143,35 @@
 
 .notification-permission {
   background-color: var(--error);
-  color: var(--background-color);
+  color: var(--background);
   border-image: none;
   border: 2px solid var(--error);
-  animation: slideIn 0.3s ease-out;
+  animation: none;
 }
 
 .loading {
   color: var(--loading);
   font-style: italic;
   margin-bottom: 15px;
+  padding: 10px;
+  background-color: var(--primary-color);
+  border-radius: 4px;
 }
 
 .warning {
   color: var(--warning);
   font-style: italic;
   margin-bottom: 15px;
+  padding: 10px;
+  background-color: var(--primary-color);
+  border-radius: 4px;
 }
 
 .error {
   color: var(--error);
   padding: 10px;
   margin-bottom: 15px;
-  background-color: var(--error);
+  background-color: var(--primary-color);
   opacity: var(--background-overlay-opacity);
   border-radius: 4px;
 }
@@ -158,6 +188,8 @@
   font-size: 16px;
   border-radius: 4px;
   margin-bottom: 15px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .time-modification {
@@ -168,7 +200,7 @@
 .time-modification-label {
   display: block;
   margin-bottom: 10px;
-  color: var(--text-color);
+  color: var(--text);
 }
 
 .reminders {
@@ -179,13 +211,13 @@
 .reminder-label {
   display: block;
   margin-bottom: 10px;
-  color: var(--text-color);
+  color: var(--text);
 }
 
 .reminder-status {
   margin-left: 10px;
   font-size: 0.9em;
-  color: var(--text-color);
+  color: var(--text);
   opacity: 0.7;
 }
 
@@ -213,7 +245,7 @@
 
 .ramadan-times p {
   margin: 8px 0;
-  color: var(--text-color);
+  color: var(--text);
   font-size: 1em;
   line-height: 1.4;
   display: flex;
@@ -222,7 +254,7 @@
 }
 
 .description {
-  color: var(--text-color);
+  color: var(--text);
   margin-bottom: 15px;
   font-size: 0.9em;
 }
@@ -241,7 +273,7 @@
 .button:hover,
 .button:focus {
   background-color: var(--accent-color);
-  color: var(--background-color);
+  color: var(--background);
 }
 
 .button:focus {
@@ -281,7 +313,15 @@
   }
 }
 
-@media (max-width: 767px) {
+@media (max-width: 480px) {
+  .container {
+    padding: 10px;
+  }
+
+  .title {
+    font-size: 20px;
+  }
+
   .prayer-times,
   .ramadan-times {
     padding: 10px;
@@ -318,12 +358,6 @@
     font-size: 1.1em;
   }
 
-  .prayer-times p,
-  .ramadan-times p {
-    min-height: 40px;
-    margin-top: 20px;
-  }
-
   .calculation-method,
   .time-zone,
   .language,
@@ -335,5 +369,6 @@
   .button {
     padding: 6px 12px;
     font-size: 0.9em;
+    width: 100%;
   }
 }

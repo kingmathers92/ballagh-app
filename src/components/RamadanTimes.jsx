@@ -1,4 +1,4 @@
-import React from "react";
+import PropTypes from "prop-types";
 
 const RamadanTimes = ({ ramadanTimes, timeZone, language, translations }) => {
   return ramadanTimes ? (
@@ -38,20 +38,30 @@ const RamadanTimes = ({ ramadanTimes, timeZone, language, translations }) => {
           })
         )}
       </p>
-      <p className="countdown">
-        {translations[language].timeUntilNextEvent.replace(
-          "{countdown}",
-          ramadanTimes.nextEventCountdown || "Calculating..."
-        )}
-      </p>
       <p>
         {translations[language].currentState.replace(
           "{state}",
-          ramadanTimes.currentEvent
+          translations[language][ramadanTimes.currentEvent.toLowerCase()]
         )}
       </p>
     </div>
   ) : null;
+};
+
+RamadanTimes.propTypes = {
+  ramadanTimes: PropTypes.shape({
+    ramadanDay: PropTypes.number,
+    suhoor: PropTypes.instanceOf(Date),
+    iftar: PropTypes.instanceOf(Date),
+    currentEvent: PropTypes.string,
+    nextEvent: PropTypes.shape({
+      name: PropTypes.string,
+      time: PropTypes.instanceOf(Date),
+    }),
+  }),
+  timeZone: PropTypes.string.isRequired,
+  language: PropTypes.oneOf(["en", "ar"]).isRequired,
+  translations: PropTypes.object.isRequired,
 };
 
 export default RamadanTimes;

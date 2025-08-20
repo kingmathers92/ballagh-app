@@ -8,7 +8,7 @@ export const scheduleReminders = (
   notificationPermission,
   currentTime = new Date(),
   language,
-  translations
+  timeZone
 ) => {
   const playSound = () => {
     const audio = new Audio("/sounds/notification.mp3");
@@ -87,10 +87,10 @@ export const scheduleReminders = (
   const now = new Date(currentTime);
   const notificationWindow = 15 * 60 * 1000; // 15 minutes
 
-  // prayer notifications
+  // Prayer notifications
   Object.keys(prayerReminders).forEach((prayer) => {
-    if (prayerReminders[prayer]) {
-      const prayerTime = prayerTimes[prayer];
+    if (prayerReminders[prayer] && prayerTimes[prayer]) {
+      const prayerTime = new Date(prayerTimes[prayer]);
       const timeDiff = prayerTime - now;
       if (timeDiff > 0 && timeDiff <= notificationWindow) {
         const message = translations[language].testNotification.replace(
@@ -101,7 +101,8 @@ export const scheduleReminders = (
         showBrowserNotification(
           message,
           translations[language].prayers[prayer],
-          prayerTime
+          prayerTime,
+          timeZone
         );
       }
     }
@@ -117,6 +118,7 @@ export const scheduleReminders = (
             nextEvent.time.toLocaleTimeString([], {
               hour: "2-digit",
               minute: "2-digit",
+              timeZone,
             })
           ) + " in 15 minutes!"
         : translations[language].iftar.replace(
@@ -124,6 +126,7 @@ export const scheduleReminders = (
             nextEvent.time.toLocaleTimeString([], {
               hour: "2-digit",
               minute: "2-digit",
+              timeZone,
             })
           ) + " in 5 minutes!";
 
@@ -132,7 +135,12 @@ export const scheduleReminders = (
       (nextEvent.name === "Iftar" && timeDiff <= 5 * 60 * 1000)
     ) {
       addNotification(message, false);
-      showBrowserNotification(message, nextEvent.name, nextEvent.time);
+      showBrowserNotification(
+        message,
+        nextEvent.name,
+        nextEvent.time,
+        timeZone
+      );
     }
   }
 };

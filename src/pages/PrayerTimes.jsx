@@ -1,20 +1,20 @@
 import { useState, useEffect, memo } from "react";
-import { useGeolocation } from "../hooks/useGeolocation";
-import { usePrayerTimes } from "../hooks/usePrayerTimes";
+import { useGeolocation } from "../hooks/useGeolocation.js";
+import { usePrayerTimes } from "../hooks/usePrayerTimes.js";
 import Notification from "../components/Notification.jsx";
 import Settings from "../components/Settings.jsx";
 import PrayerReminders from "../components/PrayerReminders.jsx";
 import PrayerTimesDisplay from "../components/PrayerTimesDisplay.jsx";
 import RamadanTimes from "../components/RamadanTimes.jsx";
 import TimeModification from "../components/TimeModification.jsx";
-import translations from "../utils/translations";
+import translations from "../utils/translations.js";
 import {
   addNotification,
   removeNotification,
   dismissAllNotifications,
   requestNotificationPermission,
   exportPrayerTimes,
-} from "../utils/prayerUtils";
+} from "../utils/prayerUtils.js";
 
 import "../styles/PrayerTimes.css";
 

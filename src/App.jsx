@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import DarkModeToggle from "./components/DarkModeToggle";
 import NavLinks from "./components/NavLinks";
 import ErrorBoundary from "./components/ErrorBoundary";
-import PrayerTimes from "./components/PrayerTimes";
+import PrayerTimes from "./pages/PrayerTimes";
 import Home from "./pages/Home";
 import Search from "./pages/Search";
 import RandomHadith from "./pages/RandomHadith";

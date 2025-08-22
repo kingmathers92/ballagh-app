@@ -2,11 +2,11 @@ import { useState, useEffect, memo } from "react";
 import { useGeolocation } from "../hooks/useGeolocation.js";
 import { usePrayerTimes } from "../hooks/usePrayerTimes.js";
 import Notification from "../components/Notification.jsx";
-import Settings from "../components/Settings.jsx";
-import PrayerReminders from "../components/PrayerReminders.jsx";
-import PrayerTimesDisplay from "../components/PrayerTimesDisplay.jsx";
-import RamadanTimes from "../components/RamadanTimes.jsx";
-import TimeModification from "../components/TimeModification.jsx";
+import Settings from "../components/Prayer/Settings.jsx";
+import PrayerReminders from "../components/Prayer/PrayerReminders.jsx";
+import PrayerTimesDisplay from "../components/Prayer/PrayerTimesDisplay.jsx";
+import RamadanTimes from "../components/Prayer/RamadanTimes.jsx";
+import TimeModification from "../components/Prayer/TimeModification.jsx";
 import translations from "../utils/translations.js";
 import {
   addNotification,

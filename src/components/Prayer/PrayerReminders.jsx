@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { togglePrayerReminder } from "../utils/prayerUtils";
+import { togglePrayerReminder } from "../../utils/prayerUtils";
 
 const PrayerReminders = ({
   prayerReminders,

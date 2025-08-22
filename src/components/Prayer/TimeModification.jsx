@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { addNotification } from "../utils/prayerUtils";
+import { addNotification } from "../../utils/prayerUtils";
 
 const TimeModification = ({
   useCustomTime,

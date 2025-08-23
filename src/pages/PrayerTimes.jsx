@@ -6,7 +6,6 @@ import Settings from "../components/Prayer/Settings.jsx";
 import PrayerReminders from "../components/Prayer/PrayerReminders.jsx";
 import PrayerTimesDisplay from "../components/Prayer/PrayerTimesDisplay.jsx";
 import RamadanTimes from "../components/Prayer/RamadanTimes.jsx";
-import TimeModification from "../components/Prayer/TimeModification.jsx";
 import translations from "../utils/translations.js";
 import {
   addNotification,
@@ -55,14 +54,6 @@ function PrayerTimesView() {
   const [language, setLanguage] = useState(() => {
     return localStorage.getItem("language") || "en";
   });
-  const [useCustomTime, setUseCustomTime] = useState(() => {
-    return localStorage.getItem("useCustomTime") === "true";
-  });
-  const [customTime, setCustomTime] = useState(() => {
-    const saved = localStorage.getItem("customTime");
-    return saved ? new Date(saved) : new Date();
-  });
-  const [triggerPrayer, setTriggerPrayer] = useState("");
 
   useEffect(() => {
     localStorage.setItem("notificationPermission", notificationPermission);
@@ -85,11 +76,6 @@ function PrayerTimesView() {
   }, [language]);
 
   useEffect(() => {
-    localStorage.setItem("useCustomTime", useCustomTime);
-    localStorage.setItem("customTime", customTime.toISOString());
-  }, [useCustomTime, customTime]);
-
-  useEffect(() => {
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker
         .register("/serviceWorker.js")
@@ -101,7 +87,6 @@ function PrayerTimesView() {
         })
         .catch((err) => {
           console.error("Service Worker registration failed:", err);
-          // Optionally notify user of failure
           addNotification(
             translations[language].serviceWorkerError ||
               "Failed to register service worker",
@@ -129,9 +114,7 @@ function PrayerTimesView() {
     calculationMethod,
     timeZone,
     prayerReminders,
-    language,
-    useCustomTime ? customTime : null,
-    triggerPrayer
+    language
   );
 
   return (
@@ -144,17 +127,6 @@ function PrayerTimesView() {
         setTimeZone={setTimeZone}
         language={language}
         setLanguage={setLanguage}
-        translations={translations}
-      />
-      <TimeModification
-        useCustomTime={useCustomTime}
-        setUseCustomTime={setUseCustomTime}
-        customTime={customTime}
-        setCustomTime={setCustomTime}
-        triggerPrayer={triggerPrayer}
-        setTriggerPrayer={setTriggerPrayer}
-        prayerReminders={prayerReminders}
-        language={language}
         translations={translations}
       />
       <button

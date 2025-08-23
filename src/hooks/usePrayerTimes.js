@@ -5,9 +5,9 @@ import {
   startCountdown,
   determineRamadanTimes,
   startRamadanCountdown,
-} from "../utils/prayerUtils";
-import { scheduleReminders } from "../utils/reminderUtils";
-import translations from "../utils/translations";
+  scheduleReminders,
+} from "../utils/prayerUtils.js";
+import { scheduleRamadanReminders } from "../utils/reminderUtils.js";
 
 export const usePrayerTimes = (
   coords,
@@ -17,117 +17,96 @@ export const usePrayerTimes = (
   calculationMethod,
   timeZone,
   prayerReminders,
-  language,
-  customTime = null,
-  triggerPrayer = ""
+  language
 ) => {
   const [prayerTimes, setPrayerTimes] = useState(null);
   const [currentPrayer, setCurrentPrayer] = useState(null);
-  const [nextPrayerCountdown, setNextPrayerCountdown] = useState("");
+  const [nextPrayerCountdown, setNextPrayerCountdown] = useState("0h 0m 0s");
   const [ramadanTimes, setRamadanTimes] = useState(null);
-  const [nextEventCountdown, setNextEventCountdown] = useState("");
+  const [nextEventCountdown, setNextEventCountdown] = useState("0h 0m 0s");
   const [loading, setLoading] = useState(true);
   const [prayerError, setPrayerError] = useState(null);
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
 
   useEffect(() => {
-    const handleOnlineStatus = () => setIsOffline(!navigator.onLine);
-    window.addEventListener("online", handleOnlineStatus);
-    window.addEventListener("offline", handleOnlineStatus);
+    const handleOnline = () => setIsOffline(false);
+    const handleOffline = () => setIsOffline(true);
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
     return () => {
-      window.removeEventListener("online", handleOnlineStatus);
-      window.removeEventListener("offline", handleOnlineStatus);
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
     };
   }, []);
 
   useEffect(() => {
-    if (!coords) {
-      setLoading(false);
-      setPrayerError(translations[language].noLocation);
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const currentTime = customTime || new Date();
-      const rawTimes = calculatePrayerTimes(
-        coords,
-        calculationMethod,
-        currentTime
-      );
-      setPrayerTimes(rawTimes);
-
-      const { currentPrayer, nextPrayer } = determineCurrentNextPrayer(
-        rawTimes,
-        currentTime
-      );
-      setCurrentPrayer(currentPrayer);
-
-      const prayerCleanup = startCountdown(
-        nextPrayer,
-        setNextPrayerCountdown,
-        timeZone
-      );
-      const ramadanData = determineRamadanTimes(
-        rawTimes,
-        ramadanStart,
-        currentTime
-      );
-      setRamadanTimes(ramadanData);
-
-      const eventCleanup = startRamadanCountdown(
-        ramadanData.nextEvent,
-        setNextEventCountdown,
-        timeZone
-      );
-
-      if (triggerPrayer && prayerReminders[triggerPrayer]) {
-        addNotification(
-          translations[language].testNotification.replace(
-            "{prayer}",
-            translations[language].prayers[triggerPrayer]
-          ),
-          false
-        );
-      } else if (notificationPermission !== "denied" && !triggerPrayer) {
-        scheduleReminders(
-          rawTimes,
-          ramadanData.nextEvent,
-          addNotification,
-          prayerReminders,
-          notificationPermission,
-          currentTime,
-          language,
-          timeZone
-        );
+    let prayerInterval, ramadanInterval;
+    const updatePrayerTimes = () => {
+      if (!coords) {
+        setPrayerError("No coordinates provided");
+        setLoading(false);
+        return;
       }
 
-      setLoading(false);
-      setPrayerError(null);
+      try {
+        const rawTimes = calculatePrayerTimes(coords, calculationMethod);
+        setPrayerTimes(rawTimes);
 
-      return () => {
-        prayerCleanup && prayerCleanup();
-        eventCleanup && eventCleanup();
-      };
-    } catch (error) {
-      setPrayerError(
-        translations[language].errorCalculatingPrayerTimes +
-          ": " +
-          error.message
-      );
-      setLoading(false);
-    }
+        const { currentPrayer, nextPrayer } =
+          determineCurrentNextPrayer(rawTimes);
+        setCurrentPrayer(currentPrayer);
+
+        prayerInterval = startCountdown(
+          nextPrayer,
+          setNextPrayerCountdown,
+          timeZone
+        );
+
+        const ramadanData = determineRamadanTimes(rawTimes, ramadanStart);
+        setRamadanTimes(ramadanData);
+
+        ramadanInterval = startRamadanCountdown(
+          ramadanData.nextEvent,
+          setNextEventCountdown,
+          timeZone
+        );
+
+        if (notificationPermission !== "denied") {
+          scheduleReminders(
+            rawTimes,
+            ramadanData.nextEvent,
+            addNotification,
+            prayerReminders,
+            notificationPermission,
+            new Date(),
+            language,
+            timeZone
+          );
+        }
+
+        setPrayerError(null);
+        setLoading(false);
+      } catch (error) {
+        setPrayerError(error.message);
+        setLoading(false);
+      }
+    };
+
+    updatePrayerTimes();
+    const interval = setInterval(updatePrayerTimes, 60 * 1000);
+    return () => {
+      clearInterval(interval);
+      if (prayerInterval) prayerInterval();
+      if (ramadanInterval) ramadanInterval();
+    };
   }, [
     coords,
-    ramadanStart,
-    addNotification,
-    notificationPermission,
     calculationMethod,
     timeZone,
     prayerReminders,
+    notificationPermission,
     language,
-    customTime,
-    triggerPrayer,
+    ramadanStart,
   ]);
 
   return {

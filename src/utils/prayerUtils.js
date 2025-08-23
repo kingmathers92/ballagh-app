@@ -1,17 +1,6 @@
 import { CalculationMethod, PrayerTimes } from "adhan";
 
-/**
- * Calculates prayer times for a given location and returns raw Date objects.
- * @param {Coordinates} coords - The geographic coordinates (latitude, longitude).
- * @param {string} calculationMethod - The calculation method (e.g., "UmmAlQura", "MuslimWorldLeague", "Egyptian").
- * @param {Date} customTime - Optional custom time for testing.
- * @returns {Object} Raw Date objects for each prayer time.
- */
-export const calculatePrayerTimes = (
-  coords,
-  calculationMethod,
-  customTime = new Date()
-) => {
+export const calculatePrayerTimes = (coords, calculationMethod) => {
   try {
     if (
       !coords ||
@@ -22,7 +11,7 @@ export const calculatePrayerTimes = (
         "Invalid coordinates: must be an adhan Coordinates object"
       );
     }
-    const date = new Date(customTime);
+    const date = new Date();
     const params = (() => {
       switch (calculationMethod) {
         case "UmmAlQura":
@@ -42,7 +31,7 @@ export const calculatePrayerTimes = (
       asr: new Date(times.asr),
       maghrib: new Date(times.maghrib),
       isha: new Date(times.isha),
-      location: coords, // Include location for tomorrow's calculations
+      location: coords,
     };
   } catch (error) {
     console.error("Error calculating prayer times:", error);
@@ -50,12 +39,6 @@ export const calculatePrayerTimes = (
   }
 };
 
-/**
- * Determines the current and next prayer based on the current time and prayer times.
- * @param {Object} rawTimes - Raw Date objects for each prayer time, including a location property.
- * @param {Date} currentTime - Current time or custom time for testing.
- * @returns {Object} Object containing currentPrayer and nextPrayer.
- */
 export const determineCurrentNextPrayer = (
   rawTimes,
   currentTime = new Date()
@@ -105,13 +88,6 @@ export const determineCurrentNextPrayer = (
   }
 };
 
-/**
- * Updates and returns the countdown to the next prayer.
- * @param {Object} nextPrayer - The next prayer object with name and time.
- * @param {Function} setNextPrayerCountdown - State setter for the countdown.
- * @param {string} timeZone - The time zone.
- * @returns {Function} Cleanup function to clear the interval.
- */
 export const startCountdown = (
   nextPrayer,
   setNextPrayerCountdown,
@@ -140,13 +116,6 @@ export const startCountdown = (
   return () => clearInterval(interval);
 };
 
-/**
- * Determines Ramadan-specific times (Suhoor and Iftar) and current/next event.
- * @param {Object} rawTimes - Raw Date objects for each prayer time.
- * @param {Date} ramadanStart - Start date of Ramadan.
- * @param {Date} currentTime - Current time or custom time for testing.
- * @returns {Object} Object containing current event, next event, and Ramadan day.
- */
 export const determineRamadanTimes = (
   rawTimes,
   ramadanStart,
@@ -199,13 +168,6 @@ export const determineRamadanTimes = (
   }
 };
 
-/**
- * Updates and returns the countdown to the next Ramadan event.
- * @param {Object} nextEvent - The next event object with name and time.
- * @param {Function} setNextEventCountdown - State setter for the countdown.
- * @param {string} timeZone - The time zone.
- * @returns {Function} Cleanup function to clear the interval.
- */
 export const startRamadanCountdown = (
   nextEvent,
   setNextEventCountdown,
@@ -234,12 +196,6 @@ export const startRamadanCountdown = (
   return () => clearInterval(interval);
 };
 
-/**
- * Adds a notification to the state.
- * @param {Function} setNotifications - State setter for notifications.
- * @param {string} message - Notification message.
- * @param {boolean} isPermissionMessage - Whether it's a permission-related notification.
- */
 export const addNotification = (
   setNotifications,
   message,
@@ -251,30 +207,14 @@ export const addNotification = (
   ]);
 };
 
-/**
- * Removes a notification by ID.
- * @param {Function} setNotifications - State setter for notifications.
- * @param {number} id - Notification ID.
- */
 export const removeNotification = (setNotifications, id) => {
   setNotifications((prev) => prev.filter((notif) => notif.id !== id));
 };
 
-/**
- * Dismisses all notifications.
- * @param {Function} setNotifications - State setter for notifications.
- */
 export const dismissAllNotifications = (setNotifications) => {
   setNotifications([]);
 };
 
-/**
- * Requests notification permission.
- * @param {Function} setNotificationPermission - State setter for permission.
- * @param {Function} addNotification - Function to add notifications.
- * @param {Object} translations - Translation object.
- * @param {string} language - Current language.
- */
 export const requestNotificationPermission = (
   setNotificationPermission,
   addNotification,
@@ -297,11 +237,6 @@ export const requestNotificationPermission = (
   }
 };
 
-/**
- * Toggles a prayer reminder.
- * @param {Function} setPrayerReminders - State setter for prayer reminders.
- * @param {string} prayer - Prayer name (e.g., "fajr").
- */
 export const togglePrayerReminder = (setPrayerReminders, prayer) => {
   setPrayerReminders((prev) => ({
     ...prev,
@@ -309,16 +244,6 @@ export const togglePrayerReminder = (setPrayerReminders, prayer) => {
   }));
 };
 
-/**
- * Exports prayer times to a JSON file.
- * @param {Object} prayerTimes - Formatted prayer times.
- * @param {Object} ramadanTimes - Ramadan times data.
- * @param {string} calculationMethod - Calculation method.
- * @param {string} timeZone - Time zone.
- * @param {string} language - Language.
- * @param {Function} addNotification - Function to add notifications.
- * @param {Object} translations - Translation object.
- */
 export const exportPrayerTimes = (
   prayerTimes,
   ramadanTimes,
@@ -368,12 +293,12 @@ export const exportPrayerTimes = (
     ramadanTimes: ramadanTimes
       ? {
           ramadanDay: ramadanTimes.ramadanDay,
-          suhoor: ramadanTimes.suhoor.toLocaleTimeString([], {
+          suhoor: ramadanTimes.suhoor?.toLocaleTimeString([], {
             hour: "2-digit",
             minute: "2-digit",
             timeZone,
           }),
-          iftar: ramadanTimes.iftar.toLocaleTimeString([], {
+          iftar: ramadanTimes.iftar?.toLocaleTimeString([], {
             hour: "2-digit",
             minute: "2-digit",
             timeZone,

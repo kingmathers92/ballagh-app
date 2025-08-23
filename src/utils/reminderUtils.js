@@ -93,10 +93,8 @@ export const scheduleReminders = (
       const prayerTime = new Date(prayerTimes[prayer]);
       const timeDiff = prayerTime - now;
       if (timeDiff > 0 && timeDiff <= notificationWindow) {
-        const message = translations[language].testNotification.replace(
-          "{prayer}",
-          translations[language].prayers[prayer]
-        );
+        const message =
+          translations[language].prayers[prayer] + " in 15 minutes!";
         addNotification(message, false);
         showBrowserNotification(
           message,

@@ -7,7 +7,6 @@ import {
   startRamadanCountdown,
   scheduleReminders,
 } from "../utils/prayerUtils.js";
-import { scheduleRamadanReminders } from "../utils/reminderUtils.js";
 
 export const usePrayerTimes = (
   coords,

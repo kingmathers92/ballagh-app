@@ -88,11 +88,7 @@ export const determineCurrentNextPrayer = (
   }
 };
 
-export const startCountdown = (
-  nextPrayer,
-  setNextPrayerCountdown,
-  timeZone
-) => {
+export const startCountdown = (nextPrayer, setNextPrayerCountdown) => {
   if (!nextPrayer || !nextPrayer.time) {
     setNextPrayerCountdown("0h 0m 0s");
     return () => {};
@@ -168,11 +164,7 @@ export const determineRamadanTimes = (
   }
 };
 
-export const startRamadanCountdown = (
-  nextEvent,
-  setNextEventCountdown,
-  timeZone
-) => {
+export const startRamadanCountdown = (nextEvent, setNextEventCountdown) => {
   if (!nextEvent || !nextEvent.time) {
     setNextEventCountdown("0h 0m 0s");
     return () => {};

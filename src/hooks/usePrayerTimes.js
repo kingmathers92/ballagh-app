@@ -5,7 +5,6 @@ import {
   startCountdown,
   determineRamadanTimes,
   startRamadanCountdown,
-  scheduleReminders,
 } from "../utils/prayerUtils.js";
 
 export const usePrayerTimes = (
@@ -70,18 +69,18 @@ export const usePrayerTimes = (
           timeZone
         );
 
-        if (notificationPermission !== "denied") {
-          scheduleReminders(
-            rawTimes,
-            ramadanData.nextEvent,
-            addNotification,
-            prayerReminders,
-            notificationPermission,
-            new Date(),
-            language,
-            timeZone
-          );
-        }
+        // if (notificationPermission !== "denied") {
+        //   scheduleReminders(
+        //     rawTimes,
+        //     ramadanData.nextEvent,
+        //     addNotification,
+        //     prayerReminders,
+        //     notificationPermission,
+        //     new Date(),
+        //     language,
+        //     timeZone
+        //   );
+        // }
 
         setPrayerError(null);
         setLoading(false);

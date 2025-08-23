@@ -6,83 +6,41 @@ export const scheduleReminders = (
   addNotification,
   prayerReminders,
   notificationPermission,
-  currentTime = new Date(),
+  currentTime,
   language,
   timeZone
 ) => {
-  const playSound = () => {
-    const audio = new Audio("/sounds/notification.mp3");
-    audio.play().catch((err) => console.warn("Audio playback failed:", err));
-  };
+  if (!prayerTimes) return;
 
-  const vibrate = () => {
-    if ("vibrate" in navigator) {
-      navigator.vibrate([200, 100, 200]);
+  const now = new Date(currentTime);
+
+  Object.entries(prayerTimes).forEach(([name, time]) => {
+    if (prayerReminders[name]) {
+      const reminderTime = new Date(time.getTime() - 5 * 60 * 1000); // 5 min before
+      if (reminderTime > now) {
+        setTimeout(() => {
+          if (notificationPermission === "granted") {
+            new Notification(`Reminder: ${name} prayer is in 5 minutes`);
+          }
+          addNotification(`Reminder: ${name} prayer is in 5 minutes`);
+        }, reminderTime - now);
+      }
     }
-  };
+  });
 
-  const showBrowserNotification = (message, eventName, eventTime, timeZone) => {
-    if (!("Notification" in window)) {
-      console.warn("Browser does not support notifications");
-      addNotification(
-        translations[language].enableNotifications + " not supported",
-        true
-      );
-      playSound();
-      vibrate();
-      return;
-    }
-
-    if (
-      notificationPermission === "granted" &&
-      document.visibilityState !== "visible"
-    ) {
-      new Notification(message, {
-        body: `Event: ${eventName} at ${eventTime.toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-          timeZone,
-        })}`,
-        icon: "/images/notification-icon.png",
-      });
-      playSound();
-      vibrate();
-    } else if (notificationPermission !== "denied") {
-      Notification.requestPermission().then((permission) => {
-        if (
-          permission === "granted" &&
-          document.visibilityState !== "visible"
-        ) {
-          new Notification(message, {
-            body: `Event: ${eventName} at ${eventTime.toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-              timeZone,
-            })}`,
-            icon: "/images/notification-icon.png",
-          });
-          playSound();
-          vibrate();
-        } else {
-          addNotification(
-            translations[language].enableNotifications +
-              " disabled. Using in-app notifications.",
-            true
-          );
-          playSound();
-          vibrate();
+  if (nextEvent?.time) {
+    const reminderTime = new Date(nextEvent.time.getTime() - 10 * 60 * 1000); // 10 min before
+    if (reminderTime > now) {
+      setTimeout(() => {
+        if (notificationPermission === "granted") {
+          new Notification(`Reminder: ${nextEvent.name} in 10 minutes`);
         }
-      });
-    } else {
-      addNotification(
-        translations[language].enableNotifications +
-          " disabled. Using in-app notifications.",
-        true
-      );
-      playSound();
-      vibrate();
+        addNotification(`Reminder: ${nextEvent.name} in 10 minutes`);
+      }, reminderTime - now);
     }
-  };
+  }
+};
+
 
   const now = new Date(currentTime);
   const notificationWindow = 15 * 60 * 1000; // 15 minutes

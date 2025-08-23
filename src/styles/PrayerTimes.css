@@ -1,37 +1,206 @@
 :root {
-  --background: #ffffff;
-  --text: #333333;
-  --primary-color: #f0f4f8;
-  --secondary-color: #e0e0e0;
-  --accent-color: #28a745;
-  --button-bg: #007bff;
-  --button-text: #ffffff;
-  --error: #dc3545;
-  --warning: #ffc107;
-  --loading: #17a2b8;
-  --background-overlay-color: rgba(200, 200, 200, 0.9);
-  --background-overlay-opacity: 0.2;
+  --background: var(--background-color);
+  --text: var(--text-color);
+  --primary-color: var(--primary-color);
+  --secondary-color: var(--secondary-color);
+  --accent-color: var(--accent-color);
+  --button-bg: var(--button-bg);
+  --button-text: var(--button-text);
+  --error: var(--error);
+  --warning: var(--warning);
+  --loading: var(--loading);
+  --background-overlay-opacity: var(--background-overlay-opacity);
+  --background-overlay-color: var(--background-overlay-color);
 }
 
-.container {
-  padding: 15px;
-  max-width: 600px;
-  margin: 0 auto;
-  box-sizing: border-box;
+.prayer-view-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   background: var(--background);
   color: var(--text);
-  font-family: Arial, sans-serif;
+  font-family: "Lateef", Arial, sans-serif;
 }
 
-.title {
-  text-align: center;
-  font-size: 24px;
-  margin-bottom: 20px;
-  color: var(--accent-color);
+.main-content {
+  flex-grow: 1;
+  padding: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.prayer-times {
-  background-color: var(--primary-color);
+@media (max-width: 767px) {
+  .main-content {
+    padding-bottom: 100px; /* Space for FAB and notifications */
+  }
+}
+
+.tab-container {
+  display: block;
+}
+
+.accordion-container {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .tab-container {
+    display: none;
+  }
+  .accordion-container {
+    display: block;
+  }
+}
+
+.tab-nav {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 15px;
+  background: var(--primary-color);
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, var(--background-overlay-opacity));
+  border: 2px solid transparent;
+  border-image: linear-gradient(
+      to right,
+      var(--primary-color),
+      var(--accent-color)
+    )
+    1;
+}
+
+.tab-button {
+  background: var(--background);
+  color: var(--text);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 1em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+  font-family: "Amiri", serif;
+}
+
+.tab-button:hover,
+.tab-button:focus {
+  background: var(--accent-color);
+  color: var(--background);
+  transform: scale(1.05);
+}
+
+.tab-button.active {
+  background: var(--accent-color);
+  color: var(--background);
+  font-weight: bold;
+}
+
+.tab-button:focus {
+  outline: 1px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+.tab-icon {
+  font-size: 1.2em;
+}
+
+.tab-content {
+  animation: fadeIn 0.5s ease-in;
+}
+
+.tab-panel {
+  display: none;
+}
+
+.tab-panel.active {
+  display: block;
+}
+
+.accordion-item {
+  margin-bottom: 10px;
+}
+
+.accordion-header {
+  background: var(--primary-color);
+  color: var(--text);
+  border: none;
+  padding: 12px 15px;
+  width: 100%;
+  text-align: left;
+  font-size: 1.1em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, var(--background-overlay-opacity));
+  border: 2px solid transparent;
+  border-image: linear-gradient(
+      to right,
+      var(--primary-color),
+      var(--accent-color)
+    )
+    1;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  font-family: "Amiri", serif;
+}
+
+.accordion-header:hover,
+.accordion-header:focus {
+  background: var(--accent-color);
+  color: var(--background);
+}
+
+.accordion-header.active {
+  background: var(--accent-color);
+  color: var(--background);
+  border-radius: 6px 6px 0 0;
+}
+
+.accordion-header:focus {
+  outline: 1px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+.accordion-icon {
+  font-size: 1.2em;
+}
+
+.accordion-arrow {
+  margin-left: auto;
+  font-size: 1em;
+}
+
+.accordion-content {
+  display: none;
+  padding: 15px;
+  background: var(--primary-color);
+  border-radius: 0 0 6px 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, var(--background-overlay-opacity));
+  border: 2px solid transparent;
+  border-image: linear-gradient(
+      to right,
+      var(--primary-color),
+      var(--accent-color)
+    )
+    1;
+  animation: slideDown 0.3s ease-out;
+}
+
+.accordion-content.open {
+  display: block;
+}
+
+.prayer-times-card,
+.ramadan-times-card,
+.reminders-card,
+.settings-card {
+  background: var(--primary-color);
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, var(--background-overlay-opacity));
@@ -42,8 +211,19 @@
       var(--accent-color)
     )
     1;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.prayer-times-card:hover,
+.ramadan-times-card:hover,
+.reminders-card:hover,
+.settings-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.prayer-times {
   text-align: left;
-  margin-bottom: 20px;
 }
 
 .prayer-times p {
@@ -52,9 +232,11 @@
   color: var(--text);
   display: flex;
   justify-content: space-between;
-  padding: 5px 10px;
+  align-items: center;
+  padding: 8px 12px;
   border-bottom: 1px solid var(--secondary-color);
   line-height: 1.4;
+  transition: background-color 0.3s ease;
 }
 
 .prayer-times p:last-child {
@@ -62,40 +244,53 @@
 }
 
 .current-prayer {
-  background-color: var(--accent-color);
+  background: var(--accent-color);
   color: var(--background);
-  border-radius: 4px;
-  padding: 5px 10px !important;
+  border-radius: 6px;
+  padding: 8px 12px !important;
   font-weight: bold;
 }
 
 .countdown {
-  background-color: var(--primary-color);
   padding: 10px 15px;
   border-radius: 6px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, var(--background-overlay-opacity));
-  border: 2px solid transparent;
-  border-image: linear-gradient(
-      to right,
-      var(--primary-color),
-      var(--accent-color)
-    )
-    1;
   font-size: 1.1em;
   font-weight: 600;
   color: var(--text);
   text-align: center;
   margin-bottom: 15px;
-  display: block;
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--accent-color)
+  );
   animation: pulse 2s infinite ease-in-out;
 }
 
-.notification {
+.notification-stack {
   position: fixed;
+  top: 20px;
   right: 20px;
-  background-color: var(--background-overlay-color);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 1000;
+}
+
+@media (max-width: 767px) {
+  .notification-stack {
+    top: auto;
+    bottom: 80px;
+    right: 10px;
+    width: calc(100% - 20px);
+    max-width: 300px;
+  }
+}
+
+.notification {
+  background: var(--background-overlay-color);
   color: var(--text);
-  padding: 15px 20px;
+  padding: 12px 16px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, var(--background-overlay-opacity));
   border: 2px solid transparent;
@@ -108,7 +303,6 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  z-index: 1000;
   animation: slideIn 0.3s ease-out;
   max-width: 300px;
   transition: background-color 0.3s ease, color 0.3s ease,
@@ -117,7 +311,7 @@
 
 .notification p {
   margin: 0;
-  font-size: 1em;
+  font-size: 0.95em;
   line-height: 1.4;
 }
 
@@ -125,7 +319,7 @@
   background: transparent;
   border: none;
   color: var(--text);
-  font-size: 1.2em;
+  font-size: 1.1em;
   cursor: pointer;
   padding: 0;
   line-height: 1;
@@ -142,105 +336,96 @@
 }
 
 .notification-permission {
-  background-color: var(--error);
+  background: var(--error);
   color: var(--background);
   border-image: none;
   border: 2px solid var(--error);
   animation: none;
 }
 
+.loading,
+.warning,
+.error {
+  padding: 10px 15px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  text-align: center;
+  font-size: 0.95em;
+}
+
 .loading {
   color: var(--loading);
-  font-style: italic;
-  margin-bottom: 15px;
-  padding: 10px;
-  background-color: var(--primary-color);
-  border-radius: 4px;
+  background: var(--primary-color);
 }
 
 .warning {
   color: var(--warning);
-  font-style: italic;
-  margin-bottom: 15px;
-  padding: 10px;
-  background-color: var(--primary-color);
-  border-radius: 4px;
+  background: var(--primary-color);
 }
 
 .error {
   color: var(--error);
-  padding: 10px;
-  margin-bottom: 15px;
-  background-color: var(--primary-color);
-  opacity: var(--background-overlay-opacity);
-  border-radius: 4px;
+  background: var(--primary-color);
 }
 
 .calculation-method,
 .time-zone,
-.language,
-.custom-time-input,
-.trigger-prayer {
+.language {
   background: var(--background);
   color: var(--text);
-  border: 1px solid var(--text);
-  padding: 8px;
-  font-size: 16px;
-  border-radius: 4px;
+  border: 1px solid var(--secondary-color);
+  padding: 10px;
+  font-size: 1em;
+  border-radius: 6px;
   margin-bottom: 15px;
   width: 100%;
   box-sizing: border-box;
+  transition: border-color 0.3s ease;
 }
 
-.time-modification {
-  margin-top: 20px;
-  margin-bottom: 15px;
-}
-
-.time-modification-label {
-  display: block;
-  margin-bottom: 10px;
-  color: var(--text);
+.calculation-method:focus,
+.time-zone:focus,
+.language:focus {
+  border-color: var(--accent-color);
+  outline: none;
 }
 
 .reminders {
-  margin-top: 20px;
-  margin-bottom: 15px;
+  text-align: left;
 }
 
 .reminder-label {
-  display: block;
-  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
   color: var(--text);
+  font-size: 1em;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+
+.reminder-label:hover {
+  background: var(--secondary-color);
 }
 
 .reminder-status {
-  margin-left: 10px;
   font-size: 0.9em;
   color: var(--text);
   opacity: 0.7;
 }
 
 .ramadan-times {
-  margin-top: 20px;
-  padding: 15px;
-  background-color: var(--primary-color);
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, var(--background-overlay-opacity));
-  border: 2px solid transparent;
-  border-image: linear-gradient(
-      to right,
-      var(--primary-color),
-      var(--accent-color)
-    )
-    1;
+  text-align: left;
 }
 
 .ramadan-times h3 {
   color: var(--accent-color);
-  margin-bottom: 10px;
-  font-size: 1.2em;
+  margin-bottom: 12px;
+  font-size: 1.3em;
   text-align: center;
+  font-family: "Amiri", serif;
 }
 
 .ramadan-times p {
@@ -250,30 +435,58 @@
   line-height: 1.4;
   display: flex;
   justify-content: space-between;
-  padding: 5px 10px;
+  align-items: center;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--secondary-color);
+}
+
+.ramadan-times p:last-child {
+  border-bottom: none;
 }
 
 .description {
   color: var(--text);
   margin-bottom: 15px;
-  font-size: 0.9em;
+  font-size: 0.95em;
+  text-align: center;
+}
+
+.action-toolbar {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 10px;
+  z-index: 1000;
+}
+
+@media (min-width: 768px) {
+  .action-toolbar {
+    position: static;
+    justify-content: center;
+    margin-top: 15px;
+  }
 }
 
 .button {
-  background-color: var(--button-bg);
+  background: var(--button-bg);
   color: var(--button-text);
-  padding: 8px 16px;
+  padding: 10px 20px;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   font-size: 1em;
   cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .button:hover,
 .button:focus {
-  background-color: var(--accent-color);
+  background: var(--accent-color);
   color: var(--background);
+  transform: scale(1.05);
 }
 
 .button:focus {
@@ -282,9 +495,128 @@
 }
 
 .button:disabled {
-  background-color: var(--secondary-color);
+  background: var(--secondary-color);
   cursor: not-allowed;
   opacity: 0.6;
+}
+
+.export-button {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+@media (min-width: 768px) {
+  .export-button {
+    width: auto;
+    height: auto;
+    border-radius: 6px;
+    padding: 10px 20px;
+  }
+}
+
+.enable-notifications,
+.dismiss-notifications {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+@media (min-width: 768px) {
+  .enable-notifications,
+  .dismiss-notifications {
+    width: auto;
+    height: auto;
+    border-radius: 6px;
+    padding: 10px 20px;
+  }
+}
+
+@media (max-width: 767px) {
+  .prayer-times-card,
+  .ramadan-times-card,
+  .reminders-card,
+  .settings-card {
+    padding: 10px;
+  }
+
+  .prayer-times p,
+  .ramadan-times p {
+    font-size: 0.9em;
+    padding: 6px 10px;
+  }
+
+  .countdown {
+    font-size: 1em;
+    padding: 8px 12px;
+  }
+
+  .ramadan-times h3 {
+    font-size: 1.2em;
+  }
+
+  .button {
+    padding: 8px 16px;
+    font-size: 0.9em;
+  }
+}
+
+@media (max-width: 480px) {
+  .prayer-view-container {
+    padding: 10px;
+  }
+
+  .main-content {
+    padding: 10px;
+  }
+
+  .prayer-times-card,
+  .ramadan-times-card,
+  .reminders-card,
+  .settings-card {
+    padding: 8px;
+  }
+
+  .prayer-times p,
+  .ramadan-times p {
+    font-size: 0.85em;
+    padding: 5px 8px;
+  }
+
+  .countdown {
+    font-size: 0.9em;
+    padding: 6px 10px;
+  }
+
+  .notification {
+    padding: 10px 12px;
+    font-size: 0.85em;
+    max-width: 90%;
+  }
+
+  .ramadan-times h3 {
+    font-size: 1.1em;
+  }
+
+  .tab-button,
+  .accordion-header {
+    font-size: 1em;
+    padding: 10px 12px;
+  }
+
+  .action-toolbar {
+    bottom: 15px;
+    right: 15px;
+    gap: 8px;
+  }
 }
 
 @keyframes pulse {
@@ -313,62 +645,24 @@
   }
 }
 
-@media (max-width: 480px) {
-  .container {
-    padding: 10px;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
   }
-
-  .title {
-    font-size: 20px;
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
+}
 
-  .prayer-times,
-  .ramadan-times {
-    padding: 10px;
-    margin-bottom: 15px;
+@keyframes slideDown {
+  from {
+    height: 0;
+    opacity: 0;
   }
-
-  .prayer-times p,
-  .ramadan-times p {
-    font-size: 0.9em;
-    padding: 4px 8px;
-    margin: 6px 0;
-  }
-
-  .countdown {
-    font-size: 1em;
-    padding: 8px 12px;
-    margin-bottom: 10px;
-    width: 100%;
-    box-sizing: border-box;
-  }
-
-  .notification {
-    right: 10px;
-    padding: 10px 15px;
-    max-width: 90%;
-    font-size: 0.9em;
-  }
-
-  .notification-permission {
-    font-size: 0.85em;
-  }
-
-  .ramadan-times h3 {
-    font-size: 1.1em;
-  }
-
-  .calculation-method,
-  .time-zone,
-  .language,
-  .custom-time-input,
-  .trigger-prayer {
-    font-size: 14px;
-  }
-
-  .button {
-    padding: 6px 12px;
-    font-size: 0.9em;
-    width: 100%;
+  to {
+    height: auto;
+    opacity: 1;
   }
 }

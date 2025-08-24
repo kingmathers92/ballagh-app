@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { useGeolocation } from "../hooks/useGeolocation.js";
 import { usePrayerTimes } from "../hooks/usePrayerTimes.js";
 import { usePersistedState } from "../hooks/usePersistedState.js";

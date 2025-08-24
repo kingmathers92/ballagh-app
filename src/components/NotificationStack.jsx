@@ -14,8 +14,7 @@ const NotificationStack = ({ notifications, setNotifications }) => (
           setNotifications((prev) => prev.filter((n) => n.id !== notif.id))
         }
         isPermissionMessage={notif.isPermissionMessage}
-        style={{ top: `${20 + index * 60}px` }}
-        aria-live={notif.isPermissionMessage ? "polite" : "assertive"}
+        className={`notification-item notification-item-${index}`}
       />
     ))}
   </div>

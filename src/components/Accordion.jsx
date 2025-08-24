@@ -1,4 +1,5 @@
 import { memo, useCallback } from "react";
+import PropTypes from "prop-types";
 
 const Accordion = ({ tabs, openAccordions, setOpenAccordions }) => {
   const toggleAccordion = useCallback(
@@ -46,6 +47,19 @@ const Accordion = ({ tabs, openAccordions, setOpenAccordions }) => {
       ))}
     </div>
   );
+};
+
+Accordion.propTypes = {
+  tabs: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      label: PropTypes.string.isRequired,
+      icon: PropTypes.string.isRequired,
+      content: PropTypes.node.isRequired,
+    })
+  ).isRequired,
+  openAccordions: PropTypes.arrayOf(PropTypes.string).isRequired,
+  setOpenAccordions: PropTypes.func.isRequired,
 };
 
 export default memo(Accordion);

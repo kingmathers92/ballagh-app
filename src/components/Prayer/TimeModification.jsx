@@ -90,7 +90,6 @@ const TimeModification = ({
   );
 };
 
-// PropTypes validations
 TimeModification.propTypes = {
   useCustomTime: PropTypes.bool.isRequired,
   setUseCustomTime: PropTypes.func.isRequired,

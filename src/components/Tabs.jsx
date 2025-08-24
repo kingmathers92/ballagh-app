@@ -1,4 +1,5 @@
 import { memo } from "react";
+import PropTypes from "prop-types";
 
 const Tabs = ({ tabs, activeTab, setActiveTab }) => (
   <div className="tab-container">
@@ -34,5 +35,18 @@ const Tabs = ({ tabs, activeTab, setActiveTab }) => (
     </div>
   </div>
 );
+
+Tabs.propTypes = {
+  tabs: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      label: PropTypes.string.isRequired,
+      icon: PropTypes.string.isRequired,
+      content: PropTypes.node.isRequired,
+    })
+  ).isRequired,
+  activeTab: PropTypes.string.isRequired,
+  setActiveTab: PropTypes.func.isRequired,
+};
 
 export default memo(Tabs);

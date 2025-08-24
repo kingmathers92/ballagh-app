@@ -3,12 +3,13 @@ import { useGeolocation } from "../hooks/useGeolocation.js";
 import { usePrayerTimes } from "../hooks/usePrayerTimes.js";
 import { usePersistedState } from "../hooks/usePersistedState.js";
 import { useServiceWorker } from "../hooks/useServiceWorker.js";
-import Tabs from "./Tabs.jsx";
-import Accordion from "./Accordion.jsx";
-import ActionToolbar from "./ActionToolbar.jsx";
-import NotificationStack from "./NotificationStack.jsx";
-import translations from "../utils/translations.js";
 import { getTabsConfig } from "../utils/tabsConfig.js";
+import Tabs from "../components/Tabs";
+import Accordion from "../components/Accordion";
+import ActionToolbar from "../components/ActionToolbar";
+import NotificationStack from "../components/NotificationStack";
+import translations from "../utils/translations.js";
+
 import "../styles/PrayerTimes.css";
 
 function PrayerTimesView() {

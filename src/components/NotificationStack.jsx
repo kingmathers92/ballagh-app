@@ -1,4 +1,5 @@
 import { memo } from "react";
+import PropTypes from "prop-types";
 import Notification from "./Notification.jsx";
 
 const MemoizedNotification = memo(Notification);
@@ -20,4 +21,15 @@ const NotificationStack = ({ notifications, setNotifications }) => (
   </div>
 );
 
-export default memo(NotificationStack);
+NotificationStack.propTypes = {
+  notifications: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      message: PropTypes.string.isRequired,
+      isPermissionMessage: PropTypes.bool.isRequired,
+    })
+  ).isRequired,
+  setNotifications: PropTypes.func.isRequired,
+};
+
+export default NotificationStack;

@@ -1,7 +1,14 @@
 import PropTypes from "prop-types";
 import { useEffect } from "react";
 
-const Notification = ({ message, onClose, isPermissionMessage = false }) => {
+import "./PrayerTimes.css";
+
+const Notification = ({
+  message,
+  onClose,
+  isPermissionMessage = false,
+  className = "",
+}) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       onClose();
@@ -13,9 +20,9 @@ const Notification = ({ message, onClose, isPermissionMessage = false }) => {
     <div
       className={`notification ${
         isPermissionMessage ? "notification-permission" : ""
-      }`}
+      } ${className}`}
       role="alert"
-      aria-live="polite"
+      aria-live={isPermissionMessage ? "polite" : "assertive"}
     >
       <p>{message}</p>
       <button
@@ -33,6 +40,7 @@ Notification.propTypes = {
   message: PropTypes.string.isRequired,
   onClose: PropTypes.func.isRequired,
   isPermissionMessage: PropTypes.bool,
+  className: PropTypes.string,
 };
 
 export default Notification;

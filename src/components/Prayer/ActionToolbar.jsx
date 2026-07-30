@@ -4,7 +4,7 @@ import {
   requestNotificationPermission,
   dismissAllNotifications,
   exportPrayerTimes,
-} from "../utils/prayerUtils.js";
+} from "../../utils/prayerUtils";
 
 const ActionToolbar = ({
   notificationPermission,

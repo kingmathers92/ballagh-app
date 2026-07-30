@@ -25,7 +25,7 @@ function Quran() {
 
   const currentAyahs = useMemo(
     () => pages?.[currentPage] || [],
-    [pages, currentPage]
+    [pages, currentPage],
   );
   const totalPages = useMemo(() => Object.keys(pages || {}).length, [pages]);
 
@@ -50,7 +50,7 @@ function Quran() {
   const handleSurahChange = (e) => {
     const selectedSurah = e.target.value;
     const surahPage = Object.keys(pages).find(
-      (page) => pages[page][0].surahName === selectedSurah
+      (page) => pages[page][0].surahName === selectedSurah,
     );
     setCurrentPage(Number(surahPage));
   };
@@ -100,7 +100,11 @@ function Quran() {
           surahs.forEach((surah) => {
             surah.ayahs.forEach((ayah) => {
               if (!allPages[ayah.page]) allPages[ayah.page] = [];
-              allPages[ayah.page].push({ ...ayah, surahName: surah.name });
+              allPages[ayah.page].push({
+                ...ayah,
+                surahName: surah.name,
+                surahNumber: surah.number,
+              });
             });
           });
 
@@ -123,6 +127,7 @@ function Quran() {
   useEffect(() => {
     if (currentAyahs.length > 0) {
       setCurrentSurah(currentAyahs[0].surahName);
+      setSelectedSurahAudio(currentAyahs[0].surahNumber);
     }
   }, [currentAyahs]);
 
@@ -152,7 +157,7 @@ function Quran() {
           <ul>
             {surahList.map((surah, index) => {
               const pageNumber = Object.keys(pages).find(
-                (page) => pages[page][0]?.surahName === surah
+                (page) => pages[page][0]?.surahName === surah,
               );
               return (
                 <li
@@ -207,7 +212,7 @@ function Quran() {
         <AudioPlayer
           autoPlay={false}
           src={`https://download.quranicaudio.com/qdc/mishary_rashid_alafasy/murattal/${String(
-            selectedSurahAudio
+            selectedSurahAudio,
           ).padStart(3, "0")}.mp3`}
           onPlayError={() => console.log("Playback failed")}
         />

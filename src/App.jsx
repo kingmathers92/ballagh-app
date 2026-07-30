@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import DarkModeToggle from "./components/DarkModeToggle";
 import NavLinks from "./components/NavLinks";
@@ -12,17 +12,14 @@ import Qibla from "./pages/Qibla";
 import Journal from "./pages/Journal";
 
 const useTheme = () => {
-  const [theme, setTheme] = useState("light");
-
-  useEffect(() => {
-    const savedTheme =
+  const [theme, setTheme] = useState(
+    () =>
+      document.documentElement.getAttribute("data-theme") ||
       localStorage.getItem("theme") ||
       (window.matchMedia("(prefers-color-scheme: dark)").matches
         ? "dark"
-        : "light");
-    setTheme(savedTheme);
-    document.documentElement.setAttribute("data-theme", savedTheme);
-  }, []);
+        : "light"),
+  );
 
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";

@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { useEffect } from "react";
 
-import "./PrayerTimes.css";
+import "../styles/PrayerTimes.css";
 
 const Notification = ({
   message,

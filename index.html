@@ -4,7 +4,30 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React</title>
+    <title>Ballagh — Quran, Prayer Times & Hadith Companion</title>
+    <meta
+      name="description"
+      content="Ballagh is a bilingual Islamic companion app: read the Quran, track prayer times, find the Qibla, discover hadith, and reflect in your journal."
+    />
+    <meta property="og:title" content="Ballagh — بلَّغ" />
+    <meta
+      property="og:description"
+      content="A daily Islamic companion: Quran, prayer times, Qibla, hadith, and reflection - all in one place."
+    />
+    <meta property="og:type" content="website" />
+    <script>
+      // Set the theme before first paint so dark-mode users don't see a
+      // flash of the light theme while React mounts.
+      (function () {
+        var saved = localStorage.getItem("theme");
+        var theme =
+          saved ||
+          (window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light");
+        document.documentElement.setAttribute("data-theme", theme);
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

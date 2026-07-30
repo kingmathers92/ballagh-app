@@ -30,9 +30,18 @@ const ReflectionJournal = () => {
   });
 
   useEffect(() => {
-    const storedEntries = JSON.parse(localStorage.getItem("journalEntries"));
-    if (storedEntries) {
-      setJournalEntries(storedEntries);
+    try {
+      const storedEntries = JSON.parse(localStorage.getItem("journalEntries"));
+      if (storedEntries) {
+        // Migrate entries saved before entries had stable ids.
+        const withIds = storedEntries.map((entry) =>
+          entry.id ? entry : { ...entry, id: crypto.randomUUID() },
+        );
+        setJournalEntries(withIds);
+      }
+    } catch {
+      // Corrupted localStorage data - start fresh rather than crash the page.
+      setJournalEntries([]);
     }
   }, []);
 
@@ -43,6 +52,7 @@ const ReflectionJournal = () => {
   const handleAddEntry = () => {
     if (reflection.trim()) {
       const newEntry = {
+        id: crypto.randomUUID(),
         text: reflection,
         category: selectedCategory === "All" ? "Reflection" : selectedCategory, // Fallback category
         timestamp: new Date().toLocaleString(),
@@ -52,10 +62,9 @@ const ReflectionJournal = () => {
     }
   };
 
-  const handleDeleteEntry = (index) => {
+  const handleDeleteEntry = (id) => {
     if (window.confirm("Are you sure you want to delete this entry?")) {
-      const updatedEntries = journalEntries.filter((_, i) => i !== index);
-      setJournalEntries(updatedEntries);
+      setJournalEntries(journalEntries.filter((entry) => entry.id !== id));
     }
   };
 
@@ -100,14 +109,14 @@ const ReflectionJournal = () => {
       </button>
 
       <ul className="journal-entries">
-        {filteredEntries.map((entry, index) => (
-          <li key={index} className="journal-entry">
+        {filteredEntries.map((entry) => (
+          <li key={entry.id} className="journal-entry">
             <span className="entry-category">{entry.category}</span>
             <p>{entry.text}</p>
             <small>{entry.timestamp}</small>
             <button
               className="delete-button"
-              onClick={() => handleDeleteEntry(index)}
+              onClick={() => handleDeleteEntry(entry.id)}
             >
               Delete
             </button>

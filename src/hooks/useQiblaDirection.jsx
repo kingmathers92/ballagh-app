@@ -47,12 +47,12 @@ export const useQiblaDirection = () => {
           err.code === 1
             ? "PERMISSION_DENIED"
             : err.code === 2
-            ? "LOCATION_UNAVAILABLE"
-            : "Something went wrong"
+              ? "LOCATION_UNAVAILABLE"
+              : "Something went wrong",
         );
         setIsLoading(false);
       },
-      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 },
     );
   }, []);
 
@@ -80,7 +80,7 @@ export const useQiblaDirection = () => {
         }
       }, 100);
     },
-    [setOrientationSupported, setError, setCompassHeading]
+    [setOrientationSupported, setError, setCompassHeading],
   );
 
   useEffect(() => {
@@ -97,14 +97,14 @@ export const useQiblaDirection = () => {
             window.addEventListener(
               "deviceorientation",
               handleOrientation,
-              true
+              true,
             );
             setOrientationSupported(true);
           } else {
             setOrientationSupported(false);
             setError("ORIENTATION_PERMISSION_DENIED");
           }
-        } catch (_err) {
+        } catch {
           setOrientationSupported(false);
           setError("ORIENTATION_ERROR");
         }

@@ -18,15 +18,15 @@ function PrayerTimesView() {
   const [notifications, setNotifications] = useState([]);
   const [notificationPermission, setNotificationPermission] = usePersistedState(
     "notificationPermission",
-    "Notification" in window ? Notification.permission : "denied"
+    "Notification" in window ? Notification.permission : "denied",
   );
   const [calculationMethod, setCalculationMethod] = usePersistedState(
     "calculationMethod",
-    "UmmAlQura"
+    "UmmAlQura",
   );
   const [timeZone, setTimeZone] = usePersistedState(
     "timeZone",
-    Intl.DateTimeFormat().resolvedOptions().timeZone
+    Intl.DateTimeFormat().resolvedOptions().timeZone,
   );
   const [prayerReminders, setPrayerReminders] = usePersistedState(
     "prayerReminders",
@@ -37,7 +37,7 @@ function PrayerTimesView() {
       asr: true,
       maghrib: true,
       isha: true,
-    }
+    },
   );
   const [language, setLanguage] = usePersistedState("language", "en");
   const [activeTab, setActiveTab] = useState("prayer-times");
@@ -66,7 +66,7 @@ function PrayerTimesView() {
     calculationMethod,
     timeZone,
     prayerReminders,
-    language
+    language,
   );
 
   const tabs = getTabsConfig(
@@ -83,7 +83,7 @@ function PrayerTimesView() {
     calculationMethod,
     setCalculationMethod,
     setTimeZone,
-    setLanguage
+    setLanguage,
   );
 
   return (

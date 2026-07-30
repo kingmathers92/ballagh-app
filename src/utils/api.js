@@ -2,7 +2,7 @@ import axios from "axios";
 
 // base URL from environment variable with fallback
 const API_BASE_URL =
-  import.meta.env.VITE_QURAN_API_URL || "http://api.alquran.cloud/v1";
+  import.meta.env.VITE_QURAN_API_URL || "https://api.alquran.cloud/v1";
 
 /**
  * Fetches the entire Quran in Uthmani script.

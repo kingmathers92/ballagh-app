@@ -13,9 +13,7 @@
 - 🧭 **Qibla Compass**: Always know which way to face for prayer with a dynamic compass and map integration.
 - 📓 **Reflection Journal**: Capture your spiritual thoughts, categorize reflections, and search through your journal entries.
 - 📶 **Offline Oasis**: Access Quran verses even when you're off the grid, thanks to service worker caching.
-- 🌍 **Polyglot Quran**: Explore translations in multiple languages, including Arabic, English, and Urdu, with a simple toggle.
 - 🗓️ **Ramadan Companion**: Your trusty sidekick for the holy month, featuring prayer times, a fasting tracker, and daily Ramadan tips.
-- 👤 **Ummah Accounts**: Sync your bookmarks, journal entries, and preferences across all your devices with user accounts.
 
 ## 🚀 Coming Soon to a Device Near You
 
@@ -23,6 +21,8 @@
 - 📊 **Mood Tracker**: Add a mood tracking feature to your journal entries to reflect on your emotional journey.
 - 📖 **Tafsir Insights**: Dive deeper into the meanings of verses with integrated tafsir on the Quran page.
 - ⭐ **Hadith Favorites**: Save your favorite hadiths to revisit and share them anytime.
+- 🌍 **Polyglot Quran**: Explore translations in multiple languages, including Arabic, English, and Urdu, with a simple toggle.
+- 👤 **Ummah Accounts**: Sync your bookmarks, journal entries, and preferences across all your devices with user accounts.
 
 ## 🛠️ Built With
 
@@ -30,7 +30,6 @@
 - ⚡ **Vite**: For lightning-fast development and builds.
 - 🧭 **React Router**: For seamless navigation between pages.
 - 🔗 **Axios**: For fetching Quran and Hadith data from APIs.
-- 🔥 **Firebase**: For user authentication and data syncing with Ummah Accounts.
 - 📦 **Workbox**: For offline support and caching Quran verses.
 
 ## 🏁 Quick Start
@@ -73,10 +72,6 @@ Distributed under the MIT License. See `LICENSE` for more information.
 - [Aladhan API](http://api.aladhan.com/) for prayer times in the Ramadan Companion.
 - The open-source community for their divine inspiration.
 - You, for embarking on this journey with Ballagh!
-
-## 📬 Contact
-
-Khaled Ben Yahya - [@Twitter](https://twitter.com/khaledbenyahya_) - khaledb.yahya@gmail.com
 
 Project Link: [Ballagh - بلَّغ](https://github.com/kingmathers92/ballagh-app)
 

@@ -1,6 +1,13 @@
 @font-face {
   font-family: "Uthmani";
-  src: url("/fonts/UthmanicHafs1Ver09.otf") format("opentype");
+  src: url("/fonts/UthmanTN1-Regular.otf") format("opentype");
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "Uthmani";
+  src: url("/fonts/UthmanTN1-Bold.otf") format("opentype");
+  font-weight: bold;
 }
 
 .container {
@@ -136,6 +143,26 @@ mark {
   text-align: right;
 }
 
+.hadith-authenticity-note {
+  font-size: 0.9em;
+  margin-top: 8px;
+  padding: 6px 10px;
+  border-radius: 5px;
+  background-color: var(--background-color);
+  border: 1px solid var(--secondary-color);
+  color: var(--secondary-color);
+}
+
+.hadith-authenticity-warning {
+  font-size: 0.9em;
+  margin-top: 8px;
+  padding: 6px 10px;
+  border-radius: 5px;
+  color: #9f1239;
+  background-color: #fecdd3;
+  border: 1px solid #f43f5e;
+}
+
 .share-buttons {
   display: flex;
   justify-content: center;
@@ -222,7 +249,9 @@ mark {
   border-radius: 5px;
   font-size: 16px;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s;
+  transition:
+    background-color 0.3s ease,
+    transform 0.2s;
 }
 
 .button:hover {

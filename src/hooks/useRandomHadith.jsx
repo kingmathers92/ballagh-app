@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import axios from "axios";
 
 const useRandomHadith = (apiVersion = "1") => {
@@ -6,11 +6,12 @@ const useRandomHadith = (apiVersion = "1") => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [arabicEditions, setArabicEditions] = useState([]);
+  const editionCache = useRef(new Map());
 
   const fetchArabicEditions = useCallback(async () => {
     try {
       const response = await axios.get(
-        `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@${apiVersion}/editions.json`
+        `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@${apiVersion}/editions.json`,
       );
       const arabicEditions = [];
       Object.values(response.data).forEach((book) => {
@@ -30,6 +31,17 @@ const useRandomHadith = (apiVersion = "1") => {
     }
   }, [apiVersion]);
 
+  const ACCEPTABLE_GRADE = /sahih|hasan/i;
+  const WEAK_GRADE = /da'?if|munkar|shadh|mawdu|fabricated/i;
+
+  const classifyAuthenticity = (grades) => {
+    if (!grades || grades.length === 0) return "unverified";
+    const hasAcceptable = grades.some((g) => ACCEPTABLE_GRADE.test(g.grade));
+    if (hasAcceptable) return "graded";
+    const allWeak = grades.every((g) => WEAK_GRADE.test(g.grade));
+    return allWeak ? "weak" : "unverified";
+  };
+
   const handleHadithFetch = (hadiths, randomHadithNumber, randomEdition) => {
     const selectedHadith = hadiths[randomHadithNumber];
 
@@ -39,8 +51,8 @@ const useRandomHadith = (apiVersion = "1") => {
         self.findIndex(
           (g) =>
             g.grade === grade.grade &&
-            (g.scholar || "Unknown") === (grade.scholar || "Unknown")
-        )
+            (g.name || "Unknown") === (grade.name || "Unknown"),
+        ),
     );
 
     setHadith({
@@ -49,7 +61,20 @@ const useRandomHadith = (apiVersion = "1") => {
       collection: randomEdition.book,
       edition: randomEdition.name,
       grades: deduplicatedGrades || [],
+      authenticity: classifyAuthenticity(deduplicatedGrades),
     });
+  };
+
+  const pickHadithNumber = (hadiths) => {
+    const keys = Object.keys(hadiths);
+    let candidate = keys[Math.floor(Math.random() * keys.length)];
+
+    for (let attempt = 0; attempt < 5; attempt++) {
+      const status = classifyAuthenticity(hadiths[candidate]?.grades);
+      if (status !== "weak") break;
+      candidate = keys[Math.floor(Math.random() * keys.length)];
+    }
+    return candidate;
   };
 
   const fetchRandomHadith = useCallback(async () => {
@@ -61,30 +86,28 @@ const useRandomHadith = (apiVersion = "1") => {
       arabicEditions[Math.floor(Math.random() * arabicEditions.length)];
 
     try {
-      const editionResponse = await axios.get(randomEdition.link);
-      const hadiths = editionResponse.data.hadiths;
-      const randomHadithNumber =
-        Object.keys(hadiths)[
-          Math.floor(Math.random() * Object.keys(hadiths).length)
-        ];
+      let hadiths = editionCache.current.get(randomEdition.link);
+      if (!hadiths) {
+        const editionResponse = await axios.get(randomEdition.link);
+        hadiths = editionResponse.data.hadiths;
+        editionCache.current.set(randomEdition.link, hadiths);
+      }
+      const randomHadithNumber = pickHadithNumber(hadiths);
       handleHadithFetch(hadiths, randomHadithNumber, randomEdition);
     } catch (error) {
       console.error("Error fetching data:", error);
       setError("Failed to load random hadith. Please try again.");
       try {
         const fallbackResponse = await axios.get(
-          randomEdition.link.replace(".json", ".min.json")
+          randomEdition.link.replace(".json", ".min.json"),
         );
         const hadiths = fallbackResponse.data.hadiths;
-        const randomHadithNumber =
-          Object.keys(hadiths)[
-            Math.floor(Math.random() * Object.keys(hadiths).length)
-          ];
+        const randomHadithNumber = pickHadithNumber(hadiths);
         handleHadithFetch(hadiths, randomHadithNumber, randomEdition);
       } catch (fallbackError) {
         console.error("Error fetching data (fallback):", fallbackError);
         setError(
-          "Failed to load random hadith after fallback. Please try again."
+          "Failed to load random hadith after fallback. Please try again.",
         );
       }
     } finally {

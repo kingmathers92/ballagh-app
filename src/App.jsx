@@ -1,15 +1,17 @@
-import { useState } from "react";
+import { useState, lazy, Suspense } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import DarkModeToggle from "./components/DarkModeToggle";
 import NavLinks from "./components/NavLinks";
 import ErrorBoundary from "./components/ErrorBoundary";
-import PrayerTimes from "./pages/PrayerTimes";
-import Home from "./pages/Home";
-import Search from "./pages/Search";
-import RandomHadith from "./pages/RandomHadith";
-import Quran from "./pages/Quran";
-import Qibla from "./pages/Qibla";
-import Journal from "./pages/Journal";
+import Spinner from "./components/Spinner";
+
+const PrayerTimes = lazy(() => import("./pages/PrayerTimes"));
+const Home = lazy(() => import("./pages/Home"));
+const Search = lazy(() => import("./pages/Search"));
+const RandomHadith = lazy(() => import("./pages/RandomHadith"));
+const Quran = lazy(() => import("./pages/Quran"));
+const Qibla = lazy(() => import("./pages/Qibla"));
+const Journal = lazy(() => import("./pages/Journal"));
 
 const useTheme = () => {
   const [theme, setTheme] = useState(
@@ -57,11 +59,13 @@ function App() {
 
         <main>
           <ErrorBoundary>
-            <Routes>
-              {routes.map(({ path, element }) => (
-                <Route key={path} path={path} element={element} />
-              ))}
-            </Routes>
+            <Suspense fallback={<Spinner />}>
+              <Routes>
+                {routes.map(({ path, element }) => (
+                  <Route key={path} path={path} element={element} />
+                ))}
+              </Routes>
+            </Suspense>
           </ErrorBoundary>
         </main>
       </div>

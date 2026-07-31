@@ -1,14 +1,4 @@
 import { useState } from "react";
-import {
-  WhatsappShareButton,
-  WhatsappIcon,
-  FacebookShareButton,
-  FacebookIcon,
-  TwitterShareButton,
-  TwitterIcon,
-  TelegramShareButton,
-  TelegramIcon,
-} from "react-share";
 import { toPng } from "html-to-image";
 import PropTypes from "prop-types";
 
@@ -16,66 +6,71 @@ import "../styles/ShareImageBox.css";
 
 const ShareImageBox = ({ textToShare }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [status, setStatus] = useState("idle");
+  const [imageUrl, setImageUrl] = useState(null);
 
-  const toggleShareBox = () => {
-    setIsOpen(!isOpen);
-  };
+  const toggleShareBox = () => setIsOpen((open) => !open);
 
-  const handleShare = async (ShareButtonComponent, shareProps) => {
+  const generateAndShare = async () => {
+    setStatus("generating");
     try {
-      const dataUrl = await toPng(document.getElementById("hadith-text"));
+      const node = document.getElementById("hadith-text");
+      const dataUrl = await toPng(node);
+      setImageUrl(dataUrl);
 
-      shareProps.url = dataUrl;
-      return <ShareButtonComponent {...shareProps} />;
+      if (navigator.share && navigator.canShare) {
+        const blob = await (await fetch(dataUrl)).blob();
+        const file = new File([blob], "hadith.png", { type: "image/png" });
+        if (navigator.canShare({ files: [file] })) {
+          await navigator.share({ files: [file], text: textToShare });
+          setStatus("idle");
+          setIsOpen(false);
+          return;
+        }
+      }
+
+      setStatus("ready");
     } catch (error) {
-      console.error("Error generating image:", error);
+      if (error?.name === "AbortError") {
+        setStatus("idle");
+      } else {
+        console.error("Error sharing hadith image:", error);
+        setStatus("error");
+      }
     }
   };
 
   return (
     <div className="share-box">
-      <button onClick={toggleShareBox} className="social-button">
-        <span role="img" aria-label="share">
+      <button
+        onClick={toggleShareBox}
+        className="social-button"
+        aria-expanded={isOpen}
+        aria-label="Share this hadith"
+      >
+        <span role="img" aria-hidden="true">
           📤
         </span>
       </button>
       {isOpen && (
         <div className="share-options">
-          <WhatsappShareButton
-            url=""
-            onClick={() =>
-              handleShare(WhatsappShareButton, { title: textToShare })
-            }
+          <button
+            onClick={generateAndShare}
+            disabled={status === "generating"}
+            className="share-action-button"
           >
-            <WhatsappIcon size={26} round />
-          </WhatsappShareButton>
-
-          <FacebookShareButton
-            url=""
-            onClick={() =>
-              handleShare(FacebookShareButton, { quote: textToShare })
-            }
-          >
-            <FacebookIcon size={26} round />
-          </FacebookShareButton>
-
-          <TwitterShareButton
-            url=""
-            onClick={() =>
-              handleShare(TwitterShareButton, { title: textToShare })
-            }
-          >
-            <TwitterIcon size={26} round />
-          </TwitterShareButton>
-
-          <TelegramShareButton
-            url=""
-            onClick={() =>
-              handleShare(TelegramShareButton, { title: textToShare })
-            }
-          >
-            <TelegramIcon size={26} round />
-          </TelegramShareButton>
+            {status === "generating" ? "Preparing image..." : "Share as image"}
+          </button>
+          {status === "ready" && imageUrl && (
+            <a href={imageUrl} download="hadith.png" className="download-link">
+              Download image
+            </a>
+          )}
+          {status === "error" && (
+            <p className="share-error" role="alert">
+              Couldn&apos;t generate the image. Please try again.
+            </p>
+          )}
         </div>
       )}
     </div>

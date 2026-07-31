@@ -3,7 +3,7 @@ import { useGeolocation } from "../hooks/useGeolocation.js";
 import { usePrayerTimes } from "../hooks/usePrayerTimes.js";
 import { usePersistedState } from "../hooks/usePersistedState.js";
 import { useServiceWorker } from "../hooks/useServiceWorker.js";
-import { getTabsConfig } from "../utils/tabsConfig.js";
+import { getTabsConfig } from "../utils/tabsConfig.jsx";
 import Tabs from "../components/Tabs";
 import Accordion from "../components/Accordion";
 import ActionToolbar from "../components/ActionToolbar";

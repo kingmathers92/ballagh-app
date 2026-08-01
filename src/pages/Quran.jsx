@@ -91,8 +91,6 @@ function Quran() {
     setIsSidebarOpen((prev) => !prev);
   };
 
-  // Effects
-  // Fetch Quran data on mount
   useEffect(() => {
     const getData = async () => {
       try {
@@ -140,7 +138,7 @@ function Quran() {
     if (reciterAudio.audioSrc && audioPlayerRef.current?.audio?.current) {
       const playPromise = audioPlayerRef.current.audio.current.play();
       if (playPromise?.catch) {
-        playPromise.catch(() => });
+        playPromise.catch(() => {});
       }
     }
   }, [reciterAudio.audioSrc]);

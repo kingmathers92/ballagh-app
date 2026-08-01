@@ -36,7 +36,16 @@ const ActionToolbar = ({
         }
         aria-label={translations[language].enableNotifications}
       >
-        <span className="button-icon">🔔</span>
+        <span className="button-icon">
+          <svg viewBox="0 0 20 20" fill="none" width="15" height="15">
+            <path
+              d="M10 3.5c-2.2 0-3.8 1.8-3.8 4v2.3L5 12.5h10l-1.2-2.7V7.5c0-2.2-1.6-4-3.8-4Z"
+              stroke="currentColor"
+              strokeWidth="1.3"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </span>
         {translations[language].enableNotifications}
       </button>
     )}
@@ -46,7 +55,11 @@ const ActionToolbar = ({
         onClick={() => dismissAllNotifications(setNotifications)}
         aria-label={translations[language].dismissAllNotifications}
       >
-        <span className="button-icon">✖️</span>
+        <span className="button-icon">
+          <svg viewBox="0 0 20 20" fill="none" width="14" height="14">
+            <path d="M5 5l10 10M15 5 5 15" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+          </svg>
+        </span>
         {translations[language].dismissAllNotifications}
       </button>
     )}
@@ -69,7 +82,11 @@ const ActionToolbar = ({
       }
       aria-label={translations[language].exportPrayerTimes}
     >
-      <span className="button-icon">📥</span>
+      <span className="button-icon">
+        <svg viewBox="0 0 20 20" fill="none" width="14" height="14">
+          <path d="M10 3v9M10 12 6.5 8.5M10 12l3.5-3.5M4 15h12" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </span>
       {translations[language].exportPrayerTimes}
     </button>
   </div>

@@ -14,10 +14,12 @@ export default defineConfig({
         "apple-touch-icon.png",
       ],
       manifest: {
-        name: "Quran and Hadith App",
-        short_name: "QuranHadith",
-        description: "Read Quran and Hadith offline with caching support.",
-        theme_color: "#ffffff",
+        name: "Ballagh",
+        short_name: "Ballagh",
+        description:
+          "A bilingual Islamic companion: Quran, prayer times, Qibla, hadith, and reflection.",
+        theme_color: "#2A4B8D",
+        background_color: "#14171F",
         icons: [
           {
             src: "pwa-192x192.png",
@@ -28,6 +30,12 @@ export default defineConfig({
             src: "pwa-512x512.png",
             sizes: "512x512",
             type: "image/png",
+          },
+          {
+            src: "pwa-512x512.png",
+            sizes: "512x512",
+            type: "image/png",
+            purpose: "maskable",
           },
         ],
       },

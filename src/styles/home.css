@@ -1,0 +1,137 @@
+.home-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 4px 15px 20px;
+}
+
+.right-now-panel {
+  display: block;
+  background-color: var(--primary-color);
+  border: 1px solid var(--card-border);
+  padding: 18px 20px;
+  margin-bottom: 16px;
+  text-decoration: none;
+  color: var(--text-color);
+}
+
+.right-now-eyebrow {
+  display: block;
+  font-family: "Manrope", sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--brass-color);
+  margin-bottom: 10px;
+}
+
+.right-now-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.right-now-ar {
+  font-family: "Reem Kufi", sans-serif;
+  font-size: 1.5rem;
+  color: var(--text-color);
+}
+
+.right-now-en {
+  font-family: "Manrope", sans-serif;
+  font-size: 0.8rem;
+  color: var(--secondary-color);
+  margin-top: 2px;
+}
+
+.right-now-countdown {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+}
+
+.countdown-value {
+  font-family: "Fraunces", serif;
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: var(--accent-bright);
+}
+
+.countdown-label {
+  font-family: "Manrope", sans-serif;
+  font-size: 0.65rem;
+  color: var(--secondary-color);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-top: 2px;
+}
+
+.right-now-loading {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--secondary-color);
+  font-family: "Manrope", sans-serif;
+}
+
+.home-nav-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.home-nav-card {
+  background-color: var(--primary-color);
+  border: 1px solid var(--card-border);
+  padding: 16px 14px;
+  text-decoration: none;
+  color: var(--text-color);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.15s ease;
+}
+
+.home-nav-card:hover,
+.home-nav-card:focus {
+  transform: translateY(-2px);
+}
+
+.home-nav-card:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--accent-color);
+}
+
+.home-nav-icon {
+  width: 20px;
+  height: 20px;
+  margin-bottom: 12px;
+  color: var(--accent-color);
+}
+
+.home-nav-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.home-nav-label-ar {
+  font-family: "Reem Kufi", sans-serif;
+  font-size: 1rem;
+  color: var(--text-color);
+}
+
+.home-nav-label-en {
+  font-family: "Manrope", sans-serif;
+  font-size: 0.75rem;
+  color: var(--secondary-color);
+  margin-top: 2px;
+}
+
+@media (max-width: 480px) {
+  .right-now-ar,
+  .home-nav-label-ar {
+    font-size: 1.3rem;
+  }
+
+  .home-nav-label-ar {
+    font-size: 0.95rem;
+  }
+}

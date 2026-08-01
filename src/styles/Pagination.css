@@ -8,13 +8,22 @@
 
 .pagination-container button {
   padding: 0.4rem 0.8rem;
-  border: 1px solid var(--secondary-color);
+  border: 1px solid var(--card-border);
   background-color: var(--primary-color);
   color: var(--text-color);
   cursor: pointer;
   transition: background-color 0.2s ease;
-  border-radius: 4px;
+  font-family: "Manrope", sans-serif;
+  font-weight: 600;
   font-size: 0.9rem;
+  clip-path: polygon(
+    6px 0,
+    100% 0,
+    100% calc(100% - 6px),
+    calc(100% - 6px) 100%,
+    0 100%,
+    0 6px
+  );
 }
 
 .pagination-container button:hover:not(.disabled):not(.active) {

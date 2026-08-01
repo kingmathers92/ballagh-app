@@ -90,9 +90,19 @@ body {
   height: 0;
   border-left: 12px solid transparent;
   border-right: 12px solid transparent;
-  border-bottom: 30px solid #e74c3c;
+  border-bottom: 30px solid var(--accent-color);
   transform: translateX(-50%);
   z-index: 2;
+}
+
+.compass-star {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 24px;
+  height: 24px;
+  transform: translate(-50%, -50%);
+  z-index: 3;
 }
 
 .qibla-marker {
@@ -253,7 +263,7 @@ body {
 }
 
 .qibla-info .error-text {
-  color: #e74c3c;
+  color: var(--accent-color);
   font-size: 0.9rem;
   margin-top: 8px;
   overflow-wrap: break-word;
@@ -302,7 +312,9 @@ body {
   background: var(--primary-color);
   border: 1px solid var(--secondary-color);
   border-radius: 6px;
-  transition: transform 0.2s ease, background-color 0.3s ease;
+  transition:
+    transform 0.2s ease,
+    background-color 0.3s ease;
   animation: fadeIn 0.5s ease forwards;
   animation-delay: calc(var(--index) * 0.1s);
 }
@@ -338,7 +350,9 @@ body {
   padding: 3px 6px;
   border: 1px solid var(--accent-color);
   border-radius: 4px;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 .nearby-mosques .mosque-directions:hover,
@@ -354,7 +368,7 @@ body {
 
 .nearby-mosques .error-text {
   font-size: 0.8rem;
-  color: var(--error-color, #e74c3c);
+  color: var(--error-color, var(--accent-color));
   text-align: center;
   margin: 5px 0;
 }
@@ -424,7 +438,7 @@ body {
 
 /* Error Message */
 .error-message {
-  color: #e74c3c;
+  color: var(--accent-color);
   max-width: 300px;
   font-size: 0.9rem;
   overflow-wrap: break-word;
@@ -437,26 +451,6 @@ body {
 }
 
 /* Error Boundary Styling */
-.error-boundary {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 80vh;
-  padding: 20px;
-  text-align: center;
-  color: #e74c3c;
-}
-
-.error-boundary h2 {
-  font-size: 1.5rem;
-  margin-bottom: 10px;
-}
-
-.error-boundary p {
-  font-size: 1rem;
-  margin-bottom: 20px;
-}
 
 .error-boundary button {
   padding: 10px 20px;
@@ -522,7 +516,7 @@ body {
   .compass-arrow {
     border-left: 10px solid transparent;
     border-right: 10px solid transparent;
-    border-bottom: 25px solid #e74c3c;
+    border-bottom: 25px solid var(--accent-color);
     top: 8px;
   }
 
@@ -695,7 +689,7 @@ body {
   .compass-arrow {
     border-left: 8px solid transparent;
     border-right: 8px solid transparent;
-    border-bottom: 20px solid #e74c3c;
+    border-bottom: 20px solid var(--accent-color);
     top: 6px;
   }
 
@@ -863,7 +857,7 @@ body {
   .compass-arrow {
     border-left: 6px solid transparent;
     border-right: 6px solid transparent;
-    border-bottom: 16px solid #e74c3c;
+    border-bottom: 16px solid var(--accent-color);
     top: 5px;
   }
 

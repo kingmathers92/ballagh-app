@@ -238,21 +238,39 @@ function Quran() {
         {/* Ayah Display */}
         {currentAyahs.length > 0 && (
           <>
-            <h3 className="page-title">{currentSurah}</h3>
-            <div className="ayah-list">
-              <p className="ayah-paragraph">
-                {currentAyahs.map((ayah, index) => (
-                  <span key={ayah.number} className="ayah-text">
-                    {ayah.text}
-                    <span className="ayah-number">
-                      ({arabicNum(ayah.numberInSurah)})
-                    </span>
-                    {index < currentAyahs.length - 1 && " "}
+            <div className="quran-page-frame cut-corner">
+              {currentAyahs.map((ayah, index) => {
+                const isNewSurah =
+                  index === 0 ||
+                  ayah.surahName !== currentAyahs[index - 1].surahName;
+                return (
+                  <span key={ayah.number}>
+                    {isNewSurah && (
+                      <span className="surah-divider">
+                        <svg viewBox="0 0 22 22" aria-hidden="true">
+                          <path d="M11 1 13.2 5 18 3.4 16.6 8.2 21 11 16.6 13.8 18 18.6 13.2 17 11 21 8.8 17 4 18.6 5.4 13.8 1 11 5.4 8.2 4 3.4 8.8 5Z" />
+                        </svg>
+                        <span className="surah-divider-name">
+                          {ayah.surahName}
+                        </span>
+                        <svg viewBox="0 0 22 22" aria-hidden="true">
+                          <path d="M11 1 13.2 5 18 3.4 16.6 8.2 21 11 16.6 13.8 18 18.6 13.2 17 11 21 8.8 17 4 18.6 5.4 13.8 1 11 5.4 8.2 4 3.4 8.8 5Z" />
+                        </svg>
+                      </span>
+                    )}
+                    <span className="ayah-text">
+                      {ayah.text}
+                      <span className="ayah-number">
+                        {arabicNum(ayah.numberInSurah)}
+                      </span>
+                    </span>{" "}
                   </span>
-                ))}
-              </p>
-              <h3 className="page-title">الصفحة {arabicNum(currentPage)}</h3>
+                );
+              })}
             </div>
+            <p className="quran-page-footer">
+              {currentSurah} &middot; Page {arabicNum(currentPage)}
+            </p>
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}

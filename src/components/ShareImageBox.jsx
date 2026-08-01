@@ -6,7 +6,7 @@ import "../styles/ShareImageBox.css";
 
 const ShareImageBox = ({ textToShare }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [status, setStatus] = useState("idle");
+  const [status, setStatus] = useState("idle"); // idle | generating | ready | error
   const [imageUrl, setImageUrl] = useState(null);
 
   const toggleShareBox = () => setIsOpen((open) => !open);
@@ -18,6 +18,8 @@ const ShareImageBox = ({ textToShare }) => {
       const dataUrl = await toPng(node);
       setImageUrl(dataUrl);
 
+      // Prefer the native share sheet (lets the user pick WhatsApp, Telegram,
+      // or anything else installed) when the browser supports sharing files.
       if (navigator.share && navigator.canShare) {
         const blob = await (await fetch(dataUrl)).blob();
         const file = new File([blob], "hadith.png", { type: "image/png" });
@@ -29,9 +31,11 @@ const ShareImageBox = ({ textToShare }) => {
         }
       }
 
+      // Fallback for browsers without file-sharing support: offer a download.
       setStatus("ready");
     } catch (error) {
       if (error?.name === "AbortError") {
+        // User cancelled the native share sheet - not an error.
         setStatus("idle");
       } else {
         console.error("Error sharing hadith image:", error);
@@ -48,8 +52,16 @@ const ShareImageBox = ({ textToShare }) => {
         aria-expanded={isOpen}
         aria-label="Share this hadith"
       >
-        <span role="img" aria-hidden="true">
-          📤
+        <span aria-hidden="true">
+          <svg viewBox="0 0 16 16" fill="none" width="16" height="16">
+            <path
+              d="M8 2v8M8 2 5 5M8 2l3 3M3 9v4h10V9"
+              stroke="currentColor"
+              strokeWidth="1.3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
         </span>
       </button>
       {isOpen && (

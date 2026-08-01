@@ -40,7 +40,7 @@
 }
 
 .reflection-journal .delete-button {
-  background-color: #e41313;
+  background-color: var(--error);
   color: white;
   border: none;
   padding: 5px 10px;
@@ -50,7 +50,23 @@
 }
 
 .reflection-journal .delete-button:hover {
-  background-color: #c81010;
+  opacity: 0.85;
+}
+
+.reflection-journal .journal-privacy-note {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: "Manrope", sans-serif;
+  font-size: 0.78em;
+  color: var(--secondary-color);
+  margin: -8px 0 15px;
+}
+
+.reflection-journal .journal-privacy-note svg {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
 }
 
 .reflection-journal ul {
@@ -75,7 +91,7 @@
   margin-bottom: 15px;
   border: 1px solid var(--secondary-color);
   border-radius: 5px;
-  font-family: "Lateef", Arial, sans-serif;
+  font-family: "Manrope", Arial, sans-serif;
   font-size: 1em;
   background-color: var(--background-color);
   color: var(--text-color);
@@ -117,11 +133,22 @@
 
 .entry-category {
   display: inline-block;
-  background-color: var(--secondary-color);
+  background-color: var(--brass-color);
   color: var(--background-color);
-  padding: 3px 8px;
-  border-radius: 12px;
-  font-size: 0.8em;
+  padding: 4px 10px;
+  clip-path: polygon(
+    6px 0,
+    100% 0,
+    100% calc(100% - 6px),
+    calc(100% - 6px) 100%,
+    0 100%,
+    0 6px
+  );
+  font-family: "Manrope", sans-serif;
+  font-weight: 700;
+  font-size: 0.72em;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
   margin-bottom: 5px;
 }
 

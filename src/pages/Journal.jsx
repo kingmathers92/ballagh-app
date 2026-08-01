@@ -71,6 +71,21 @@ const ReflectionJournal = () => {
   return (
     <div className="reflection-journal">
       <h2>Reflection & Gratitude Journal</h2>
+      <p className="journal-privacy-note">
+        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <rect
+            x="2"
+            y="2"
+            width="12"
+            height="12"
+            rx="3"
+            stroke="currentColor"
+            strokeWidth="1.2"
+          />
+          <path d="M5 8l2 2 4-4" stroke="currentColor" strokeWidth="1.3" />
+        </svg>
+        Private &middot; stored on this device only
+      </p>
 
       <input
         type="text"

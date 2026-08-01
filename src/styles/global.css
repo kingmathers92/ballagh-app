@@ -1,37 +1,43 @@
-@import url("https://fonts.googleapis.com/css2?family=Amiri&family=Lateef&display=swap");
-
 :root[data-theme="light"] {
   --primary-color: #ffffff;
-  --secondary-color: #6b7280;
-  --text-color: #1f2937;
-  --background-color: #f9fafb;
-  --accent-color: #c09c64;
+  --secondary-color: #6b6558;
+  --text-color: #14171f;
+  --background-color: #f2ecdd;
+  --accent-color: #2a4b8d;
+  --accent-bright: #3e63ae;
+  --brass-color: #a8823d;
+  --clay-color: #9c5b44;
   --background: #fff;
   --text: #000;
-  --button-bg: #007bff;
-  --button-text: #fff;
+  --button-bg: #2a4b8d;
+  --button-text: #f2ecdd;
   --error: #d32f2f;
   --warning: #ff9800;
   --loading: #555;
-  --background-overlay-opacity: 0.1;
-  --background-overlay-color: rgba(0, 0, 0, 0.5);
+  --card-border: #e8dfc9;
+  --background-overlay-opacity: 0;
+  --background-overlay-color: rgba(0, 0, 0, 0);
 }
 
 :root[data-theme="dark"] {
-  --primary-color: #1e293b;
-  --secondary-color: #475569;
-  --text-color: #e2e8f0;
-  --background-color: #111827;
-  --accent-color: #c09c64;
-  --background: #222;
-  --text: #fff;
-  --button-bg: #555;
-  --button-text: #fff;
+  --primary-color: #1c2030;
+  --secondary-color: #9a9384;
+  --text-color: #f2ecdd;
+  --background-color: #14171f;
+  --accent-color: #3e63ae;
+  --accent-bright: #5c86d6;
+  --brass-color: #c9a465;
+  --clay-color: #b97457;
+  --background: #14171f;
+  --text: #f2ecdd;
+  --button-bg: #3e63ae;
+  --button-text: #f2ecdd;
   --error: #ef5350;
   --warning: #ffb300;
   --loading: #bbb;
-  --background-overlay-opacity: 0.2;
-  --background-overlay-color: rgba(0, 0, 0, 0.7);
+  --card-border: #2a2d38;
+  --background-overlay-opacity: 0;
+  --background-overlay-color: rgba(0, 0, 0, 0);
 }
 
 body,
@@ -40,7 +46,9 @@ nav,
 .container,
 .dark-mode-toggle,
 .app-title {
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 .App {
@@ -50,28 +58,37 @@ nav,
 }
 
 body {
-  font-family: "Lateef", Arial, sans-serif;
+  font-family: "Manrope", Arial, sans-serif;
   margin: 0;
   padding: 0;
   background-color: var(--background-color);
   color: var(--text-color);
-  background-image: url("https://www.transparenttextures.com/patterns/arabesque.png");
-  background-size: 200px 200px;
-  background-attachment: fixed;
   position: relative;
 }
 
-body::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: inherit;
-  opacity: var(--background-overlay-opacity);
-  background-color: var(--background-overlay-color);
-  z-index: -1;
+/* Signature shape: an asymmetric cut corner, derived from the 8-point
+   star's construction geometry. Used on cards, buttons and panels instead
+   of generic rounded rectangles. Two sizes for different component scales. */
+.cut-corner {
+  clip-path: polygon(
+    14px 0,
+    100% 0,
+    100% calc(100% - 14px),
+    calc(100% - 14px) 100%,
+    0 100%,
+    0 14px
+  );
+}
+
+.cut-corner-sm {
+  clip-path: polygon(
+    8px 0,
+    100% 0,
+    100% calc(100% - 8px),
+    calc(100% - 8px) 100%,
+    0 100%,
+    0 8px
+  );
 }
 
 header {
@@ -101,10 +118,11 @@ header {
 }
 
 .app-title {
-  color: var(--secondary-color);
+  color: var(--text-color);
   margin: 0;
-  font-size: 1.5em;
-  font-family: "Amiri", serif;
+  font-size: 1.4em;
+  font-family: "Reem Kufi", sans-serif;
+  font-weight: 700;
   text-align: center;
 }
 
@@ -127,14 +145,8 @@ nav ul {
     left: 0;
     width: 100%;
     height: 60px;
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-    border-top: 2px solid transparent;
-    border-image: linear-gradient(
-        to right,
-        var(--primary-color),
-        var(--accent-color)
-      )
-      1;
+    box-shadow: 0 -1px 0 var(--card-border);
+    border-top: none;
   }
 
   nav ul {
@@ -153,36 +165,44 @@ nav ul {
   }
 
   nav ul li a {
-    color: var(--accent-color);
+    color: var(--secondary-color);
     text-decoration: none;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
+    font-family: "Manrope", sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 4px;
     padding: 8px 5px;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease;
   }
 
   nav ul li a.active {
-    color: var(--secondary-color);
-    font-weight: bold;
-    background-color: var(--background-color);
+    color: var(--accent-color);
+    font-weight: 700;
   }
 
   nav ul li a:hover,
   nav ul li a:focus {
-    background-color: var(--accent-color);
-    color: var(--background-color);
+    color: var(--accent-color);
   }
 
   nav ul li a:focus {
-    outline: 1px solid var(--text-color);
+    outline: 1px solid var(--accent-color);
     outline-offset: 1px;
   }
 
   .nav-icon {
-    font-size: 1.2rem;
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+  }
+
+  .nav-icon svg {
+    width: 100%;
+    height: 100%;
   }
 }
 
@@ -209,37 +229,44 @@ nav ul {
   }
 
   nav ul li a {
-    color: var(--accent-color);
+    color: var(--secondary-color);
     text-decoration: none;
-    font-size: 1rem;
+    font-size: 0.95rem;
     display: flex;
     align-items: center;
     gap: 8px;
     padding: 8px 12px;
-    border-radius: 5px;
-    transition: background-color 0.3s ease, color 0.3s ease;
-    font-family: "Amiri", serif;
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease;
+    font-family: "Manrope", sans-serif;
+    font-weight: 500;
   }
 
   nav ul li a.active {
-    color: var(--secondary-color);
-    font-weight: bold;
-    background-color: var(--background-color);
+    color: var(--accent-color);
+    font-weight: 700;
   }
 
   nav ul li a:hover,
   nav ul li a:focus {
-    background-color: var(--accent-color);
-    color: var(--background-color);
+    color: var(--accent-color);
   }
 
   nav ul li a:focus {
-    outline: 1px solid var(--text-color);
+    outline: 1px solid var(--accent-color);
     outline-offset: 1px;
   }
 
   .nav-icon {
-    font-size: 1.1rem;
+    width: 16px;
+    height: 16px;
+    display: inline-flex;
+  }
+
+  .nav-icon svg {
+    width: 100%;
+    height: 100%;
   }
 }
 
@@ -254,69 +281,54 @@ main {
 
 @media (max-width: 767px) {
   main {
-    padding-bottom: 60px;
+    padding-bottom: 76px;
   }
 }
 
+/* Header band used by Home and PrayerTimes - typographic, not a photo. */
 .hero-section {
   position: relative;
-  height: 200px;
-  background-image: url("/images/okba.jpg");
-  background-size: cover;
-  background-position: center;
+  padding: 32px 20px;
+  background-color: var(--primary-color);
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 15px;
-}
-
-.hero-section::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 2, 0, 0.5);
-  z-index: 1;
+  text-align: center;
 }
 
 .hero-section .title {
   position: relative;
-  z-index: 2;
-  color: #fff;
-  text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.5);
+  color: var(--text-color);
+  text-shadow: none;
 }
 
 .container {
-  background-color: var(--background-color);
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: var(--primary-color);
+  padding: 18px;
   max-width: 800px;
   margin: 0 auto;
   text-align: center;
-  border: 2px solid transparent;
-  border-image: linear-gradient(
-      to right,
-      var(--primary-color),
-      var(--accent-color)
-    )
-    1;
+  border: 1px solid var(--card-border);
 }
 
 .title {
-  color: var(--accent-color);
+  color: var(--text-color);
   text-align: center;
-  font-family: "Amiri", serif;
-  font-size: 2.25em;
+  font-family: "Fraunces", serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-size: 2em;
   margin-bottom: 15px;
 }
 
 .subtitle {
   color: var(--text-color);
   text-align: center;
-  font-size: 1.1em;
+  font-size: 1.05em;
+  font-family: "Fraunces", serif;
+  font-style: italic;
+  font-weight: 500;
   margin-top: 0;
   margin-bottom: 15px;
 }
@@ -324,14 +336,17 @@ main {
 .description {
   margin-bottom: 20px;
   font-size: 1em;
+  color: var(--secondary-color);
 }
 
 .input {
   width: 100%;
   padding: 8px;
   margin-bottom: 8px;
-  border: 2px solid var(--secondary-color);
-  border-radius: 4px;
+  border: 1px solid var(--card-border);
+  background-color: var(--background-color);
+  color: var(--text-color);
+  font-family: "Manrope", sans-serif;
   font-size: 0.95em;
   box-sizing: border-box;
 }
@@ -344,26 +359,33 @@ main {
 .button,
 .button-container button,
 .share-button {
-  background-color: var(--primary-color);
-  color: var(--text-color);
+  background-color: var(--button-bg);
+  color: var(--button-text);
   border: none;
-  border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s;
-  padding: 8px 16px;
+  transition: transform 0.15s ease;
+  padding: 10px 18px;
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  animation: fadeIn 0.5s ease-in;
   text-decoration: none;
+  font-family: "Manrope", sans-serif;
+  font-weight: 600;
+  font-size: 0.9em;
+  clip-path: polygon(
+    8px 0,
+    100% 0,
+    100% calc(100% - 8px),
+    calc(100% - 8px) 100%,
+    0 100%,
+    0 8px
+  );
 }
 
 .button:hover,
 .button-container button:hover,
 .share-button:hover {
-  background-color: var(--accent-color);
-  color: var(--background-color);
-  transform: scale(1.03);
+  transform: scale(1.02);
   text-decoration: none;
 }
 
@@ -376,17 +398,6 @@ button:focus,
 .share-button:focus {
   outline: none;
   box-shadow: 0 0 0 2px var(--accent-color);
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 /* Responsive adjustments */
@@ -402,15 +413,15 @@ button:focus,
   }
 
   .app-title {
-    font-size: 1.3em;
+    font-size: 1.2em;
   }
 
   .hero-section {
-    height: 150px;
+    padding: 24px 16px;
   }
 
   .container {
-    padding: 10px;
+    padding: 12px;
   }
 
   .title {
@@ -432,21 +443,9 @@ button:focus,
     padding: 6px 10px;
     font-size: 0.9em;
   }
-
-  .button {
-    width: 100%;
-    max-width: 60px;
-    justify-content: center;
-    padding: 6px 12px;
-    font-size: 0.85em;
-  }
 }
 
 @media (min-width: 768px) {
-  .hero-section {
-    height: 250px;
-  }
-
   .container {
     padding: 15px;
   }
@@ -457,12 +456,6 @@ button:focus,
 
   .subtitle {
     font-size: 1.2rem;
-  }
-
-  .button {
-    padding: 8px 16px;
-    font-size: 0.9rem;
-    width: auto;
   }
 
   .app-title {

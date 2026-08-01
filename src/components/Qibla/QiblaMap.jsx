@@ -26,13 +26,13 @@ function QiblaMap({ location, qiblaDirection }) {
 
     const lat2 = Math.asin(
       Math.sin(lat1) * Math.cos(distance / R) +
-        Math.cos(lat1) * Math.sin(distance / R) * Math.cos(bearing)
+        Math.cos(lat1) * Math.sin(distance / R) * Math.cos(bearing),
     );
     const lon2 =
       lon1 +
       Math.atan2(
         Math.sin(bearing) * Math.sin(distance / R) * Math.cos(lat1),
-        Math.cos(distance / R) - Math.sin(lat1) * Math.sin(lat2)
+        Math.cos(distance / R) - Math.sin(lat1) * Math.sin(lat2),
       );
 
     return [(lat2 * 180) / Math.PI, (lon2 * 180) / Math.PI];
@@ -64,10 +64,10 @@ function QiblaMap({ location, qiblaDirection }) {
           calculateQiblaPoint(
             location.latitude,
             location.longitude,
-            qiblaDirection
+            qiblaDirection,
           ),
         ]}
-        color="#2ecc71"
+        color="#2A4B8D"
         weight={3}
       />
     </MapContainer>

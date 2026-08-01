@@ -179,7 +179,7 @@
   border-radius: 5px;
   background: var(--primary-color);
   color: var(--text-color);
-  font-family: "Uthmani", "Amiri", serif;
+  font-family: "Manrope", sans-serif;
   flex: 1;
   min-width: 150px;
   max-width: 100%;
@@ -215,7 +215,7 @@
   border: 2px solid var(--secondary-color);
   border-radius: 5px;
   font-size: 1rem;
-  font-family: "Uthmani", "Amiri", serif;
+  font-family: "Manrope", sans-serif;
 }
 
 /* Page Input */
@@ -234,7 +234,7 @@
   border: 2px solid var(--secondary-color);
   border-radius: 5px;
   font-size: 1rem;
-  font-family: "Uthmani", "Amiri", serif;
+  font-family: "Manrope", sans-serif;
 }
 
 .page-input-container button {
@@ -245,7 +245,7 @@
   border-radius: 5px;
   cursor: pointer;
   font-size: 1rem;
-  font-family: "Uthmani", "Amiri", serif;
+  font-family: "Manrope", sans-serif;
 }
 
 .page-input-container button:disabled {
@@ -333,6 +333,227 @@
   margin: 0 5px;
 }
 
+.quran-page-frame .ayah-text {
+  cursor: pointer;
+  border-radius: 3px;
+  transition: background-color 0.15s ease;
+}
+
+.quran-page-frame .ayah-text:hover {
+  background-color: var(--background-color);
+}
+
+.quran-page-frame .ayah-selected {
+  background-color: var(--background-color);
+  box-shadow: 0 0 0 1px var(--accent-color);
+}
+
+.quran-page-frame .ayah-playing .ayah-number {
+  background-color: var(--brass-color);
+}
+
+.quran-page-frame .ayah-playing {
+  background-color: rgba(42, 75, 141, 0.08);
+}
+
+.ayah-action-bar {
+  display: inline-flex;
+  gap: 6px;
+  margin: 0 6px;
+  vertical-align: middle;
+}
+
+.ayah-action-bar button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  background-color: var(--accent-color);
+  color: #f2ecdd;
+  border: none;
+  font-family: "Manrope", sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  cursor: pointer;
+  clip-path: polygon(
+    6px 0,
+    100% 0,
+    100% calc(100% - 6px),
+    calc(100% - 6px) 100%,
+    0 100%,
+    0 6px
+  );
+}
+
+.ayah-action-bar button svg {
+  width: 10px;
+  height: 10px;
+}
+
+.audio-controls-row {
+  display: flex;
+  gap: 10px;
+  max-width: 640px;
+  margin: 16px auto 0;
+}
+
+.play-surah-button,
+.reciter-pill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border: 1px solid var(--card-border);
+  background-color: var(--primary-color);
+  color: var(--text-color);
+  font-family: "Manrope", sans-serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  clip-path: polygon(
+    8px 0,
+    100% 0,
+    100% calc(100% - 8px),
+    calc(100% - 8px) 100%,
+    0 100%,
+    0 8px
+  );
+}
+
+.play-surah-button {
+  flex: 1;
+  background-color: var(--accent-color);
+  color: #f2ecdd;
+  border: none;
+}
+
+.play-surah-button svg {
+  width: 14px;
+  height: 14px;
+}
+
+.play-surah-button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.reciter-pill {
+  flex: 1;
+}
+
+.reciter-pill-mark svg {
+  width: 14px;
+  height: 14px;
+  fill: var(--brass-color);
+}
+
+.reciter-sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 23, 31, 0.55);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.reciter-sheet {
+  width: 100%;
+  max-width: 640px;
+  max-height: 75vh;
+  overflow-y: auto;
+  background-color: var(--primary-color);
+  padding: 10px 18px 24px;
+}
+
+.reciter-sheet-handle {
+  width: 36px;
+  height: 4px;
+  background: var(--card-border);
+  border-radius: 2px;
+  margin: 6px auto 14px;
+}
+
+.reciter-sheet-title {
+  font-family: "Fraunces", serif;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--text-color);
+  text-align: center;
+  margin: 0 0 16px;
+}
+
+.reciter-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.reciter-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background-color: var(--background-color);
+  border: 1px solid var(--card-border);
+  cursor: pointer;
+  text-align: left;
+  clip-path: polygon(
+    8px 0,
+    100% 0,
+    100% calc(100% - 8px),
+    calc(100% - 8px) 100%,
+    0 100%,
+    0 8px
+  );
+}
+
+.reciter-card-selected {
+  box-shadow: 0 0 0 1.5px var(--accent-color);
+}
+
+.reciter-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.reciter-avatar svg {
+  width: 16px;
+  height: 16px;
+  fill: #f2ecdd;
+}
+
+.reciter-card-names {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.reciter-card-name-ar {
+  font-family: "Reem Kufi", sans-serif;
+  font-size: 1rem;
+  color: var(--text-color);
+}
+
+.reciter-card-name-en {
+  font-family: "Manrope", sans-serif;
+  font-size: 0.72rem;
+  color: var(--secondary-color);
+}
+
+.reciter-check {
+  width: 16px;
+  height: 16px;
+  color: var(--accent-color);
+  flex-shrink: 0;
+}
+
 /* Search Results */
 .search-results {
   margin-top: 15px;
@@ -373,7 +594,7 @@
 
 .rhap_time {
   color: var(--text-color);
-  font-family: "Uthmani", "Amiri", serif;
+  font-family: "Manrope", sans-serif;
 }
 
 /* Pagination */

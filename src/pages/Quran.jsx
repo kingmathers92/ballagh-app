@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { fetchQuranData } from "../utils/api";
 import useBookmarks from "../hooks/useBookmarks";
 import { useSwipeable } from "react-swipeable";
@@ -7,6 +7,8 @@ import Pagination from "../components/Pagination";
 import Spinner from "../components/Spinner";
 import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
+import { useReciterAudio } from "../hooks/useReciterAudio";
+import ReciterPicker from "../components/ReciterPicker";
 
 import "../styles/Quran.css";
 
@@ -19,8 +21,10 @@ function Quran() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [inputPage, setInputPage] = useState("");
-  const [selectedSurahAudio, setSelectedSurahAudio] = useState(1);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [selectedAyah, setSelectedAyah] = useState(null);
+  const [isReciterPickerOpen, setIsReciterPickerOpen] = useState(false);
+  const audioPlayerRef = useRef(null);
   const { bookmarkedPages, removeBookmark } = useBookmarks();
 
   const currentAyahs = useMemo(
@@ -127,11 +131,20 @@ function Quran() {
   useEffect(() => {
     if (currentAyahs.length > 0) {
       setCurrentSurah(currentAyahs[0].surahName);
-      setSelectedSurahAudio(currentAyahs[0].surahNumber);
     }
   }, [currentAyahs]);
 
-  // Debounced search effect
+  const reciterAudio = useReciterAudio(pages);
+
+  useEffect(() => {
+    if (reciterAudio.audioSrc && audioPlayerRef.current?.audio?.current) {
+      const playPromise = audioPlayerRef.current.audio.current.play();
+      if (playPromise?.catch) {
+        playPromise.catch(() => });
+      }
+    }
+  }, [reciterAudio.audioSrc]);
+
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
       debouncedSearch();
@@ -148,7 +161,7 @@ function Quran() {
     <div {...swipeHandlers} className="quran-container">
       {/* Sidebar Toggle Button */}
       <button className="sidebar-toggle" onClick={toggleSidebar}>
-        {isSidebarOpen ? "إخفاء" : "السور"} {/* Simplified labels */}
+        {isSidebarOpen ? "إخفاء" : "السور"}
       </button>
 
       {/* Sidebar */}
@@ -177,7 +190,6 @@ function Quran() {
 
       {/* Main Content */}
       <div className="quran-main-content">
-        {/* Combined Search, Surah, and Page Navigation */}
         <div className="search-surah-container">
           <div className="search-container">
             <input
@@ -209,12 +221,62 @@ function Quran() {
         </div>
 
         {/* Audio Player */}
-        <AudioPlayer
-          autoPlay={false}
-          src={`https://download.quranicaudio.com/qdc/mishary_rashid_alafasy/murattal/${String(
-            selectedSurahAudio,
-          ).padStart(3, "0")}.mp3`}
-          onPlayError={() => console.log("Playback failed")}
+        <div className="audio-controls-row">
+          <button
+            className="play-surah-button"
+            onClick={() =>
+              currentAyahs[0] &&
+              reciterAudio.playSurah(currentAyahs[0].surahNumber)
+            }
+            disabled={!currentAyahs[0]}
+          >
+            <svg viewBox="0 0 16 16" fill="none">
+              <path d="M5 3.5v9l8-4.5Z" fill="currentColor" />
+            </svg>
+            Play surah
+          </button>
+          <button
+            className="reciter-pill"
+            onClick={() => setIsReciterPickerOpen(true)}
+          >
+            <span className="reciter-pill-mark">
+              <svg viewBox="0 0 22 22" aria-hidden="true">
+                <path d="M11 1 13.2 5 18 3.4 16.6 8.2 21 11 16.6 13.8 18 18.6 13.2 17 11 21 8.8 17 4 18.6 5.4 13.8 1 11 5.4 8.2 4 3.4 8.8 5Z" />
+              </svg>
+            </span>
+            {reciterAudio.reciter.name}
+          </button>
+        </div>
+
+        {reciterAudio.audioSrc && (
+          <AudioPlayer
+            ref={audioPlayerRef}
+            autoPlay
+            src={reciterAudio.audioSrc}
+            onPlayError={() => console.log("Playback failed")}
+            onEnded={() => {
+              const moved = reciterAudio.advance();
+              if (!moved) reciterAudio.stop();
+            }}
+            header={
+              reciterAudio.currentAyah
+                ? `${reciterAudio.currentAyah.surahName} · Ayah ${arabicNum(
+                    reciterAudio.currentAyah.numberInSurah,
+                  )} · ${reciterAudio.reciter.name}`
+                : ""
+            }
+          />
+        )}
+
+        <ReciterPicker
+          isOpen={isReciterPickerOpen}
+          onClose={() => setIsReciterPickerOpen(false)}
+          reciters={reciterAudio.reciters}
+          selectedId={reciterAudio.reciter.id}
+          onSelect={(id) => {
+            reciterAudio.setReciterId(id);
+            setIsReciterPickerOpen(false);
+          }}
         />
 
         {/* Search Results */}
@@ -258,12 +320,68 @@ function Quran() {
                         </svg>
                       </span>
                     )}
-                    <span className="ayah-text">
+                    <span
+                      className={`ayah-text${
+                        reciterAudio.currentAyah?.number === ayah.number
+                          ? " ayah-playing"
+                          : ""
+                      }${
+                        selectedAyah?.number === ayah.number
+                          ? " ayah-selected"
+                          : ""
+                      }`}
+                      onClick={() =>
+                        setSelectedAyah(
+                          selectedAyah?.number === ayah.number ? null : ayah,
+                        )
+                      }
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          setSelectedAyah(
+                            selectedAyah?.number === ayah.number ? null : ayah,
+                          );
+                        }
+                      }}
+                    >
                       {ayah.text}
                       <span className="ayah-number">
                         {arabicNum(ayah.numberInSurah)}
                       </span>
-                    </span>{" "}
+                    </span>
+                    {selectedAyah?.number === ayah.number && (
+                      <span className="ayah-action-bar">
+                        <button
+                          onClick={() => {
+                            reciterAudio.playAyah(ayah);
+                            setSelectedAyah(null);
+                          }}
+                        >
+                          <svg viewBox="0 0 16 16" fill="none">
+                            <path d="M5 3.5v9l8-4.5Z" fill="currentColor" />
+                          </svg>
+                          Play this ayah
+                        </button>
+                        <button
+                          onClick={() => {
+                            reciterAudio.playSurah(ayah.surahNumber, ayah);
+                            setSelectedAyah(null);
+                          }}
+                        >
+                          <svg viewBox="0 0 16 16" fill="none">
+                            <path
+                              d="M4 3v10M8 3v10M12 3v10"
+                              stroke="currentColor"
+                              strokeWidth="1.4"
+                              strokeLinecap="round"
+                            />
+                          </svg>
+                          Play from here
+                        </button>
+                      </span>
+                    )}{" "}
                   </span>
                 );
               })}

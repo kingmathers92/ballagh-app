@@ -12,47 +12,6 @@ import "../styles/Home.css";
 
 const navItems = [
   {
-    to: "/quran",
-    labelAr: "القرآن",
-    labelEn: "Quran",
-    icon: (
-      <svg viewBox="0 0 20 20" fill="none">
-        <path
-          d="M3 3h6v14H3zM11 3h6v14h-6z"
-          stroke="currentColor"
-          strokeWidth="1.3"
-        />
-      </svg>
-    ),
-  },
-  {
-    to: "/random",
-    labelAr: "الحديث",
-    labelEn: "Hadith",
-    icon: (
-      <svg viewBox="0 0 20 20" fill="none">
-        <circle cx="10" cy="10" r="7" stroke="currentColor" strokeWidth="1.3" />
-        <path d="M10 5.5v5l3.2 1.8" stroke="currentColor" strokeWidth="1.3" />
-      </svg>
-    ),
-  },
-  {
-    to: "/qibla",
-    labelAr: "القبلة",
-    labelEn: "Qibla",
-    icon: (
-      <svg viewBox="0 0 20 20" fill="none">
-        <circle cx="10" cy="10" r="7" stroke="currentColor" strokeWidth="1.3" />
-        <path
-          d="M10 10 13.8 6.2"
-          stroke="currentColor"
-          strokeWidth="1.3"
-          strokeLinecap="round"
-        />
-      </svg>
-    ),
-  },
-  {
     to: "/journal",
     labelAr: "اليوميات",
     labelEn: "Journal",
@@ -62,6 +21,28 @@ const navItems = [
           d="M4 3h12v14l-6-3-6 3z"
           stroke="currentColor"
           strokeWidth="1.3"
+        />
+      </svg>
+    ),
+  },
+  {
+    to: "/search",
+    labelAr: "بحث",
+    labelEn: "Search",
+    icon: (
+      <svg viewBox="0 0 20 20" fill="none">
+        <circle
+          cx="8.5"
+          cy="8.5"
+          r="5.5"
+          stroke="currentColor"
+          strokeWidth="1.3"
+        />
+        <path
+          d="M13 13 17 17"
+          stroke="currentColor"
+          strokeWidth="1.3"
+          strokeLinecap="round"
         />
       </svg>
     ),

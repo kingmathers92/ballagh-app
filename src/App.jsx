@@ -1,5 +1,5 @@
 import { useState, lazy, Suspense } from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import DarkModeToggle from "./components/DarkModeToggle";
 import NavLinks from "./components/NavLinks";
 import ErrorBoundary from "./components/ErrorBoundary";
@@ -52,6 +52,27 @@ function App() {
         <header>
           <DarkModeToggle theme={theme} toggleTheme={toggleTheme} />
           <h1 className="app-title">بلَّغ</h1>
+          <Link
+            to="/search"
+            className="header-search-button"
+            aria-label="Search"
+          >
+            <svg viewBox="0 0 20 20" fill="none">
+              <circle
+                cx="8.5"
+                cy="8.5"
+                r="5.5"
+                stroke="currentColor"
+                strokeWidth="1.4"
+              />
+              <path
+                d="M13 13 17 17"
+                stroke="currentColor"
+                strokeWidth="1.4"
+                strokeLinecap="round"
+              />
+            </svg>
+          </Link>
           <nav>
             <NavLinks />
           </nav>

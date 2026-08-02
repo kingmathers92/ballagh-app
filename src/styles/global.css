@@ -117,6 +117,28 @@ header {
   outline-offset: 2px;
 }
 
+.header-search-button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 1000;
+  color: var(--text-color);
+  display: flex;
+}
+
+.header-search-button svg {
+  width: 20px;
+  height: 20px;
+}
+
+.header-search-button:focus {
+  outline: 1px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
 .app-title {
   color: var(--text-color);
   margin: 0;
@@ -149,12 +171,41 @@ nav ul {
     border-top: none;
   }
 
-  nav ul {
+  nav ul.primary-nav {
     display: flex;
     justify-content: space-around;
     align-items: center;
     height: 100%;
     background: var(--primary-color);
+    position: relative;
+  }
+
+  .nav-indicator {
+    position: absolute;
+    top: 6px;
+    left: 0;
+    width: calc(100% / var(--nav-count));
+    height: 46px;
+    transform: translateX(calc(var(--nav-index) * 100%));
+    transition: transform 0.28s cubic-bezier(0.34, 1.2, 0.64, 1);
+    pointer-events: none;
+  }
+
+  .nav-indicator::after {
+    content: "";
+    display: block;
+    width: 52px;
+    height: 100%;
+    margin: 0 auto;
+    background: var(--background-color);
+    clip-path: polygon(
+      10px 0,
+      100% 0,
+      100% calc(100% - 10px),
+      calc(100% - 10px) 100%,
+      0 100%,
+      0 10px
+    );
   }
 
   nav ul li {
@@ -162,26 +213,32 @@ nav ul {
     padding: 0;
     border-bottom: none;
     text-align: center;
+    position: relative;
+    z-index: 1;
   }
 
   nav ul li a {
     color: var(--secondary-color);
     text-decoration: none;
-    font-size: 0.8rem;
+    font-size: 0.72rem;
     font-family: "Manrope", sans-serif;
+    font-weight: 600;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 4px;
     padding: 8px 5px;
     transition:
-      background-color 0.3s ease,
-      color 0.3s ease;
+      color 0.2s ease,
+      transform 0.15s ease;
+  }
+
+  nav ul li a:active {
+    transform: scale(0.9);
   }
 
   nav ul li a.active {
     color: var(--accent-color);
-    font-weight: 700;
   }
 
   nav ul li a:hover,
@@ -208,6 +265,10 @@ nav ul {
 
 /* Desktop: Horizontal nav in header */
 @media (min-width: 768px) {
+  .nav-indicator {
+    display: none;
+  }
+
   nav {
     position: static;
     width: auto;
@@ -390,7 +451,12 @@ main {
 }
 
 .button-icon {
-  font-size: 1.1em;
+  display: inline-flex;
+  align-items: center;
+}
+
+.button-icon svg {
+  display: block;
 }
 
 button:focus,

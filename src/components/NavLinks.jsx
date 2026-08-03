@@ -1,5 +1,6 @@
+import { useRef, useState } from "react";
 import PropTypes from "prop-types";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 
 const icons = {
   home: (
@@ -46,21 +47,68 @@ const icons = {
 // (a quick action, not a place you browse) and Journal is one tap away
 // through Home's own nav grid - both stay fully reachable, just not
 // competing for space in the primary bar.
+//
+// Quran and Hadith also carry a long-press shortcut - a small bit of
+// native-app-feeling delight (like an iOS/Android app-icon quick
+// action) layered on top of normal navigation, not a replacement for it.
 const links = [
   { path: "/", label: "Home", icon: icons.home },
-  { path: "/quran", label: "Quran", icon: icons.quran },
-  { path: "/random", label: "Hadith", icon: icons.hadith },
+  {
+    path: "/quran",
+    label: "Quran",
+    icon: icons.quran,
+    longPress: { state: { randomPage: true }, hint: "Random page" },
+  },
+  {
+    path: "/random",
+    label: "Hadith",
+    icon: icons.hadith,
+    longPress: { state: { freshFetch: true }, hint: "New hadith" },
+  },
   { path: "/qibla", label: "Qibla", icon: icons.qibla },
   { path: "/prayer-times", label: "Prayer", icon: icons.prayer },
 ];
 
+const LONG_PRESS_MS = 500;
+
 const NavLinks = ({ toggleMenu = () => {} }) => {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
+  const [pressedPath, setPressedPath] = useState(null);
+  const timerRef = useRef(null);
+  const firedRef = useRef(false);
+
   const activeIndex = Math.max(
     0,
     links.findIndex((link) => link.path === pathname),
   );
   const isKnownRoute = links.some((link) => link.path === pathname);
+
+  const clearPress = () => {
+    clearTimeout(timerRef.current);
+    setPressedPath(null);
+  };
+
+  const startPress = (link) => {
+    if (!link.longPress) return;
+    firedRef.current = false;
+    setPressedPath(link.path);
+    timerRef.current = setTimeout(() => {
+      firedRef.current = true;
+      setPressedPath(null);
+      navigate(link.path, { state: link.longPress.state });
+    }, LONG_PRESS_MS);
+  };
+
+  const endPress = (e) => {
+    clearPress();
+    if (firedRef.current) {
+      // The long press already navigated - swallow the click that
+      // follows pointerup so it doesn't also trigger a normal nav.
+      e.preventDefault();
+      firedRef.current = false;
+    }
+  };
 
   return (
     <ul className="primary-nav">
@@ -76,13 +124,26 @@ const NavLinks = ({ toggleMenu = () => {} }) => {
           <NavLink
             to={link.path}
             end={link.path === "/"}
-            onClick={toggleMenu}
-            className={({ isActive }) => (isActive ? "active" : "")}
+            onClick={(e) => {
+              endPress(e);
+              if (!e.defaultPrevented) toggleMenu();
+            }}
+            onPointerDown={() => startPress(link)}
+            onPointerUp={(e) => endPress(e)}
+            onPointerLeave={clearPress}
+            className={({ isActive }) =>
+              `${isActive ? "active" : ""}${
+                pressedPath === link.path ? " long-pressing" : ""
+              }`
+            }
           >
             <span className="nav-icon" aria-hidden="true">
               {link.icon}
             </span>
             <span>{link.label}</span>
+            {link.longPress && pressedPath === link.path && (
+              <span className="nav-longpress-hint">{link.longPress.hint}</span>
+            )}
           </NavLink>
         </li>
       ))}

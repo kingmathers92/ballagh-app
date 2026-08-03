@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
+import { useLocation } from "react-router-dom";
 import { fetchQuranData } from "../utils/api";
 import useBookmarks from "../hooks/useBookmarks";
 import { useSwipeable } from "react-swipeable";
@@ -9,12 +10,14 @@ import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
 import { useReciterAudio } from "../hooks/useReciterAudio";
 import ReciterPicker from "../components/ReciterPicker";
+import { usePersistedState } from "../hooks/usePersistedState";
 
 import "../styles/Quran.css";
 
 function Quran() {
+  const location = useLocation();
   const [pages, setPages] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = usePersistedState("quranLastPage", 1);
   const [status, setStatus] = useState({ loading: true, error: null });
   const [currentSurah, setCurrentSurah] = useState("");
   const [surahList, setSurahList] = useState([]);
@@ -32,6 +35,16 @@ function Quran() {
     [pages, currentPage],
   );
   const totalPages = useMemo(() => Object.keys(pages || {}).length, [pages]);
+
+  useEffect(() => {
+    if (location.state?.randomPage && totalPages > 0) {
+      setCurrentPage(1 + Math.floor(Math.random() * totalPages));
+    }
+    // Only re-run when the navigation itself changes (location.key is a
+    // fresh value on every navigation, even to the same route) or once
+    // totalPages first becomes available - not on every currentPage change.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.key, totalPages]);
 
   const debouncedSearch = useCallback(() => {
     const query = searchQuery.trim();
@@ -91,6 +104,8 @@ function Quran() {
     setIsSidebarOpen((prev) => !prev);
   };
 
+  // Effects
+  // Fetch Quran data on mount
   useEffect(() => {
     const getData = async () => {
       try {
@@ -138,11 +153,16 @@ function Quran() {
     if (reciterAudio.audioSrc && audioPlayerRef.current?.audio?.current) {
       const playPromise = audioPlayerRef.current.audio.current.play();
       if (playPromise?.catch) {
-        playPromise.catch(() => {});
+        playPromise.catch(() => {
+          // Autoplay can be blocked by the browser before any user
+          // gesture has happened in this session - the visible play
+          // button in the player still lets the user start it manually.
+        });
       }
     }
   }, [reciterAudio.audioSrc]);
 
+  // Debounced search effect
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
       debouncedSearch();
@@ -159,7 +179,7 @@ function Quran() {
     <div {...swipeHandlers} className="quran-container">
       {/* Sidebar Toggle Button */}
       <button className="sidebar-toggle" onClick={toggleSidebar}>
-        {isSidebarOpen ? "إخفاء" : "السور"}
+        {isSidebarOpen ? "إخفاء" : "السور"} {/* Simplified labels */}
       </button>
 
       {/* Sidebar */}
@@ -188,6 +208,7 @@ function Quran() {
 
       {/* Main Content */}
       <div className="quran-main-content">
+        {/* Combined Search, Surah, and Page Navigation */}
         <div className="search-surah-container">
           <div className="search-container">
             <input

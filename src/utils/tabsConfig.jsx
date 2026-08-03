@@ -21,7 +21,7 @@ export const getTabsConfig = (
 ) => [
   {
     id: "prayer-times",
-    label: translations[language].prayerTimes,
+    label: translations[language].title,
     icon: (
       <svg viewBox="0 0 20 20" fill="none">
         <circle cx="10" cy="10" r="7" stroke="currentColor" strokeWidth="1.3" />

@@ -1,3 +1,6 @@
+import { useEffect, useRef } from "react";
+import { useLocation } from "react-router-dom";
+import { useSwipeable } from "react-swipeable";
 import useRandomHadith from "../hooks/useRandomHadith";
 import Spinner from "../components/Spinner";
 import ShareButton from "../components/ShareButton";
@@ -9,11 +12,32 @@ import "../styles/RandomHadith.css";
 function RandomHadith() {
   const { hadith, isLoading, error, arabicEditions, fetchRandomHadith } =
     useRandomHadith();
+  const location = useLocation();
+  const consumedFreshFetch = useRef(false);
+
+  useEffect(() => {
+    if (
+      location.state?.freshFetch &&
+      !consumedFreshFetch.current &&
+      arabicEditions?.length > 0
+    ) {
+      consumedFreshFetch.current = true;
+      fetchRandomHadith();
+    }
+  }, [location.state, arabicEditions, fetchRandomHadith]);
+
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: () => !isLoading && fetchRandomHadith(),
+    onSwipedRight: () => !isLoading && fetchRandomHadith(),
+    trackMouse: false,
+    preventScrollOnSwipe: false,
+  });
 
   return (
     <div className="container">
       <h2 className="title">Random Hadith</h2>
       <p className="subtitle">Explore Hadiths Alongside the Quran</p>
+      <p className="swipe-hint">Swipe the card for a new one</p>
       {arabicEditions?.length === 0 && !error && (
         <p className="loading-placeholder">Fetching a Hadith for You…</p>
       )}
@@ -33,7 +57,7 @@ function RandomHadith() {
       )}
 
       {!isLoading && !error && hadith && (
-        <div id="hadith-text" className="hadith-container">
+        <div id="hadith-text" className="hadith-container" {...swipeHandlers}>
           <p className="hadith-text rtl">{hadith.text}</p>
           <p className="hadith-source">
             Collection: {hadith.collection}, Edition: {hadith.edition}, Hadith
@@ -45,13 +69,22 @@ function RandomHadith() {
               {hadith.grades.map((grade, index) => (
                 <span key={index}>
                   {grade.grade}
-                  {grade.scholar ? ` (${grade.scholar})` : ""}
+                  {grade.name ? ` (${grade.name})` : ""}
                   {index < hadith.grades.length - 1 ? ", " : ""}
                 </span>
               ))}
             </p>
           ) : (
-            <p className="hadith-grades">Grades: Not available</p>
+            <p className="hadith-authenticity-note" role="note">
+              Authenticity not established by the available sources for this
+              narration - grading data wasn&apos;t provided.
+            </p>
+          )}
+          {hadith.authenticity === "weak" && (
+            <p className="hadith-authenticity-warning" role="alert">
+              Note: available gradings for this narration lean weak. Please
+              verify before relying on or sharing it.
+            </p>
           )}
 
           <div className="share-buttons">

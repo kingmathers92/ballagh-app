@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useGeolocation } from "../hooks/useGeolocation.js";
 import { usePrayerTimes } from "../hooks/usePrayerTimes.js";
 import { usePersistedState } from "../hooks/usePersistedState.js";
-import { useServiceWorker } from "../hooks/useServiceWorker.js";
 import { getTabsConfig } from "../utils/tabsConfig.jsx";
 import Tabs from "../components/Tabs";
 import Accordion from "../components/Accordion";
@@ -42,8 +41,6 @@ function PrayerTimesView() {
   const [language, setLanguage] = usePersistedState("language", "en");
   const [activeTab, setActiveTab] = useState("prayer-times");
   const [openAccordions, setOpenAccordions] = useState(["prayer-times"]);
-
-  useServiceWorker(language, translations);
 
   const {
     prayerTimes,

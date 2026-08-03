@@ -76,14 +76,21 @@ const Home = () => {
 
   return (
     <div>
-      <header className="hero-section">
+      <header
+        className={`hero-section period-${prayerStatus?.currentPrayer || "default"}`}
+      >
         <h1 className="title" style={{ fontFamily: "'Reem Kufi', sans-serif" }}>
           بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ
         </h1>
       </header>
 
       <div className="home-container">
-        <Link to="/prayer-times" className="right-now-panel cut-corner">
+        <Link
+          to="/prayer-times"
+          className={`right-now-panel cut-corner period-${
+            prayerStatus?.currentPrayer || "default"
+          }`}
+        >
           <span className="right-now-eyebrow">Right now</span>
           {prayerStatus ? (
             <div className="right-now-row">

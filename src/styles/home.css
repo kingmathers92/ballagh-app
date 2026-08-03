@@ -12,6 +12,70 @@
   margin-bottom: 16px;
   text-decoration: none;
   color: var(--text-color);
+  transition: background 0.6s ease;
+}
+
+.hero-section.period-fajr,
+.right-now-panel.period-fajr {
+  background: linear-gradient(135deg, #14171f, #1c2340 70%);
+}
+
+.hero-section.period-sunrise,
+.right-now-panel.period-sunrise {
+  background: linear-gradient(135deg, #1c2030, #6b4a2f 140%);
+}
+
+.hero-section.period-dhuhr,
+.right-now-panel.period-dhuhr {
+  background: linear-gradient(135deg, #2a4b8d, #3e63ae 140%);
+}
+
+.hero-section.period-asr,
+.right-now-panel.period-asr {
+  background: linear-gradient(135deg, #1c2030, #8a5a35 150%);
+}
+
+.hero-section.period-maghrib,
+.right-now-panel.period-maghrib {
+  background: linear-gradient(135deg, #1c2030, #9c5b44 140%);
+}
+
+.hero-section.period-isha,
+.right-now-panel.period-isha {
+  background: linear-gradient(135deg, #0e0f13, #14171f);
+}
+
+.period-fajr .title,
+.period-sunrise .title,
+.period-dhuhr .title,
+.period-asr .title,
+.period-maghrib .title,
+.period-isha .title {
+  color: #f2ecdd;
+}
+
+.period-fajr .right-now-ar,
+.period-sunrise .right-now-ar,
+.period-dhuhr .right-now-ar,
+.period-asr .right-now-ar,
+.period-maghrib .right-now-ar,
+.period-isha .right-now-ar,
+.period-fajr .right-now-en,
+.period-sunrise .right-now-en,
+.period-dhuhr .right-now-en,
+.period-asr .right-now-en,
+.period-maghrib .right-now-en,
+.period-isha .right-now-en {
+  color: #f2ecdd;
+}
+
+.period-fajr .countdown-value,
+.period-sunrise .countdown-value,
+.period-dhuhr .countdown-value,
+.period-asr .countdown-value,
+.period-maghrib .countdown-value,
+.period-isha .countdown-value {
+  color: #fff;
 }
 
 .right-now-eyebrow {

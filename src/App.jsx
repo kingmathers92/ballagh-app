@@ -4,7 +4,6 @@ import DarkModeToggle from "./components/DarkModeToggle";
 import NavLinks from "./components/NavLinks";
 import ErrorBoundary from "./components/ErrorBoundary";
 import Spinner from "./components/Spinner";
-
 const PrayerTimes = lazy(() => import("./pages/PrayerTimes"));
 const Home = lazy(() => import("./pages/Home"));
 const Search = lazy(() => import("./pages/Search"));
@@ -45,13 +44,27 @@ const routes = [
 
 function App() {
   const { theme, toggleTheme } = useTheme();
+  const [markSpins, setMarkSpins] = useState(0);
 
   return (
     <Router>
       <div className="App">
         <header>
           <DarkModeToggle theme={theme} toggleTheme={toggleTheme} />
-          <h1 className="app-title">بلَّغ</h1>
+          <h1 className="app-title">
+            <button
+              type="button"
+              className="app-mark"
+              style={{ "--spins": markSpins }}
+              onClick={() => setMarkSpins((n) => n + 1)}
+              aria-label="Ballagh"
+            >
+              <svg viewBox="0 0 22 22" aria-hidden="true">
+                <path d="M11 1 13.2 5 18 3.4 16.6 8.2 21 11 16.6 13.8 18 18.6 13.2 17 11 21 8.8 17 4 18.6 5.4 13.8 1 11 5.4 8.2 4 3.4 8.8 5Z" />
+              </svg>
+            </button>
+            بلَّغ
+          </h1>
           <Link
             to="/search"
             className="header-search-button"

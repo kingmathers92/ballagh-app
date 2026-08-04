@@ -38,7 +38,7 @@ export const useGeolocation = () => {
               setLocation(null);
             }
           },
-          { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+          { enableHighAccuracy: false, timeout: 10000, maximumAge: 60000 }
         );
       } else {
         setError("Geolocation is not supported by this browser.");

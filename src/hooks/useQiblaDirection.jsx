@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { Coordinates, Qibla } from "adhan";
+import geomagnetism from "geomagnetism";
 
 export const useQiblaDirection = () => {
   const [qiblaDirection, setQiblaDirection] = useState(null);
@@ -9,6 +10,9 @@ export const useQiblaDirection = () => {
   const [location, setLocation] = useState(null);
   const [accuracy, setAccuracy] = useState(null);
   const [orientationSupported, setOrientationSupported] = useState(false);
+  const declinationRef = useRef(0);
+
+  const attemptRef = useRef(0);
 
   const getGeolocation = useCallback(() => {
     setIsLoading(true);
@@ -20,40 +24,54 @@ export const useQiblaDirection = () => {
       return;
     }
 
-    const timeoutId = setTimeout(() => {
-      setError("LOCATION_TIMEOUT");
-      setIsLoading(false);
-    }, 15000);
-
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        clearTimeout(timeoutId);
-        const { latitude, longitude, accuracy } = position.coords;
-        setLocation({ latitude, longitude });
-        setAccuracy(accuracy);
-        try {
-          const coords = new Coordinates(latitude, longitude);
-          const direction = Qibla(coords);
-          setQiblaDirection(direction);
-        } catch (err) {
-          setError("Failed to calculate Qibla direction: " + err.message);
-        } finally {
+    const attempt = () => {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          attemptRef.current = 0;
+          const { latitude, longitude, accuracy } = position.coords;
+          setLocation({ latitude, longitude });
+          setAccuracy(accuracy);
+          try {
+            declinationRef.current = geomagnetism
+              .model()
+              .point([latitude, longitude]).decl;
+          } catch (declErr) {
+            console.error("Error computing magnetic declination:", declErr);
+            declinationRef.current = 0;
+          }
+          try {
+            const coords = new Coordinates(latitude, longitude);
+            const direction = Qibla(coords);
+            setQiblaDirection(direction);
+          } catch (err) {
+            setError("Failed to calculate Qibla direction: " + err.message);
+          } finally {
+            setIsLoading(false);
+          }
+        },
+        (err) => {
+          if (attemptRef.current < 1 && err.code !== 1) {
+            attemptRef.current += 1;
+            setTimeout(attempt, 1500);
+            return;
+          }
+          attemptRef.current = 0;
+          setError(
+            err.code === 1
+              ? "PERMISSION_DENIED"
+              : err.code === 2
+                ? "LOCATION_UNAVAILABLE"
+                : err.code === 3
+                  ? "LOCATION_TIMEOUT"
+                  : "Something went wrong",
+          );
           setIsLoading(false);
-        }
-      },
-      (err) => {
-        clearTimeout(timeoutId);
-        setError(
-          err.code === 1
-            ? "PERMISSION_DENIED"
-            : err.code === 2
-              ? "LOCATION_UNAVAILABLE"
-              : "Something went wrong",
-        );
-        setIsLoading(false);
-      },
-      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 },
-    );
+        },
+        { enableHighAccuracy: false, timeout: 10000, maximumAge: 60000 },
+      );
+    };
+
+    attempt();
   }, []);
 
   const debounceTimeoutRef = useRef(null);
@@ -73,17 +91,27 @@ export const useQiblaDirection = () => {
 
         let heading = event.webkitCompassHeading || event.alpha;
         if (event.webkitCompassHeading) {
-          setCompassHeading(heading);
+          heading = event.webkitCompassHeading;
         } else {
           heading = 360 - event.alpha;
-          setCompassHeading(heading);
         }
+        const trueHeading = (heading + declinationRef.current + 360) % 360;
+        setCompassHeading(trueHeading);
       }, 100);
     },
     [setOrientationSupported, setError, setCompassHeading],
   );
 
   useEffect(() => {
+    let receivedAbsolute = false;
+    const handleAbsolute = (event) => {
+      receivedAbsolute = true;
+      handleOrientation(event);
+    };
+    const handleRelativeFallback = (event) => {
+      if (!receivedAbsolute) handleOrientation(event);
+    };
+
     if (
       typeof window !== "undefined" &&
       window.DeviceOrientationEvent &&
@@ -111,7 +139,16 @@ export const useQiblaDirection = () => {
       };
       requestPermission();
     } else if (window.DeviceOrientationEvent) {
-      window.addEventListener("deviceorientation", handleOrientation, true);
+      window.addEventListener(
+        "deviceorientationabsolute",
+        handleAbsolute,
+        true,
+      );
+      window.addEventListener(
+        "deviceorientation",
+        handleRelativeFallback,
+        true,
+      );
       setOrientationSupported(true);
     } else {
       setOrientationSupported(false);
@@ -122,6 +159,16 @@ export const useQiblaDirection = () => {
 
     return () => {
       window.removeEventListener("deviceorientation", handleOrientation, true);
+      window.removeEventListener(
+        "deviceorientationabsolute",
+        handleAbsolute,
+        true,
+      );
+      window.removeEventListener(
+        "deviceorientation",
+        handleRelativeFallback,
+        true,
+      );
       if (debounceTimeoutRef.current) {
         clearTimeout(debounceTimeoutRef.current);
       }

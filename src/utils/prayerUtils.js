@@ -14,10 +14,30 @@ export const calculatePrayerTimes = (coords, calculationMethod) => {
     const date = new Date();
     const params = (() => {
       switch (calculationMethod) {
-        case "UmmAlQura":
-          return CalculationMethod.UmmAlQura();
+        case "MuslimWorldLeague":
+          return CalculationMethod.MuslimWorldLeague();
         case "Egyptian":
           return CalculationMethod.Egyptian();
+        case "Karachi":
+          return CalculationMethod.Karachi();
+        case "UmmAlQura":
+          return CalculationMethod.UmmAlQura();
+        case "Dubai":
+          return CalculationMethod.Dubai();
+        case "MoonsightingCommittee":
+          return CalculationMethod.MoonsightingCommittee();
+        case "NorthAmerica":
+          return CalculationMethod.NorthAmerica();
+        case "Kuwait":
+          return CalculationMethod.Kuwait();
+        case "Qatar":
+          return CalculationMethod.Qatar();
+        case "Singapore":
+          return CalculationMethod.Singapore();
+        case "Tehran":
+          return CalculationMethod.Tehran();
+        case "Turkey":
+          return CalculationMethod.Turkey();
         default:
           return CalculationMethod.MuslimWorldLeague();
       }

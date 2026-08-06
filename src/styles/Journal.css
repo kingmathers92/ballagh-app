@@ -136,14 +136,7 @@
   background-color: var(--brass-color);
   color: var(--background-color);
   padding: 4px 10px;
-  clip-path: polygon(
-    6px 0,
-    100% 0,
-    100% calc(100% - 6px),
-    calc(100% - 6px) 100%,
-    0 100%,
-    0 6px
-  );
+  clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
   font-family: "Manrope", sans-serif;
   font-weight: 700;
   font-size: 0.72em;

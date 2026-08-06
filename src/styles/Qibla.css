@@ -197,8 +197,7 @@ body {
 }
 
 @keyframes qibla-pulse {
-  0%,
-  100% {
+  0%, 100% {
     transform: translate(-50%, -50%) scale(1);
   }
   50% {
@@ -214,9 +213,7 @@ body {
   color: var(--accent-color);
   opacity: 0;
   transform: translateY(-4px);
-  transition:
-    opacity 0.25s ease,
-    transform 0.25s ease;
+  transition: opacity 0.25s ease, transform 0.25s ease;
   height: 1.2rem;
   margin: 6px 0 0;
 }
@@ -368,9 +365,7 @@ body {
   background: var(--primary-color);
   border: 1px solid var(--secondary-color);
   border-radius: 6px;
-  transition:
-    transform 0.2s ease,
-    background-color 0.3s ease;
+  transition: transform 0.2s ease, background-color 0.3s ease;
   animation: fadeIn 0.5s ease forwards;
   animation-delay: calc(var(--index) * 0.1s);
 }
@@ -406,9 +401,7 @@ body {
   padding: 3px 6px;
   border: 1px solid var(--accent-color);
   border-radius: 4px;
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .nearby-mosques .mosque-directions:hover,

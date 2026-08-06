@@ -4,7 +4,6 @@ import L from "leaflet";
 import { MapContainer, TileLayer, Marker, Polyline } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 
-// Fix for default marker icon in Leaflet (ensure this runs after DOM is ready)
 if (typeof window !== "undefined") {
   delete L.Icon.Default.prototype._getIconUrl;
   L.Icon.Default.mergeOptions({

@@ -57,7 +57,11 @@ function RandomHadith() {
       )}
 
       {!isLoading && !error && hadith && (
-        <div id="hadith-text" className="hadith-container" {...swipeHandlers}>
+        <div
+          id="hadith-text"
+          className="hadith-container"
+          {...swipeHandlers}
+        >
           <p className="hadith-text rtl">{hadith.text}</p>
           <p className="hadith-source">
             Collection: {hadith.collection}, Edition: {hadith.edition}, Hadith

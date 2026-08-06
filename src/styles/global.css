@@ -46,9 +46,7 @@ nav,
 .container,
 .dark-mode-toggle,
 .app-title {
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .App {
@@ -249,9 +247,7 @@ nav ul {
     align-items: center;
     gap: 4px;
     padding: 8px 5px;
-    transition:
-      color 0.2s ease,
-      transform 0.15s ease;
+    transition: color 0.2s ease, transform 0.15s ease;
   }
 
   nav ul li a:active {
@@ -277,14 +273,7 @@ nav ul {
     font-weight: 700;
     padding: 4px 8px;
     white-space: nowrap;
-    clip-path: polygon(
-      5px 0,
-      100% 0,
-      100% calc(100% - 5px),
-      calc(100% - 5px) 100%,
-      0 100%,
-      0 5px
-    );
+    clip-path: polygon(5px 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%, 0 5px);
   }
 
   nav ul li a.active {
@@ -347,9 +336,7 @@ nav ul {
     align-items: center;
     gap: 8px;
     padding: 8px 12px;
-    transition:
-      background-color 0.3s ease,
-      color 0.3s ease;
+    transition: background-color 0.3s ease, color 0.3s ease;
     font-family: "Manrope", sans-serif;
     font-weight: 500;
   }

@@ -17,7 +17,7 @@ export const getTabsConfig = (
   calculationMethod,
   setCalculationMethod,
   setTimeZone,
-  setLanguage,
+  setLanguage
 ) => [
   {
     id: "prayer-times",
@@ -34,7 +34,7 @@ export const getTabsConfig = (
           <p className="countdown">
             {translations[language].timeUntilNextPrayer.replace(
               "{countdown}",
-              nextPrayerCountdown,
+              nextPrayerCountdown
             )}
           </p>
         )}
@@ -71,7 +71,7 @@ export const getTabsConfig = (
                 "{event}",
                 translations[language][
                   ramadanTimes.nextEvent.name.toLowerCase()
-                ],
+                ]
               )
               .replace("{countdown}", nextEventCountdown)}
           </p>
@@ -96,11 +96,7 @@ export const getTabsConfig = (
           strokeWidth="1.3"
           strokeLinejoin="round"
         />
-        <path
-          d="M8.5 14.5a1.5 1.5 0 0 0 3 0"
-          stroke="currentColor"
-          strokeWidth="1.3"
-        />
+        <path d="M8.5 14.5a1.5 1.5 0 0 0 3 0" stroke="currentColor" strokeWidth="1.3" />
       </svg>
     ),
     content: (
@@ -119,13 +115,7 @@ export const getTabsConfig = (
     label: translations[language].settingsLabel,
     icon: (
       <svg viewBox="0 0 20 20" fill="none">
-        <circle
-          cx="10"
-          cy="10"
-          r="2.6"
-          stroke="currentColor"
-          strokeWidth="1.3"
-        />
+        <circle cx="10" cy="10" r="2.6" stroke="currentColor" strokeWidth="1.3" />
         <path
           d="M10 3v2M10 15v2M17 10h-2M5 10H3M14.9 5.1l-1.4 1.4M6.5 13.5l-1.4 1.4M14.9 14.9l-1.4-1.4M6.5 6.5 5.1 5.1"
           stroke="currentColor"

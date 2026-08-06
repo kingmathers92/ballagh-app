@@ -54,7 +54,7 @@ function Qibla() {
           location.latitude,
           location.longitude,
           element.lat,
-          element.lon,
+          element.lon
         ),
       }));
       setMosques(mosqueList.sort((a, b) => a.distance - b.distance));

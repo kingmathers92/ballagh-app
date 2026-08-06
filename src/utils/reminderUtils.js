@@ -45,7 +45,6 @@ export const scheduleReminders = (
   const now = new Date(currentTime);
   const notificationWindow = 15 * 60 * 1000; // 15 minutes
 
-  // Prayer notifications
   Object.keys(prayerReminders).forEach((prayer) => {
     if (prayerReminders[prayer] && prayerTimes[prayer]) {
       const prayerTime = new Date(prayerTimes[prayer]);
@@ -64,7 +63,6 @@ export const scheduleReminders = (
     }
   });
 
-  // Ramadan notifications
   if (nextEvent && nextEvent.time > now) {
     const timeDiff = nextEvent.time - now;
     const message =

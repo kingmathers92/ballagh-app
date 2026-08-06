@@ -19,7 +19,7 @@ const useTheme = () => {
       localStorage.getItem("theme") ||
       (window.matchMedia("(prefers-color-scheme: dark)").matches
         ? "dark"
-        : "light"),
+        : "light")
   );
 
   const toggleTheme = () => {
@@ -65,25 +65,10 @@ function App() {
             </button>
             بلَّغ
           </h1>
-          <Link
-            to="/search"
-            className="header-search-button"
-            aria-label="Search"
-          >
+          <Link to="/search" className="header-search-button" aria-label="Search">
             <svg viewBox="0 0 20 20" fill="none">
-              <circle
-                cx="8.5"
-                cy="8.5"
-                r="5.5"
-                stroke="currentColor"
-                strokeWidth="1.4"
-              />
-              <path
-                d="M13 13 17 17"
-                stroke="currentColor"
-                strokeWidth="1.4"
-                strokeLinecap="round"
-              />
+              <circle cx="8.5" cy="8.5" r="5.5" stroke="currentColor" strokeWidth="1.4" />
+              <path d="M13 13 17 17" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
             </svg>
           </Link>
           <nav>

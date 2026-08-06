@@ -1,6 +1,5 @@
 import axios from "axios";
 
-// base URL from environment variable with fallback
 const API_BASE_URL =
   import.meta.env.VITE_QURAN_API_URL || "https://api.alquran.cloud/v1";
 
@@ -11,13 +10,11 @@ const API_BASE_URL =
  */
 export const fetchQuranData = async () => {
   try {
-    // Check if data is cached in IndexedDB
     const cachedData = await getCachedQuranData();
     if (cachedData) {
       return cachedData;
     }
 
-    // Configure Axios with timeout and retries
     const instance = axios.create({
       baseURL: API_BASE_URL,
       timeout: 10000,
@@ -32,7 +29,6 @@ export const fetchQuranData = async () => {
       throw new Error("No Surah data found in API response");
     }
 
-    // Cache the data for offline use
     await cacheQuranData(surahs);
     return surahs;
   } catch (error) {
@@ -74,7 +70,6 @@ export const fetchSurahAudio = async (surahNumber) => {
   }
 };
 
-// Helper function to handle API errors with detailed messages
 const handleApiError = (error, operation) => {
   if (axios.isAxiosError(error)) {
     if (error.response) {
@@ -92,7 +87,6 @@ const handleApiError = (error, operation) => {
   return `Failed to ${operation}: ${error.message}`;
 };
 
-// Retry logic for API calls
 const withRetry = async (fn, retries = 3, delay = 1000) => {
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
@@ -104,7 +98,6 @@ const withRetry = async (fn, retries = 3, delay = 1000) => {
   }
 };
 
-// IndexedDB caching for Quran data
 const dbPromise =
   typeof window !== "undefined" && typeof window.indexedDB !== "undefined"
     ? import("idb").then(({ openDB }) =>

@@ -18,8 +18,6 @@ const ShareImageBox = ({ textToShare }) => {
       const dataUrl = await toPng(node);
       setImageUrl(dataUrl);
 
-      // Prefer the native share sheet (lets the user pick WhatsApp, Telegram,
-      // or anything else installed) when the browser supports sharing files.
       if (navigator.share && navigator.canShare) {
         const blob = await (await fetch(dataUrl)).blob();
         const file = new File([blob], "hadith.png", { type: "image/png" });
@@ -31,11 +29,9 @@ const ShareImageBox = ({ textToShare }) => {
         }
       }
 
-      // Fallback for browsers without file-sharing support: offer a download.
       setStatus("ready");
     } catch (error) {
       if (error?.name === "AbortError") {
-        // User cancelled the native share sheet - not an error.
         setStatus("idle");
       } else {
         console.error("Error sharing hadith image:", error);

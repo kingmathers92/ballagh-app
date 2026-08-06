@@ -1,6 +1,29 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import axios from "axios";
 
+const ACCEPTABLE_GRADE = /sahih|hasan/i;
+const WEAK_GRADE = /da'?if|munkar|shadh|mawdu|fabricated/i;
+
+const classifyAuthenticity = (grades) => {
+  if (!grades || grades.length === 0) return "unverified";
+  const hasAcceptable = grades.some((g) => ACCEPTABLE_GRADE.test(g.grade));
+  if (hasAcceptable) return "graded";
+  const allWeak = grades.every((g) => WEAK_GRADE.test(g.grade));
+  return allWeak ? "weak" : "unverified";
+};
+
+const pickHadithNumber = (hadiths) => {
+  const keys = Object.keys(hadiths);
+  let candidate = keys[Math.floor(Math.random() * keys.length)];
+
+  for (let attempt = 0; attempt < 5; attempt++) {
+    const status = classifyAuthenticity(hadiths[candidate]?.grades);
+    if (status !== "weak") break;
+    candidate = keys[Math.floor(Math.random() * keys.length)];
+  }
+  return candidate;
+};
+
 const useRandomHadith = (apiVersion = "1") => {
   const [hadith, setHadith] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -31,51 +54,31 @@ const useRandomHadith = (apiVersion = "1") => {
     }
   }, [apiVersion]);
 
-  const ACCEPTABLE_GRADE = /sahih|hasan/i;
-  const WEAK_GRADE = /da'?if|munkar|shadh|mawdu|fabricated/i;
+  const handleHadithFetch = useCallback(
+    (hadiths, randomHadithNumber, randomEdition) => {
+      const selectedHadith = hadiths[randomHadithNumber];
 
-  const classifyAuthenticity = (grades) => {
-    if (!grades || grades.length === 0) return "unverified";
-    const hasAcceptable = grades.some((g) => ACCEPTABLE_GRADE.test(g.grade));
-    if (hasAcceptable) return "graded";
-    const allWeak = grades.every((g) => WEAK_GRADE.test(g.grade));
-    return allWeak ? "weak" : "unverified";
-  };
+      const deduplicatedGrades = selectedHadith.grades?.filter(
+        (grade, index, self) =>
+          index ===
+          self.findIndex(
+            (g) =>
+              g.grade === grade.grade &&
+              (g.name || "Unknown") === (grade.name || "Unknown"),
+          ),
+      );
 
-  const handleHadithFetch = (hadiths, randomHadithNumber, randomEdition) => {
-    const selectedHadith = hadiths[randomHadithNumber];
-
-    const deduplicatedGrades = selectedHadith.grades?.filter(
-      (grade, index, self) =>
-        index ===
-        self.findIndex(
-          (g) =>
-            g.grade === grade.grade &&
-            (g.name || "Unknown") === (grade.name || "Unknown"),
-        ),
-    );
-
-    setHadith({
-      text: selectedHadith.text,
-      number: randomHadithNumber,
-      collection: randomEdition.book,
-      edition: randomEdition.name,
-      grades: deduplicatedGrades || [],
-      authenticity: classifyAuthenticity(deduplicatedGrades),
-    });
-  };
-
-  const pickHadithNumber = (hadiths) => {
-    const keys = Object.keys(hadiths);
-    let candidate = keys[Math.floor(Math.random() * keys.length)];
-
-    for (let attempt = 0; attempt < 5; attempt++) {
-      const status = classifyAuthenticity(hadiths[candidate]?.grades);
-      if (status !== "weak") break;
-      candidate = keys[Math.floor(Math.random() * keys.length)];
-    }
-    return candidate;
-  };
+      setHadith({
+        text: selectedHadith.text,
+        number: randomHadithNumber,
+        collection: randomEdition.book,
+        edition: randomEdition.name,
+        grades: deduplicatedGrades || [],
+        authenticity: classifyAuthenticity(deduplicatedGrades),
+      });
+    },
+    [],
+  );
 
   const fetchRandomHadith = useCallback(async () => {
     if (arabicEditions.length === 0) return;
@@ -113,7 +116,7 @@ const useRandomHadith = (apiVersion = "1") => {
     } finally {
       setIsLoading(false);
     }
-  }, [arabicEditions]);
+  }, [arabicEditions, handleHadithFetch]);
 
   useEffect(() => {
     fetchArabicEditions();

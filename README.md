@@ -73,6 +73,10 @@ Distributed under the MIT License. See `LICENSE` for more information.
 - The open-source community for their divine inspiration.
 - You, for embarking on this journey with Ballagh!
 
+## 📬 Contact
+
+Khaled Ben Yahya - [@Twitter](https://twitter.com/khaledbenyahya_) - khaledb.yahya@gmail.com
+
 Project Link: [Ballagh - بلَّغ](https://github.com/kingmathers92/ballagh-app)
 
 ---

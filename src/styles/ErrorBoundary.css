@@ -1,0 +1,24 @@
+.error-boundary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: 20px;
+  text-align: center;
+  color: var(--text-color);
+}
+
+.error-boundary h2 {
+  font-family: "Fraunces", serif;
+  font-weight: 600;
+  font-size: 1.4rem;
+  margin-bottom: 10px;
+  color: var(--error);
+}
+
+.error-boundary p {
+  font-size: 0.95rem;
+  color: var(--secondary-color);
+  margin-bottom: 20px;
+}

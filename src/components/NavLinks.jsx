@@ -42,15 +42,6 @@ const icons = {
   ),
 };
 
-// Five primary destinations only - the ones opened often enough to earn
-// permanent thumb-reach real estate. Search lives as a header icon
-// (a quick action, not a place you browse) and Journal is one tap away
-// through Home's own nav grid - both stay fully reachable, just not
-// competing for space in the primary bar.
-//
-// Quran and Hadith also carry a long-press shortcut - a small bit of
-// native-app-feeling delight (like an iOS/Android app-icon quick
-// action) layered on top of normal navigation, not a replacement for it.
 const links = [
   { path: "/", label: "Home", icon: icons.home },
   {
@@ -103,8 +94,6 @@ const NavLinks = ({ toggleMenu = () => {} }) => {
   const endPress = (e) => {
     clearPress();
     if (firedRef.current) {
-      // The long press already navigated - swallow the click that
-      // follows pointerup so it doesn't also trigger a normal nav.
       e.preventDefault();
       firedRef.current = false;
     }

@@ -41,7 +41,7 @@ function Search() {
       setLoadingEditions(true);
       try {
         const response = await axios.get(
-          `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions.json`
+          `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions.json`,
         );
         const editionList = [];
         Object.values(response.data).forEach((book) => {
@@ -77,7 +77,7 @@ function Search() {
       let allResults = [];
       if (selectedEdition === "all") {
         const editionRequests = editions.map((edition) =>
-          axios.get(edition.link)
+          axios.get(edition.link),
         );
         const responses = await Promise.allSettled(editionRequests);
 
@@ -86,23 +86,23 @@ function Search() {
             const hadiths = response.value.data.hadiths;
             const formattedResults = formatHadithResults(
               hadiths,
-              editions[index]
+              editions[index],
             );
             const filteredResults = formattedResults.filter((result) =>
-              result.text.toLowerCase().includes(query.toLowerCase())
+              result.text.toLowerCase().includes(query.toLowerCase()),
             );
             allResults = [...allResults, ...filteredResults];
           }
         });
       } else {
         const edition = editions.find(
-          (edition) => edition.name === selectedEdition
+          (edition) => edition.name === selectedEdition,
         );
         if (edition) {
           const hadiths = await fetchHadithData(edition.link);
           const formattedResults = formatHadithResults(hadiths, edition);
           const filteredResults = formattedResults.filter((result) =>
-            result.text.toLowerCase().includes(query.toLowerCase())
+            result.text.toLowerCase().includes(query.toLowerCase()),
           );
           allResults = [...filteredResults];
         }
@@ -112,7 +112,7 @@ function Search() {
     } catch (error) {
       console.error("Error fetching Hadiths:", error);
       setError(
-        "An error occurred while fetching Hadiths. Please try again later."
+        "An error occurred while fetching Hadiths. Please try again later.",
       );
     } finally {
       setLoading(false);
@@ -125,7 +125,6 @@ function Search() {
     }
   };
 
-  // Calculating results for the current page
   const indexOfLastResult = currentPage * resultsPerPage;
   const indexOfFirstResult = indexOfLastResult - resultsPerPage;
   const currentResults = results.slice(indexOfFirstResult, indexOfLastResult);

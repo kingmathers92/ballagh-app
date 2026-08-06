@@ -69,19 +69,6 @@ export const usePrayerTimes = (
           timeZone
         );
 
-        // if (notificationPermission !== "denied") {
-        //   scheduleReminders(
-        //     rawTimes,
-        //     ramadanData.nextEvent,
-        //     addNotification,
-        //     prayerReminders,
-        //     notificationPermission,
-        //     new Date(),
-        //     language,
-        //     timeZone
-        //   );
-        // }
-
         setPrayerError(null);
         setLoading(false);
       } catch (error) {

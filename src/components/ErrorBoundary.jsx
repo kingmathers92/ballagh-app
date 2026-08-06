@@ -1,6 +1,6 @@
 import { Component } from "react";
 import PropTypes from "prop-types";
-import "../styles/Qibla.css";
+import "../styles/ErrorBoundary.css";
 
 class ErrorBoundary extends Component {
   state = { hasError: false, error: null };

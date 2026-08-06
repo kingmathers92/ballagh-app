@@ -83,10 +83,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease,
-    transform 0.2s ease;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
   font-family: "Amiri", serif;
 }
 
@@ -156,9 +153,7 @@
       var(--accent-color)
     )
     1;
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease;
   font-family: "Amiri", serif;
 }
 
@@ -230,9 +225,7 @@
       var(--accent-color)
     )
     1;
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .prayer-times-card:hover,
@@ -326,9 +319,7 @@
   gap: 10px;
   animation: slideIn 0.3s ease-out;
   max-width: 300px;
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease,
+  transition: background-color 0.3s ease, color 0.3s ease,
     border-color 0.3s ease;
 }
 
@@ -499,9 +490,7 @@
   border-radius: 6px;
   font-size: 1em;
   cursor: pointer;
-  transition:
-    background-color 0.3s ease,
-    transform 0.2s ease;
+  transition: background-color 0.3s ease, transform 0.2s ease;
   display: inline-flex;
   align-items: center;
   gap: 8px;

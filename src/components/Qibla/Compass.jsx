@@ -16,7 +16,14 @@ function Compass({ qiblaDirection, compassHeading }) {
   return (
     <div className="compass-container">
       <div className="compass">
+        {/* Fixed - always represents the direction the phone is actually
+            pointing, regardless of heading. This does not rotate. */}
         <div className="heading-indicator" aria-hidden="true" />
+
+        {/* Rotates as one unit so the cardinal labels stay geometrically
+            correct relative to true north - previously the tick marks
+            rotated but the N/E/S/W labels didn't, which was never
+            actually correct. */}
         <div className="compass-dial" style={getCompassStyle(compassHeading)}>
           <div className="compass-rose">
             {[...Array(8)].map((_, i) => (
@@ -37,11 +44,7 @@ function Compass({ qiblaDirection, compassHeading }) {
               className={`qibla-needle${isAligned ? " qibla-needle-aligned" : ""}`}
               style={{ transform: `rotate(${qiblaDirection}deg)` }}
             >
-              <svg
-                viewBox="0 0 16 90"
-                className="qibla-needle-shaft"
-                aria-hidden="true"
-              >
+              <svg viewBox="0 0 16 90" className="qibla-needle-shaft" aria-hidden="true">
                 <path d="M8 0 L8 90" stroke="currentColor" strokeWidth="2" />
               </svg>
               <span className="qibla-needle-mark" aria-hidden="true">

@@ -9,7 +9,7 @@ import Spinner from "../components/Spinner";
 import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
 import { useReciterAudio } from "../hooks/useReciterAudio";
-import ReciterPicker from "../components/ReciterPicker";
+import ReciterPicker from "../components/Quran/ReciterPicker";
 import { usePersistedState } from "../hooks/usePersistedState";
 
 import "../styles/Quran.css";
@@ -40,10 +40,6 @@ function Quran() {
     if (location.state?.randomPage && totalPages > 0) {
       setCurrentPage(1 + Math.floor(Math.random() * totalPages));
     }
-    // Only re-run when the navigation itself changes (location.key is a
-    // fresh value on every navigation, even to the same route) or once
-    // totalPages first becomes available - not on every currentPage change.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.key, totalPages]);
 
   const debouncedSearch = useCallback(() => {
@@ -104,8 +100,6 @@ function Quran() {
     setIsSidebarOpen((prev) => !prev);
   };
 
-  // Effects
-  // Fetch Quran data on mount
   useEffect(() => {
     const getData = async () => {
       try {
@@ -140,7 +134,6 @@ function Quran() {
     getData();
   }, []);
 
-  // Update current surah when ayahs change
   useEffect(() => {
     if (currentAyahs.length > 0) {
       setCurrentSurah(currentAyahs[0].surahName);
@@ -153,16 +146,11 @@ function Quran() {
     if (reciterAudio.audioSrc && audioPlayerRef.current?.audio?.current) {
       const playPromise = audioPlayerRef.current.audio.current.play();
       if (playPromise?.catch) {
-        playPromise.catch(() => {
-          // Autoplay can be blocked by the browser before any user
-          // gesture has happened in this session - the visible play
-          // button in the player still lets the user start it manually.
-        });
+        playPromise.catch(() => {});
       }
     }
   }, [reciterAudio.audioSrc]);
 
-  // Debounced search effect
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
       debouncedSearch();
@@ -171,7 +159,6 @@ function Quran() {
     return () => clearTimeout(delayDebounce);
   }, [debouncedSearch]);
 
-  // Render
   if (status.loading) return <Spinner />;
   if (status.error) return <p>{status.error}</p>;
 

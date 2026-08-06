@@ -9,7 +9,6 @@ const ReflectionJournal = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const maxLength = 500;
 
-  // Categories for dropdown (added "All" option)
   const categories = [
     "All",
     "Reflection",
@@ -19,7 +18,6 @@ const ReflectionJournal = () => {
     "Other",
   ];
 
-  // Filter entries based on search term and category
   const filteredEntries = journalEntries.filter((entry) => {
     const matchesText = entry.text
       .toLowerCase()
@@ -33,14 +31,12 @@ const ReflectionJournal = () => {
     try {
       const storedEntries = JSON.parse(localStorage.getItem("journalEntries"));
       if (storedEntries) {
-        // Migrate entries saved before entries had stable ids.
         const withIds = storedEntries.map((entry) =>
           entry.id ? entry : { ...entry, id: crypto.randomUUID() },
         );
         setJournalEntries(withIds);
       }
     } catch {
-      // Corrupted localStorage data - start fresh rather than crash the page.
       setJournalEntries([]);
     }
   }, []);

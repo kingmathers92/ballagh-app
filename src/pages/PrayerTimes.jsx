@@ -3,6 +3,7 @@ import { useGeolocation } from "../hooks/useGeolocation.js";
 import { usePrayerTimes } from "../hooks/usePrayerTimes.js";
 import { usePersistedState } from "../hooks/usePersistedState.js";
 import { getTabsConfig } from "../utils/tabsConfig.jsx";
+import { getRamadanStart } from "../utils/hijriUtils.js";
 import Tabs from "../components/Tabs";
 import Accordion from "../components/Accordion";
 import ActionToolbar from "../components/ActionToolbar";
@@ -13,7 +14,7 @@ import "../styles/PrayerTimes.css";
 
 function PrayerTimesView() {
   const { location, error } = useGeolocation();
-  const ramadanStart = new Date("2025-03-01");
+  const ramadanStart = getRamadanStart();
   const [notifications, setNotifications] = useState([]);
   const [notificationPermission, setNotificationPermission] = usePersistedState(
     "notificationPermission",

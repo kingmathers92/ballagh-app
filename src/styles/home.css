@@ -4,6 +4,24 @@
   padding: 4px 15px 20px;
 }
 
+.home-date-line {
+  text-align: center;
+  font-family: "Manrope", sans-serif;
+  font-size: 0.78rem;
+  color: var(--secondary-color);
+  margin: 0 0 14px;
+}
+
+.home-date-hijri {
+  font-weight: 700;
+  color: var(--text-color);
+}
+
+.home-date-sep {
+  margin: 0 6px;
+  opacity: 0.5;
+}
+
 .right-now-panel {
   display: block;
   background-color: var(--primary-color);

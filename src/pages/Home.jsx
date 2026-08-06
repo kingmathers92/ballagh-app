@@ -8,6 +8,7 @@ import {
   startCountdown,
 } from "../utils/prayerUtils";
 import translations from "../utils/translations";
+import { getHijriDate } from "../utils/hijriUtils";
 import "../styles/Home.css";
 
 const navItems = [
@@ -58,6 +59,7 @@ const Home = () => {
   const [prayerStatus, setPrayerStatus] = useState(null);
   const [countdown, setCountdown] = useState("");
   const language = "en";
+  const hijriToday = getHijriDate();
 
   useEffect(() => {
     if (!coords) return;
@@ -85,6 +87,21 @@ const Home = () => {
       </header>
 
       <div className="home-container">
+        <p className="home-date-line">
+          <span className="home-date-hijri">
+            {hijriToday.day} {hijriToday.nameEn} {hijriToday.year} AH
+          </span>
+          <span className="home-date-sep">&middot;</span>
+          <span className="home-date-gregorian">
+            {new Date().toLocaleDateString("en-US", {
+              weekday: "long",
+              month: "long",
+              day: "numeric",
+              year: "numeric",
+            })}
+          </span>
+        </p>
+
         <Link
           to="/prayer-times"
           className={`right-now-panel cut-corner period-${

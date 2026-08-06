@@ -27,7 +27,7 @@ export const calculateDistance = (lat1, lon1, lat2, lon2) => {
  * @returns {Object} CSS transform style.
  */
 export const getCompassStyle = (compassHeading) => ({
-  transform: `rotate(${compassHeading}deg)`,
+  transform: `rotate(${-compassHeading}deg)`,
 });
 
 /**

@@ -59,6 +59,13 @@ export default defineConfig({
       },
     }),
   ],
+    server: {
+    host: true,
+    allowedHosts: [
+      ".loca.lt",
+      ".trycloudflare.com",
+    ],
+  },
   resolve: {
     extensions: [".js", ".jsx", ".json"],
   },

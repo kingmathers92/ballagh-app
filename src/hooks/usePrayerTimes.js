@@ -69,6 +69,7 @@ export const usePrayerTimes = (
           timeZone
         );
 
+
         setPrayerError(null);
         setLoading(false);
       } catch (error) {

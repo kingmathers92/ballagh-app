@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useCallback, useRef } from "react";
 import { useGeolocation } from "../hooks/useGeolocation.js";
 import { usePrayerTimes } from "../hooks/usePrayerTimes.js";
 import { usePersistedState } from "../hooks/usePersistedState.js";
 import { getTabsConfig } from "../utils/tabsConfig.jsx";
 import { getRamadanStart } from "../utils/hijriUtils.js";
+import { getAdhanById, DEFAULT_ADHAN_ID } from "../utils/adhanSounds.js";
 import Tabs from "../components/Tabs";
 import Accordion from "../components/Accordion";
 import ActionToolbar from "../components/ActionToolbar";
@@ -18,15 +19,15 @@ function PrayerTimesView() {
   const [notifications, setNotifications] = useState([]);
   const [notificationPermission, setNotificationPermission] = usePersistedState(
     "notificationPermission",
-    "Notification" in window ? Notification.permission : "denied"
+    "Notification" in window ? Notification.permission : "denied",
   );
   const [calculationMethod, setCalculationMethod] = usePersistedState(
     "calculationMethod",
-    "UmmAlQura"
+    "UmmAlQura",
   );
   const [timeZone, setTimeZone] = usePersistedState(
     "timeZone",
-    Intl.DateTimeFormat().resolvedOptions().timeZone
+    Intl.DateTimeFormat().resolvedOptions().timeZone,
   );
   const [prayerReminders, setPrayerReminders] = usePersistedState(
     "prayerReminders",
@@ -37,11 +38,35 @@ function PrayerTimesView() {
       asr: true,
       maghrib: true,
       isha: true,
-    }
+    },
   );
   const [language, setLanguage] = usePersistedState("language", "en");
+  const [adhanSoundId, setAdhanSoundId] = usePersistedState(
+    "adhanSoundId",
+    DEFAULT_ADHAN_ID,
+  );
+  const adhanAudioRef = useRef(null);
+  const playAdhan = useCallback(() => {
+    if (!adhanAudioRef.current) return;
+    adhanAudioRef.current.currentTime = 0;
+    const playPromise = adhanAudioRef.current.play();
+    if (playPromise?.catch) {
+      playPromise.catch((err) => {
+        console.error("Adhan playback blocked:", err);
+      });
+    }
+  }, []);
   const [activeTab, setActiveTab] = useState("prayer-times");
   const [openAccordions, setOpenAccordions] = useState(["prayer-times"]);
+
+  const addNotification = useCallback(
+    (message, isPermissionMessage) =>
+      setNotifications((prev) => [
+        ...prev,
+        { id: Date.now(), message, isPermissionMessage },
+      ]),
+    [],
+  );
 
   const {
     prayerTimes,
@@ -55,16 +80,13 @@ function PrayerTimesView() {
   } = usePrayerTimes(
     location,
     ramadanStart,
-    (message, isPermissionMessage) =>
-      setNotifications((prev) => [
-        ...prev,
-        { id: Date.now(), message, isPermissionMessage },
-      ]),
+    addNotification,
     notificationPermission,
     calculationMethod,
     timeZone,
     prayerReminders,
-    language
+    language,
+    playAdhan,
   );
 
   const tabs = getTabsConfig(
@@ -81,11 +103,19 @@ function PrayerTimesView() {
     calculationMethod,
     setCalculationMethod,
     setTimeZone,
-    setLanguage
+    setLanguage,
+    adhanSoundId,
+    setAdhanSoundId,
   );
 
   return (
     <div className="prayer-view-container">
+      <audio
+        ref={adhanAudioRef}
+        src={getAdhanById(adhanSoundId).url}
+        preload="auto"
+        aria-hidden="true"
+      />
       <header className="hero-section">
         <h1 className="title">{translations[language].title}</h1>
       </header>

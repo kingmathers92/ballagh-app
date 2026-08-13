@@ -430,6 +430,92 @@
   opacity: 0.7;
 }
 
+.adhan-picker {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--card-border, var(--secondary-color));
+}
+
+.adhan-picker-title {
+  font-family: "Fraunces", serif;
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--text-color);
+  margin: 0 0 10px;
+}
+
+.adhan-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.adhan-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.adhan-option-select {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  background-color: var(--background-color);
+  border: 1px solid var(--card-border, var(--secondary-color));
+  color: var(--text-color);
+  font-family: "Manrope", sans-serif;
+  font-size: 0.85rem;
+  cursor: pointer;
+  text-align: left;
+  clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
+}
+
+.adhan-option-radio {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1.5px solid var(--secondary-color);
+  flex-shrink: 0;
+}
+
+.adhan-option-selected .adhan-option-select {
+  border-color: var(--accent-color);
+}
+
+.adhan-option-selected .adhan-option-radio {
+  background-color: var(--accent-color);
+  border-color: var(--accent-color);
+}
+
+.adhan-option-preview {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: 1px solid var(--card-border, var(--secondary-color));
+  border-radius: 50%;
+  color: var(--secondary-color);
+  cursor: pointer;
+}
+
+.adhan-option-preview svg {
+  width: 12px;
+  height: 12px;
+}
+
+.adhan-picker-note {
+  margin-top: 12px;
+  font-family: "Manrope", sans-serif;
+  font-size: 0.72rem;
+  color: var(--secondary-color);
+  line-height: 1.5;
+}
+
 .ramadan-times {
   text-align: left;
 }

@@ -17,7 +17,9 @@ export const getTabsConfig = (
   calculationMethod,
   setCalculationMethod,
   setTimeZone,
-  setLanguage
+  setLanguage,
+  adhanSoundId,
+  setAdhanSoundId
 ) => [
   {
     id: "prayer-times",
@@ -106,6 +108,8 @@ export const getTabsConfig = (
           setPrayerReminders={setPrayerReminders}
           language={language}
           translations={translations}
+          adhanSoundId={adhanSoundId}
+          setAdhanSoundId={setAdhanSoundId}
         />
       </div>
     ),

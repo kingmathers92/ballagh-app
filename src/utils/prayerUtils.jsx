@@ -9,7 +9,7 @@ export const calculatePrayerTimes = (coords, calculationMethod) => {
       typeof coords.longitude !== "number"
     ) {
       throw new Error(
-        "Invalid coordinates: must be an adhan Coordinates object"
+        "Invalid coordinates: must be an adhan Coordinates object",
       );
     }
     const date = new Date();
@@ -62,7 +62,7 @@ export const calculatePrayerTimes = (coords, calculationMethod) => {
 
 export const determineCurrentNextPrayer = (
   rawTimes,
-  currentTime = new Date()
+  currentTime = new Date(),
 ) => {
   try {
     const now = new Date(currentTime);
@@ -95,7 +95,7 @@ export const determineCurrentNextPrayer = (
       const tomorrowTimes = new PrayerTimes(
         rawTimes.location,
         tomorrow,
-        params
+        params,
       );
       nextPrayer = { name: "fajr", time: new Date(tomorrowTimes.fajr) };
     } else if (!current) {
@@ -136,7 +136,7 @@ export const startCountdown = (nextPrayer, setNextPrayerCountdown) => {
 export const determineRamadanTimes = (
   rawTimes,
   ramadanStart,
-  currentTime = new Date()
+  currentTime = new Date(),
 ) => {
   try {
     const now = new Date(currentTime);
@@ -212,7 +212,7 @@ export const startRamadanCountdown = (nextEvent, setNextEventCountdown) => {
 export const addNotification = (
   setNotifications,
   message,
-  isPermissionMessage = false
+  isPermissionMessage = false,
 ) => {
   setNotifications((prev) => [
     ...prev,
@@ -239,7 +239,7 @@ export const scheduleReminders = (
   now,
   language,
   timeZone,
-  playAdhan
+  playAdhan,
 ) => {
   if (notificationPermission !== "granted" || !prayerReminders) return;
 
@@ -289,7 +289,10 @@ export const scheduleReminders = (
         }
       }
 
-      addNotification(`${prayerLabel} \u2014 time to pray (${timeLabel})`, false);
+      addNotification(
+        `${prayerLabel} \u2014 time to pray (${timeLabel})`,
+        false,
+      );
 
       if (typeof playAdhan === "function") {
         playAdhan();
@@ -302,18 +305,19 @@ export const requestNotificationPermission = (
   setNotificationPermission,
   addNotification,
   translations,
-  language
+  language,
 ) => {
   if ("Notification" in window && Notification.permission !== "granted") {
     Notification.requestPermission().then((permission) => {
       setNotificationPermission(permission);
+
       if (permission === "granted") {
         addNotification(translations[language].enableNotifications + "!", true);
       } else {
         addNotification(
           translations[language].enableNotifications +
             " disabled. Using in-app notifications.",
-          true
+          true,
         );
       }
     });
@@ -334,7 +338,7 @@ export const exportPrayerTimes = (
   timeZone,
   language,
   addNotification,
-  translations
+  translations,
 ) => {
   if (!prayerTimes) {
     addNotification(translations[language].noPrayerTimes, true);

@@ -74,30 +74,22 @@ export const useQiblaDirection = () => {
     attempt();
   }, []);
 
-  const debounceTimeoutRef = useRef(null);
-
   const handleOrientation = useCallback(
     (event) => {
-      if (debounceTimeoutRef.current) {
-        clearTimeout(debounceTimeoutRef.current);
+      if (event.alpha === null || event.alpha === undefined) {
+        setOrientationSupported(false);
+        setError("ORIENTATION_DATA_UNAVAILABLE");
+        return;
       }
 
-      debounceTimeoutRef.current = setTimeout(() => {
-        if (event.alpha === null || event.alpha === undefined) {
-          setOrientationSupported(false);
-          setError("ORIENTATION_DATA_UNAVAILABLE");
-          return;
-        }
-
-        let heading = event.webkitCompassHeading || event.alpha;
-        if (event.webkitCompassHeading) {
-          heading = event.webkitCompassHeading;
-        } else {
-          heading = 360 - event.alpha;
-        }
-        const trueHeading = (heading + declinationRef.current + 360) % 360;
-        setCompassHeading(trueHeading);
-      }, 100);
+      let heading = event.webkitCompassHeading || event.alpha;
+      if (event.webkitCompassHeading) {
+        heading = event.webkitCompassHeading;
+      } else {
+        heading = 360 - event.alpha;
+      }
+      const trueHeading = (heading + declinationRef.current + 360) % 360;
+      setCompassHeading(trueHeading);
     },
     [setOrientationSupported, setError, setCompassHeading],
   );
@@ -169,9 +161,6 @@ export const useQiblaDirection = () => {
         handleRelativeFallback,
         true,
       );
-      if (debounceTimeoutRef.current) {
-        clearTimeout(debounceTimeoutRef.current);
-      }
     };
   }, [getGeolocation, handleOrientation]);
 

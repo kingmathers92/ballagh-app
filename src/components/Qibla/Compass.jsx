@@ -2,58 +2,38 @@ import PropTypes from "prop-types";
 import { getCompassStyle } from "../../utils/qiblaUtils";
 
 const ALIGNMENT_THRESHOLD = 6;
+const CLOSE_THRESHOLD = 25;
 
-const getAngleDelta = (a, b) => {
-  const diff = Math.abs(a - b) % 360;
-  return diff > 180 ? 360 - diff : diff;
-};
+const getSignedDelta = (from, to) => ((to - from + 540) % 360) - 180;
 
 function Compass({ qiblaDirection, compassHeading }) {
-  const isAligned =
-    qiblaDirection !== null &&
-    getAngleDelta(compassHeading, qiblaDirection) <= ALIGNMENT_THRESHOLD;
+  const delta =
+    qiblaDirection !== null
+      ? getSignedDelta(compassHeading, qiblaDirection)
+      : null;
+  const absDelta = delta !== null ? Math.abs(delta) : null;
+  const isAligned = absDelta !== null && absDelta <= ALIGNMENT_THRESHOLD;
+  const isClose = absDelta !== null && absDelta <= CLOSE_THRESHOLD;
+
+  const proximityClass = isAligned ? "aligned" : isClose ? "close" : "far";
 
   return (
     <div className="compass-container">
       <div className="compass">
-        {/* Fixed - always represents the direction the phone is actually
-            pointing, regardless of heading. This does not rotate. */}
-        <div className="heading-indicator" aria-hidden="true" />
-
-        {/* Rotates as one unit so the cardinal labels stay geometrically
-            correct relative to true north - previously the tick marks
-            rotated but the N/E/S/W labels didn't, which was never
-            actually correct. */}
         <div className="compass-dial" style={getCompassStyle(compassHeading)}>
-          <div className="compass-rose">
-            {[...Array(8)].map((_, i) => (
-              <div
-                key={i}
-                className={`compass-mark${i % 2 === 0 ? " compass-mark-major" : ""}`}
-                style={{ transform: `rotate(${i * 45}deg)` }}
-              />
-            ))}
-          </div>
-          <span className="compass-label compass-label-n">N</span>
-          <span className="compass-label compass-label-e">E</span>
-          <span className="compass-label compass-label-s">S</span>
-          <span className="compass-label compass-label-w">W</span>
-
           {qiblaDirection !== null && (
             <div
-              className={`qibla-needle${isAligned ? " qibla-needle-aligned" : ""}`}
+              className={`qibla-target qibla-target-${proximityClass}`}
               style={{ transform: `rotate(${qiblaDirection}deg)` }}
             >
-              <svg viewBox="0 0 16 90" className="qibla-needle-shaft" aria-hidden="true">
-                <path d="M8 0 L8 90" stroke="currentColor" strokeWidth="2" />
-              </svg>
-              <span className="qibla-needle-mark" aria-hidden="true">
+              <span className="qibla-target-glow" aria-hidden="true" />
+              <span className="qibla-target-mark" aria-hidden="true">
                 <svg viewBox="0 0 20 20">
                   <path
                     d="M5 8 L5 16 L15 16 L15 8 L10 4 Z"
                     fill="none"
                     stroke="currentColor"
-                    strokeWidth="1.4"
+                    strokeWidth="1.6"
                     strokeLinejoin="round"
                   />
                 </svg>
@@ -62,22 +42,31 @@ function Compass({ qiblaDirection, compassHeading }) {
           )}
         </div>
 
-        <svg
-          className={`compass-star${isAligned ? " compass-star-aligned" : ""}`}
-          viewBox="0 0 22 22"
-          aria-hidden="true"
-        >
-          <path
-            d="M11 1 13.2 5 18 3.4 16.6 8.2 21 11 16.6 13.8 18 18.6 13.2 17 11 21 8.8 17 4 18.6 5.4 13.8 1 11 5.4 8.2 4 3.4 8.8 5Z"
-            fill={isAligned ? "var(--accent-color)" : "var(--text-color)"}
-          />
-        </svg>
+        <div className={`qibla-readout qibla-readout-${proximityClass}`}>
+          {absDelta !== null ? (
+            <span className="qibla-readout-value">
+              {Math.round(absDelta)}&deg;
+            </span>
+          ) : (
+            <span className="qibla-readout-value qibla-readout-loading">
+              &hellip;
+            </span>
+          )}
+        </div>
       </div>
-      <p
-        className={`qibla-alignment-message${isAligned ? " visible" : ""}`}
-        role="status"
-      >
-        You&apos;re facing the Qibla
+
+      <p className="qibla-guidance" role="status">
+        {isAligned ? (
+          <span className="qibla-guidance-aligned">
+            You&apos;re facing the Qibla
+          </span>
+        ) : delta !== null ? (
+          <>
+            Turn to your <strong>{delta < 0 ? "left" : "right"}</strong>
+          </>
+        ) : (
+          "Finding direction\u2026"
+        )}
       </p>
     </div>
   );
